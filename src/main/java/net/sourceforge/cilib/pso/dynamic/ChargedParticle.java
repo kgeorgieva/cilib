@@ -27,9 +27,9 @@ import net.sourceforge.cilib.problem.OptimisationProblem;
 import net.sourceforge.cilib.type.types.Int;
 
 /**
- * Charged Particle used by charged PSO (ChargedVelocityUpdate). The only difference
- * from DynamicParticle is that a charged particle stores the charge magnitude and
- * the initialization strategy for charge.
+ * Charged Particle used by charged PSO (ChargedVelocityProvider). The only
+ * difference from DynamicParticle is that a charged particle stores the charge
+ * magnitude and the initialization strategy for charge.
  *
  * @author Anna Rakitianskaia
  *
@@ -37,16 +37,15 @@ import net.sourceforge.cilib.type.types.Int;
 public class ChargedParticle extends DynamicParticle {
 
     private static final long serialVersionUID = 7872499872488908368L;
+    
     private double charge;
 
     public ChargedParticle() {
-        super();
-        behavior.setVelocityUpdateStrategy(new ChargedVelocityUpdateStrategy());
+        this.behavior.setVelocityProvider(new ChargedVelocityProvider());
     }
 
     public ChargedParticle(ChargedParticle copy) {
         super(copy);
-
         this.charge = copy.charge;
     }
 
@@ -95,19 +94,16 @@ public class ChargedParticle extends DynamicParticle {
     @Override
     public void initialise(OptimisationProblem problem) {
         this.getProperties().put(EntityType.CANDIDATE_SOLUTION, problem.getDomain().getBuiltRepresenation().getClone());
-
-        getPositionInitialisationStrategy().initialize(EntityType.CANDIDATE_SOLUTION, this);
         this.getProperties().put(EntityType.Particle.BEST_POSITION, getPosition().getClone());
-
-        // Create the velocity vector by cloning the position and setting all the values
-        // within the velocity to 0
         this.getProperties().put(EntityType.Particle.VELOCITY, getPosition().getClone());
+
+        this.positionInitialisationStrategy.initialize(EntityType.CANDIDATE_SOLUTION, this);
+        this.personalBestInitialisationStrategy.initialize(EntityType.Particle.BEST_POSITION, this);
         this.velocityInitializationStrategy.initialize(EntityType.Particle.VELOCITY, this);
 
         this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
         this.getProperties().put(EntityType.Particle.BEST_FITNESS, InferiorFitness.instance());
-        neighbourhoodBest = this;
-
+        this.neighbourhoodBest = this;
         this.getProperties().put(EntityType.Particle.Count.PBEST_STAGNATION_COUNTER, Int.valueOf(0));
     }
 }

@@ -21,10 +21,13 @@
  */
 package net.sourceforge.cilib.pso.particle;
 
-import net.sourceforge.cilib.pso.positionupdatestrategies.PositionUpdateStrategy;
-import net.sourceforge.cilib.pso.positionupdatestrategies.StandardPositionUpdateStrategy;
-import net.sourceforge.cilib.pso.velocityupdatestrategies.StandardVelocityUpdate;
-import net.sourceforge.cilib.pso.velocityupdatestrategies.VelocityUpdateStrategy;
+import net.sourceforge.cilib.pso.guideprovider.GuideProvider;
+import net.sourceforge.cilib.pso.guideprovider.NBestGuideProvider;
+import net.sourceforge.cilib.pso.guideprovider.PBestGuideProvider;
+import net.sourceforge.cilib.pso.positionprovider.PositionProvider;
+import net.sourceforge.cilib.pso.positionprovider.StandardPositionProvider;
+import net.sourceforge.cilib.pso.velocityprovider.StandardVelocityProvider;
+import net.sourceforge.cilib.pso.velocityprovider.VelocityProvider;
 
 /**
  * A {@link ParticleBehavior} object encapsulates the {@link PositionUpdateStrategy}
@@ -33,34 +36,43 @@ import net.sourceforge.cilib.pso.velocityupdatestrategies.VelocityUpdateStrategy
  * @author Bennie Leonard
  */
 public class ParticleBehavior implements Comparable<ParticleBehavior> {
-    private PositionUpdateStrategy positionUpdateStrategy;
-    private VelocityUpdateStrategy velocityUpdateStrategy;
+
+    private PositionProvider positionProvider;
+    private VelocityProvider velocityProvider;
+
+    private GuideProvider localGuideProvider;
+    private GuideProvider globalGuideProvider;
+
     private int successCounter;
     private int selectedCounter;
 
     /**
-     * Default constructor assigns standard position and velocity update
-     * strategies to particles.
+     * Default constructor assigns standard position and velocity provider
+     * to particles.
      */
     public ParticleBehavior() {
-        positionUpdateStrategy = new StandardPositionUpdateStrategy();
-        velocityUpdateStrategy = new StandardVelocityUpdate();
-        successCounter = 0;
-        selectedCounter = 0;
+        this.positionProvider = new StandardPositionProvider();
+        this.velocityProvider = new StandardVelocityProvider();
+
+        this.localGuideProvider = new PBestGuideProvider();
+        this.globalGuideProvider = new NBestGuideProvider();
+
+        this.successCounter = 0;
+        this.selectedCounter = 0;
     }
 
     /**
      * Constructor that assigns a given position and velocity update strategy
      * to a particle.
      *
-     * @param p The {@link PositionUpdateStrategy} to use.
-     * @param v The {@link VelocityUpdateStrategy} to use.
+     * @param p The {@link PositionProvider} to use.
+     * @param v The {@link VelocityProvider} to use.
      */
-    public ParticleBehavior(PositionUpdateStrategy p, VelocityUpdateStrategy v) {
-        positionUpdateStrategy = p;
-        velocityUpdateStrategy = v;
-        successCounter = 0;
-        selectedCounter = 0;
+    public ParticleBehavior(PositionProvider p, VelocityProvider v) {
+        this.positionProvider = p;
+        this.velocityProvider = v;
+        this.successCounter = 0;
+        this.selectedCounter = 0;
     }
 
     /**
@@ -69,8 +81,10 @@ public class ParticleBehavior implements Comparable<ParticleBehavior> {
      * @param copy The {@link ParticleBehavior} object to copy.
      */
     public ParticleBehavior(ParticleBehavior copy) {
-        this.positionUpdateStrategy = copy.positionUpdateStrategy;
-        this.velocityUpdateStrategy = copy.velocityUpdateStrategy;
+        this.positionProvider = copy.positionProvider.getClone();
+        this.velocityProvider = copy.velocityProvider.getClone();
+        this.localGuideProvider = copy.localGuideProvider.getClone();
+        this.globalGuideProvider = copy.globalGuideProvider.getClone();
         this.selectedCounter = copy.selectedCounter;
         this.successCounter = copy.successCounter;
     }
@@ -83,39 +97,71 @@ public class ParticleBehavior implements Comparable<ParticleBehavior> {
     }
 
     /**
-     * Get the currently set {@link PositionUpdateStrategy}.
+     * Get the currently set {@link PositionProvider}.
      *
-     * @return The current {@link PositionUpdateStrategy}.
+     * @return The current {@link PositionProvider}.
      */
-    public PositionUpdateStrategy getPositionUpdateStrategy() {
-        return positionUpdateStrategy;
+    public PositionProvider getPositionProvider() {
+        return positionProvider;
     }
 
     /**
-     * Set the {@link PositionUpdateStrategy}.
+     * Set the {@link PositionProvider}.
      *
-     * @param strategy The {@link PositionUpdateStrategy} to set.
+     * @param positionProvider The {@link PositionProvider} to set.
      */
-    public void setPositionUpdateStrategy(PositionUpdateStrategy strategy) {
-        positionUpdateStrategy = strategy;
+    public void setPositionProvider(PositionProvider positionProvider) {
+        this.positionProvider = positionProvider;
     }
 
     /**
-     * Get the currently set {@link VelocityUpdateStrategy}.
+     * Get the currently set {@link VelocityProvider}.
      *
-     * @return The current {@link VelocityUpdateStrategy}.
+     * @return The current {@link VelocityProvider}.
      */
-    public VelocityUpdateStrategy getVelocityUpdateStrategy() {
-        return velocityUpdateStrategy;
+    public VelocityProvider getVelocityProvider() {
+        return this.velocityProvider;
     }
 
     /**
-     * Set the {@link VelocityUpdateStrategy}.
+     * Set the {@link VelocityProvider}.
      *
-     * @param strategy The {@link VelocityUpdateStrategy} to set.
+     * @param velocityProvider The {@link VelocityProvider} to set.
      */
-    public void setVelocityUpdateStrategy(VelocityUpdateStrategy strategy) {
-        velocityUpdateStrategy = strategy;
+    public void setVelocityProvider(VelocityProvider velocityProvider) {
+        this.velocityProvider = velocityProvider;
+    }
+
+    /**
+     * Get the current global <tt>GuideProvider</tt>.
+     * @return The currently associated global <tt>GuideProvider</tt>.
+     */
+    public GuideProvider getGlobalGuideProvider() {
+        return this.globalGuideProvider;
+    }
+
+    /**
+     * Set the <tt>GuideProvider</tt>.
+     * @param globalGuideProvider The global <tt>GuideProvider</tt> to use.
+     */
+    public void setGlobalGuideProvider(GuideProvider globalGuideProvider) {
+        this.globalGuideProvider = globalGuideProvider;
+    }
+
+    /**
+     * Get the current local <tt>GuideProvider</tt>.
+     * @return The currently associated local <tt>GuideProvider</tt>.
+     */
+    public GuideProvider getLocalGuideProvider() {
+        return this.localGuideProvider;
+    }
+
+    /**
+     * Set the <tt>GuideProvider</tt>.
+     * @param localGuideProvider The local <tt>GuideProvider</tt> to use.
+     */
+    public void setLocalGuideProvider(GuideProvider localGuideProvider) {
+        this.localGuideProvider = localGuideProvider;
     }
 
     /**
