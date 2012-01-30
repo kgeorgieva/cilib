@@ -99,6 +99,7 @@ public class PSO extends SinglePopulationBasedAlgorithm implements Participating
      */
     @Override
     public PSO getClone() {
+        int zero = 0;
         return new PSO(this);
     }
 
