@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: net.sourceforge.cilib.type.parser.DomainParserTest
+-------------------------------------------------------------------------------
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.028 sec
