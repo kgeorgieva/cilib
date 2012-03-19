@@ -127,31 +127,9 @@ public class LinearDecreasingControlParameter implements BoundedControlParameter
         }
     }
     
+    @Override
     public void updateParameter(double value) {
-        
+        parameter = Real.valueOf(value);
     }
     
-    /*
-     * Get the current velocity of the parameter
-     * @return The current velocity of the parameter
-     */
-    @Override
-    public double getVelocity(){
-        return 0.0;
-    }
-    
-    /*
-     * Set the current velocity of the parameter
-     */
-    @Override
-    public void setVelocity(double value){
-        
-    }
-    
-    /*
-     * Not currently applicable
-     */
-    public boolean wasSetByUser() {
-        return false;
-    }
 }
