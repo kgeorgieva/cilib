@@ -110,6 +110,7 @@ public class PSO extends SinglePopulationBasedAlgorithm implements Participating
         //Iterables.addAll(getTopology(), particles); // Use this instead?
         for (Entity particle : particles)
             topology.add((Particle) particle);
+        
     }
 
     /**
