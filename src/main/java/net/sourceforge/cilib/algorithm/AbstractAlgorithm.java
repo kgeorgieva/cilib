@@ -350,7 +350,7 @@ public abstract class AbstractAlgorithm implements Algorithm, Stoppable {
     /**
      * {@inheritDoc}
      */
-    @Override
+     @Override
     public abstract OptimisationSolution getBestSolution();
 
     /**
