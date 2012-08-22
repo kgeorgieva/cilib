@@ -11,6 +11,7 @@ import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.math.random.generator.Rand;
 
+
 public class GaussianDistribution implements ProbabilityDistributionFunction {
     private ControlParameter mean;
     private ControlParameter deviation;
@@ -93,18 +94,27 @@ public class GaussianDistribution implements ProbabilityDistributionFunction {
     }
 
     public void setDeviation(ControlParameter deviation) {
+
         this.deviation = deviation;
     }
+    
+    public void setDeviation(double deviation) {
+        this.deviation.setParameter(deviation);
+    }
 
-    public ControlParameter getDeviation() {
+    public SettableControlParameter getDeviation() {
         return deviation;
     }
 
-    public void setMean(ControlParameter mean) {
+    public void setMean(SettableControlParameter mean) {
         this.mean = mean;
     }
+    
+    public void setMean(double mean) {
+        this.mean.setParameter(mean);
+    }
 
-    public ControlParameter getMean() {
+    public SettableControlParameter getMean() {
         return mean;
     }
 }

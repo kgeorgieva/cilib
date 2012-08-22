@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.controlparameter.adaptation;
 
+import fj.test.Rand;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.entity.Entity;

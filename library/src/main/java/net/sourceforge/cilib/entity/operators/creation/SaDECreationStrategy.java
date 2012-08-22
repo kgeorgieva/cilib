@@ -118,6 +118,7 @@ public class SaDECreationStrategy implements CreationStrategy {
         
         if(randomValue <= probability) {
            trialEntity = (T) strategy1.create(targetEntity, current, topology).getClone();
+
         } else {
             trialEntity = strategy2.create(targetEntity, current, topology);
         }

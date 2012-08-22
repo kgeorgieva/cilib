@@ -35,6 +35,7 @@ public class SaNSDEParameterAdaptationStrategy implements ParameterAdaptationStr
      * Default constructor for SaNSDEParameterAdaptationStrategy
      */
     public SaNSDEParameterAdaptationStrategy() {
+
         GaussianDistribution gaussian = new GaussianDistribution();
         gaussian.setMean(ConstantControlParameter.of(0.5));
         gaussian.setDeviation(ConstantControlParameter.of(0.3));
