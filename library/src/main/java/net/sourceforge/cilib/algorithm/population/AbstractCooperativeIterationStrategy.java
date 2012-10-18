@@ -68,13 +68,14 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
-
+        int patternIndex;
+        
         for(int i = 0; i < dataset.size(); i++) {
                 euclideanDistance = Double.POSITIVE_INFINITY;
                 addedPattern = Vector.of();
                 Vector pattern = ((StandardPattern) dataset.getRow(i)).getVector();
-                int centroidIndex = 0;
-                int patternIndex = 0;
+                centroidIndex = 0;
+                patternIndex = 0;
                 for(ClusterCentroid centroid : candidateSolution) {
                     if(distanceMeasure.distance(centroid.toVector(), pattern) < euclideanDistance) {
                         euclideanDistance = distanceMeasure.distance(centroid.toVector(), pattern);
@@ -95,6 +96,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
     public ClusterParticle getContextParticle() {
         clearDataPatterns(contextParticle);
         assignDataPatternsToParticle((CentroidHolder) contextParticle.getCandidateSolution(), table);
+        contextParticle.calculateFitness();
         return contextParticle;
     }
 

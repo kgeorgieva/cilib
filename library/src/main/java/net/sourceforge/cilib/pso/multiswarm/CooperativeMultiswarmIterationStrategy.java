@@ -75,14 +75,14 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                         clearDataPatterns(contextParticle);
                         assignDataPatternsToParticle((CentroidHolder) contextParticle.getCandidateSolution(), table);
                         contextParticle.calculateFitness();
-
+                        
                         ClusterParticle particleWithContext = new ClusterParticle();
                         particleWithContext.setCandidateSolution(contextParticle.getCandidateSolution().getClone());
                         particleWithContext.getProperties().put(EntityType.Particle.BEST_POSITION, particle.getBestPosition().getClone());
                         particleWithContext.getProperties().put(EntityType.Particle.BEST_FITNESS, particle.getBestFitness().getClone());
                         particleWithContext.getProperties().put(EntityType.Particle.VELOCITY, particle.getVelocity().getClone());
                         particleWithContext.setNeighbourhoodBest(contextParticle);
-                        ((CentroidHolder) particleWithContext.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particle.getCandidateSolution()).get(populationIndex));
+                        ((CentroidHolder) particleWithContext.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particle.getCandidateSolution()).get(populationIndex).getClone());
                         particleWithContext.getProperties().put(EntityType.Particle.Count.PBEST_STAGNATION_COUNTER, particle.getProperties().get(EntityType.Particle.Count.PBEST_STAGNATION_COUNTER).getClone());
                         particleWithContext.setCentroidInitialisationStrategy(particle.getCentroidInitializationStrategyCandidate().getClone());
 
@@ -91,12 +91,17 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                         particleWithContext.calculateFitness();
 
                         if(particleWithContext.getFitness().getValue() < particleWithContext.getBestFitness().getValue()) {
-                            particleWithContext.getProperties().put(EntityType.Particle.BEST_POSITION, particleWithContext.getPosition());
-                            particleWithContext.getProperties().put(EntityType.Particle.BEST_FITNESS, particleWithContext.getFitness());
+                            particleWithContext.getProperties().put(EntityType.Particle.BEST_POSITION, particleWithContext.getPosition()).getClone();
+                            particleWithContext.getProperties().put(EntityType.Particle.BEST_FITNESS, particleWithContext.getFitness()).getClone();
                         }
 
                         if(particleWithContext.getBestFitness().getValue() < contextParticle.getFitness().getValue()) {
-                               ((CentroidHolder) contextParticle.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particleWithContext.getCandidateSolution()).get(populationIndex));
+                               ((CentroidHolder) contextParticle.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particleWithContext.getCandidateSolution()).get(populationIndex).getClone());
+                        }
+                        
+                        if(contextParticle.getFitness().getValue() < contextParticle.getBestFitness().getValue()) {
+                            contextParticle.getProperties().put(EntityType.Particle.BEST_POSITION, contextParticle.getPosition()).getClone();
+                            contextParticle.getProperties().put(EntityType.Particle.BEST_FITNESS, contextParticle.getFitness()).getClone();
                         }
 
                         particle = particleWithContext.getClone();

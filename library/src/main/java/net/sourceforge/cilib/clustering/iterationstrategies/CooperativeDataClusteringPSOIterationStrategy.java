@@ -63,6 +63,9 @@ public class CooperativeDataClusteringPSOIterationStrategy extends AbstractCoope
     public void performIteration(CooperativePSO algorithm) {
         int populationIndex = 0;
         table = new StandardDataTable();
+        DataClusteringPSO pso ;
+        Topology newTopology;
+        ClusterParticle particleWithContext;
         
         for(PopulationBasedAlgorithm currentAlgorithm : algorithm.getPopulations()) {
               
@@ -72,9 +75,8 @@ public class CooperativeDataClusteringPSOIterationStrategy extends AbstractCoope
                 initializeContextParticle(algorithm);
             }
             
-            
-            DataClusteringPSO pso = ((DataClusteringPSO) currentAlgorithm);
-            Topology newTopology = ((DataClusteringPSO) currentAlgorithm).getTopology().getClone();
+            pso = ((DataClusteringPSO) currentAlgorithm);
+            newTopology = ((DataClusteringPSO) currentAlgorithm).getTopology().getClone();
             newTopology.clear();
             
             for(ClusterParticle particle : ((DataClusteringPSO) currentAlgorithm).getTopology()) {
@@ -82,7 +84,7 @@ public class CooperativeDataClusteringPSOIterationStrategy extends AbstractCoope
                 assignDataPatternsToParticle((CentroidHolder) contextParticle.getCandidateSolution(), table);
                 contextParticle.calculateFitness();
                     
-                ClusterParticle particleWithContext = new ClusterParticle();
+                particleWithContext = new ClusterParticle();
                 particleWithContext.setCandidateSolution(contextParticle.getCandidateSolution().getClone());
                 particleWithContext.getProperties().put(EntityType.Particle.BEST_POSITION, particle.getBestPosition().getClone());
                 particleWithContext.getProperties().put(EntityType.Particle.BEST_FITNESS, particle.getBestFitness().getClone());
@@ -107,6 +109,11 @@ public class CooperativeDataClusteringPSOIterationStrategy extends AbstractCoope
                 
                 if(particleWithContext.getBestFitness().getValue() < contextParticle.getFitness().getValue()) {
                        ((CentroidHolder) contextParticle.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particle.getCandidateSolution()).get(populationIndex));
+                }
+                
+                if(contextParticle.getFitness().getValue() < contextParticle.getBestFitness().getValue()) {
+                    contextParticle.getProperties().put(EntityType.Particle.BEST_POSITION, contextParticle.getPosition()).getClone();
+                    contextParticle.getProperties().put(EntityType.Particle.BEST_FITNESS, contextParticle.getFitness()).getClone();
                 }
                 
                 newTopology.add(particleWithContext);
