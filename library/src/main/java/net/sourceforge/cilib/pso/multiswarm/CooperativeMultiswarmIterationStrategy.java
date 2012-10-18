@@ -90,16 +90,16 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                         assignDataPatternsToParticle((CentroidHolder) particleWithContext.getCandidateSolution(), table);
                         particleWithContext.calculateFitness();
 
-                        if(particleWithContext.getFitness().getValue() < particleWithContext.getBestFitness().getValue()) {
+                        if(particleWithContext.getFitness().compareTo(particleWithContext.getBestFitness()) > 0) {
                             particleWithContext.getProperties().put(EntityType.Particle.BEST_POSITION, particleWithContext.getPosition()).getClone();
                             particleWithContext.getProperties().put(EntityType.Particle.BEST_FITNESS, particleWithContext.getFitness()).getClone();
                         }
 
-                        if(particleWithContext.getBestFitness().getValue() < contextParticle.getFitness().getValue()) {
+                        if(particleWithContext.getBestFitness().compareTo(contextParticle.getFitness()) > 0) {
                                ((CentroidHolder) contextParticle.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particleWithContext.getCandidateSolution()).get(populationIndex).getClone());
                         }
                         
-                        if(contextParticle.getFitness().getValue() < contextParticle.getBestFitness().getValue()) {
+                        if(contextParticle.getFitness().compareTo(contextParticle.getBestFitness()) > 0) {
                             contextParticle.getProperties().put(EntityType.Particle.BEST_POSITION, contextParticle.getPosition()).getClone();
                             contextParticle.getProperties().put(EntityType.Particle.BEST_FITNESS, contextParticle.getFitness()).getClone();
                         }
@@ -113,6 +113,9 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                 
         }
         
+        contextParticle.getProperties().put(EntityType.CANDIDATE_SOLUTION, contextParticle.getBestPosition()).getClone();
+        contextParticle.getProperties().put(EntityType.FITNESS, contextParticle.getBestFitness()).getClone();
+                            
         MultiSwarm multiswarm = convertCooperativePSOToMultiswarm(algorithm);
         delegate.performIteration(multiswarm);
         convertMultiswarmToCooperative(multiswarm, algorithm);
