@@ -27,7 +27,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
     protected ClusterParticle contextParticle;
     protected boolean contextinitialized;
     protected DataTable table;
-
+    protected boolean elitist;
     /*
      * Default constructor for AbstractCooperativeIterationStrategy
      */
@@ -35,6 +35,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
         contextParticle = new ClusterParticle();
         contextinitialized = false;
         table = new StandardDataTable();
+        elitist = false;
     }
 
     /*
@@ -45,6 +46,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
         contextParticle = copy.contextParticle;
         contextinitialized = copy.contextinitialized;
         table = copy.table;
+        elitist = copy.elitist;
     }
 
     /**
@@ -139,4 +141,13 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
             centroid.clearDataItems();
         }
     }
+
+    public boolean getetIsElitist() {
+        return elitist;
+    }
+
+    public void setIsElitist(Boolean elitist) {
+        this.elitist = elitist; 
+    }
+    
 }

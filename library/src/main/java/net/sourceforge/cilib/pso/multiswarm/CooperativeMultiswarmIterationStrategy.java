@@ -113,8 +113,10 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                 
         }
         
-        contextParticle.getProperties().put(EntityType.CANDIDATE_SOLUTION, contextParticle.getBestPosition()).getClone();
-        contextParticle.getProperties().put(EntityType.FITNESS, contextParticle.getBestFitness()).getClone();
+        if(elitist) {
+            contextParticle.getProperties().put(EntityType.CANDIDATE_SOLUTION, contextParticle.getBestPosition().getClone());
+            contextParticle.getProperties().put(EntityType.FITNESS, contextParticle.getBestFitness().getClone());
+        }
                             
         MultiSwarm multiswarm = convertCooperativePSOToMultiswarm(algorithm);
         delegate.performIteration(multiswarm);
