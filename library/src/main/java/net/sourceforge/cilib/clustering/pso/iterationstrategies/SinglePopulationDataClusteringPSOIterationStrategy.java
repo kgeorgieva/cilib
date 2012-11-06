@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
@@ -22,19 +22,18 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 /**
  *This class holds the methods that are shared by certain clustering iteration strategies
  */
-public abstract class SinglePopulationDataClusteringIterationStrategy extends AbstractIterationStrategy<DataClusteringPSO>{
+public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends AbstractIterationStrategy<DataClusteringPSO>{
     protected DataTable dataset;
     protected EuclideanDistanceMeasure distanceMeasure;
     protected SlidingWindow window;
     protected int reinitialisationInterval;
     protected int dimensions;
     protected boolean reinitialized;
-    protected String fileName;
     
     /*
      * Default constructor for SinglePopulationDataClusteringIterationStrategy
      */
-    public SinglePopulationDataClusteringIterationStrategy() {
+    public SinglePopulationDataClusteringPSOIterationStrategy() {
         dataset = new StandardPatternDataTable();
         reinitialized = false;
         distanceMeasure = new EuclideanDistanceMeasure();
@@ -49,7 +48,7 @@ public abstract class SinglePopulationDataClusteringIterationStrategy extends Ab
      * Copy constructor for SinglePopulationDataClusteringIterationStrategy
      * @param vopy The SinglePopulationDataClusteringIterationStrategy to be copied
      */
-    public SinglePopulationDataClusteringIterationStrategy(SinglePopulationDataClusteringIterationStrategy copy) {
+    public SinglePopulationDataClusteringPSOIterationStrategy(SinglePopulationDataClusteringPSOIterationStrategy copy) {
         dataset = copy.dataset;
         distanceMeasure = copy.distanceMeasure;
         boundaryConstraint = copy.boundaryConstraint;
@@ -63,7 +62,7 @@ public abstract class SinglePopulationDataClusteringIterationStrategy extends Ab
      * Abstract clone method for SinglePopulationDataClusteringIterationStrategy
      */
     @Override
-    public abstract SinglePopulationDataClusteringIterationStrategy getClone();
+    public abstract SinglePopulationDataClusteringPSOIterationStrategy getClone();
 
     /*
      * Abstract method to perform an iteration of the iteration strategy

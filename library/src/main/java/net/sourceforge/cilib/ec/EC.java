@@ -33,11 +33,11 @@ import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingAlgorithm {
 
     private static final long serialVersionUID = -4324446523858690744L;
-    private Problem problem;
+    protected Problem problem;
     private IterationStrategy<EC> iterationStrategy;
-    private Topology<Individual> topology;
-    private InitializationStrategy<Entity> strategyParameterInitialization;
-    private ContributionSelectionStrategy contributionSelection;
+    protected Topology<Individual> topology;
+    protected InitializationStrategy<Entity> strategyParameterInitialization;
+    protected ContributionSelectionStrategy contributionSelection;
 
     /**
      * Create a new instance of {@code EC}.

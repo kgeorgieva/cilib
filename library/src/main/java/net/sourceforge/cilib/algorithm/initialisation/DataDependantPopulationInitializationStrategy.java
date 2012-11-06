@@ -7,6 +7,7 @@
 package net.sourceforge.cilib.algorithm.initialisation;
 
 import java.util.ArrayList;
+import net.sourceforge.cilib.clustering.entity.ClusterEntity;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
@@ -94,20 +95,26 @@ public class DataDependantPopulationInitializationStrategy <E extends Entity> im
      */
     @Override
     public Iterable<E> initialise(Problem problem) {
-        if(((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyCandidate() instanceof StandardCentroidInitializationStrategy) {
-            StandardCentroidInitializationStrategy strategy = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyCandidate();
+        if(((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy() instanceof StandardCentroidInitializationStrategy) {
+            StandardCentroidInitializationStrategy strategy = (StandardCentroidInitializationStrategy) ((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy();
             strategy.setBounds(getBounds());
-            StandardCentroidInitializationStrategy strategy2 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
-            strategy2.setBounds(getBounds());
-            StandardCentroidInitializationStrategy strategy3 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
-            strategy3.setBounds(getBounds());
+            
+            if(prototypeEntity instanceof ClusterParticle) {
+                StandardCentroidInitializationStrategy strategy2 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
+                strategy2.setBounds(getBounds());
+                StandardCentroidInitializationStrategy strategy3 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
+                strategy3.setBounds(getBounds());
+            }
         } else{
-            DataPatternInitializationStrategy strategy = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyCandidate();
+            DataPatternInitializationStrategy strategy = (DataPatternInitializationStrategy) ((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy();
             strategy.setDataset(dataset);
-            DataPatternInitializationStrategy strategy2 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
-            strategy2.setDataset(dataset);
-            DataPatternInitializationStrategy strategy3 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
-            strategy3.setDataset(dataset);
+            
+            if(prototypeEntity instanceof ClusterParticle) {
+                DataPatternInitializationStrategy strategy2 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
+                strategy2.setDataset(dataset);
+                DataPatternInitializationStrategy strategy3 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
+                strategy3.setDataset(dataset);
+            }
         }
 
         delegate.setEntityType(prototypeEntity);
@@ -163,7 +170,6 @@ public class DataDependantPopulationInitializationStrategy <E extends Entity> im
         double minValue;
         double maxValue;
         Vector row;
-        
         for(int j = 0; j < size; j++) {
             minValue = Double.POSITIVE_INFINITY;
             maxValue = Double.NEGATIVE_INFINITY;

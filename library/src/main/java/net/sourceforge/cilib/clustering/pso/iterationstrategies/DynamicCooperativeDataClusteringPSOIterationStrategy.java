@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
@@ -70,7 +70,7 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
                     ((ClusterParticle) topology.get(i)).reinitialise();
                     clearDataPatterns((ClusterParticle) topology.get(i));
                     assignDataPatternsToParticle(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()),
-                            ((SinglePopulationDataClusteringIterationStrategy)(((DataClusteringPSO) currentAlgorithm).getIterationStrategy())).getDataset());
+                            ((SinglePopulationDataClusteringPSOIterationStrategy)(((DataClusteringPSO) currentAlgorithm).getIterationStrategy())).getDataset());
                 }
              }
                

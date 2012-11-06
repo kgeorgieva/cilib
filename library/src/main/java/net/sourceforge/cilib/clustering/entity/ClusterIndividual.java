@@ -1,74 +1,59 @@
-/**           __  __
- *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- *   / ___/ / / / __ \   (c) CIRG @ UP
- *  / /__/ / / / /_/ /   http://cilib.net
- *  \___/_/_/_/_.___/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
-package net.sourceforge.cilib.ec;
+package net.sourceforge.cilib.clustering.entity;
 
-import javax.sound.midi.Sequence;
-import net.sourceforge.cilib.entity.AbstractEntity;
+import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
-import net.sourceforge.cilib.entity.initialization.RandomInitializationStrategy;
-import net.sourceforge.cilib.problem.solution.InferiorFitness;
+import net.sourceforge.cilib.entity.initialization.StandardCentroidInitializationStrategy;
+import net.sourceforge.cilib.problem.ClusteringProblem;
 import net.sourceforge.cilib.problem.Problem;
-import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
-import net.sourceforge.cilib.entity.initialization.RandomInitializationStrategy;
+import net.sourceforge.cilib.problem.solution.Fitness;
+import net.sourceforge.cilib.problem.solution.InferiorFitness;
+import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.StructuredType;
 import net.sourceforge.cilib.type.types.container.Vector;
+import net.sourceforge.cilib.util.calculator.EntityBasedFitnessCalculator;
+
 
 /**
- * Implements the Entity interface. Individual represents entities used within the EC paradigm.
+ *
+ * @author Kris
  */
-public class Individual extends AbstractEntity {
-
-    protected static final long serialVersionUID = -578986147850240655L;
-    protected InitializationStrategy<Individual> initialisationStrategy;
+public class ClusterIndividual extends Individual implements ClusterEntity{
+    private int numberOfClusters;
+    private InitializationStrategy centroidInitialisationStrategy;
     
     /**
      * Create an instance of {@linkplain Individual}.
      */
-    public Individual() {
-        this.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.of());
-        this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
-        initialisationStrategy = new RandomInitializationStrategy<Individual>();
+    public ClusterIndividual() {
+        super();
+        numberOfClusters = 1;
+        centroidInitialisationStrategy = new StandardCentroidInitializationStrategy();
     }
 
     /**
      * Copy constructor. Creates a copy of the given {@linkplain Individual}.
      * @param copy The {@linkplain Individual} to copy.
      */
-    public Individual(Individual copy) {
+    public ClusterIndividual(ClusterIndividual copy) {
         super(copy);
-        initialisationStrategy = copy.initialisationStrategy;
+        numberOfClusters = copy.numberOfClusters;
+        centroidInitialisationStrategy = copy.centroidInitialisationStrategy.getClone();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Individual getClone() {
-        return new Individual(this);
+    public ClusterIndividual getClone() {
+        return new ClusterIndividual(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-
-        if ((object == null) || (this.getClass() != object.getClass())) {
-            return false;
-        }
-
-        Individual other = (Individual) object;
-        return super.equals(other);
-    }
 
     /**
      * {@inheritDoc}
@@ -92,17 +77,20 @@ public class Individual extends AbstractEntity {
      */
     @Override
     public void initialise(Problem problem) {
-        // ID initialization is done in the clone method...
-        // which is always enforced due to the semantics of the performInitialisation methods
-        this.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.newBuilder().copyOf(problem.getDomain().getBuiltRepresentation()).build());
-
+        numberOfClusters = ((ClusteringProblem) problem).getNumberOfClusters();
         
-        this.initialisationStrategy.initialize(EntityType.CANDIDATE_SOLUTION, this);
+        this.getProperties().put(EntityType.CANDIDATE_SOLUTION, new CentroidHolder(numberOfClusters, problem.getDomain().getDimension()));
+        
+        if(centroidInitialisationStrategy instanceof StandardCentroidInitializationStrategy)
+            ((StandardCentroidInitializationStrategy) centroidInitialisationStrategy).setInitialisationStrategy(super.initialisationStrategy);
+        
+        centroidInitialisationStrategy.initialize(EntityType.CANDIDATE_SOLUTION, this);
         
         Vector strategy = Vector.fill(0.0, this.getCandidateSolution().size());
         
         this.getProperties().put(EntityType.STRATEGY_PARAMETERS, strategy);
-        this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
+        this.getProperties().put(EntityType.FITNESS, net.sourceforge.cilib.problem.solution.InferiorFitness.instance());
+        
     }
 
     /**
@@ -126,7 +114,9 @@ public class Individual extends AbstractEntity {
      */
     @Override
     public void calculateFitness() {
-        this.getProperties().put(EntityType.FITNESS, this.getFitnessCalculator().getFitness(this));
+        EntityBasedFitnessCalculator f = new EntityBasedFitnessCalculator();
+        Fitness fitness = f.getFitness(this);
+        this.getProperties().put(EntityType.FITNESS, fitness);
     }
 
     /**
@@ -158,12 +148,22 @@ public class Individual extends AbstractEntity {
     public void reinitialise() {
         throw new UnsupportedOperationException("Implementation is required for this method");
     }
-    
-    public InitializationStrategy getInitialisationStrategy() {
-        return initialisationStrategy;
+
+    public int getNumberOfClusters() {
+        return numberOfClusters;
+    }
+
+    public void setNumberOfClusters(int numberOfClusters) {
+        this.numberOfClusters = numberOfClusters;
+    }
+
+    public InitializationStrategy getCentroidInitialisationStrategy() {
+        return centroidInitialisationStrategy;
+    }
+
+    public void setCentroidInitialisationStrategy(InitializationStrategy centroidInitialisationStrategy) {
+        this.centroidInitialisationStrategy = centroidInitialisationStrategy;
     }
     
-    public void setInitializationStrategy(InitializationStrategy strategy) {
-        initialisationStrategy = strategy;
-    }
+    
 }

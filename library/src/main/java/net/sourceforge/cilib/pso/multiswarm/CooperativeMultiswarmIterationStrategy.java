@@ -12,7 +12,7 @@ import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.iterationstrategies.SinglePopulationDataClusteringIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
 import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 
@@ -62,7 +62,7 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
         int populationIndex = 0;
         
         for(PopulationBasedAlgorithm currentAlgorithm : algorithm.getPopulations()) {
-                table = ((SinglePopulationDataClusteringIterationStrategy) ((DataClusteringPSO) currentAlgorithm).getIterationStrategy()).getDataset();
+                table = ((SinglePopulationDataClusteringPSOIterationStrategy) ((DataClusteringPSO) currentAlgorithm).getIterationStrategy()).getDataset();
 
                 if(!contextinitialized) {
                     ((DataClusteringPSO) currentAlgorithm).setIsExplorer(true);

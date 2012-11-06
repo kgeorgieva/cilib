@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import net.sourceforge.cilib.algorithm.population.AbstractCooperativeIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
@@ -69,7 +69,7 @@ public class CooperativeDataClusteringPSOIterationStrategy extends AbstractCoope
         
         for(PopulationBasedAlgorithm currentAlgorithm : algorithm.getPopulations()) {
               
-            table = ((SinglePopulationDataClusteringIterationStrategy) ((DataClusteringPSO) currentAlgorithm).getIterationStrategy()).getDataset();
+            table = ((SinglePopulationDataClusteringPSOIterationStrategy) ((DataClusteringPSO) currentAlgorithm).getIterationStrategy()).getDataset();
             
             if(!contextinitialized) {
                 initializeContextParticle(algorithm);

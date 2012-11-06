@@ -11,7 +11,7 @@ import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.iterationstrategies.SinglePopulationDataClusteringIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
@@ -221,7 +221,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
         for(ClusterParticle particle : algorithm.getTopology()) {
             particle.reinitialise();
             assignDataPatternsToParticle((CentroidHolder) particle.getCandidateSolution(), 
-                    ((SinglePopulationDataClusteringIterationStrategy) algorithm.getIterationStrategy()).getWindow().getCurrentDataset());
+                    ((SinglePopulationDataClusteringPSOIterationStrategy) algorithm.getIterationStrategy()).getWindow().getCurrentDataset());
         }
     }
     

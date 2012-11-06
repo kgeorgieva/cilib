@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
@@ -21,14 +21,14 @@ import net.sourceforge.cilib.type.types.container.CentroidHolder;
  * if any changes have occurred in the dataset. If changes have occurred, part of the population 
  * (or the whole population) is re-initialized.
  */
-public class ReinitializingDataClusteringIterationStrategy extends SinglePopulationDataClusteringIterationStrategy{
-    private SinglePopulationDataClusteringIterationStrategy delegate;
+public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopulationDataClusteringPSOIterationStrategy{
+    private SinglePopulationDataClusteringPSOIterationStrategy delegate;
     ChangeDetectionStrategy changeDetectionStrategy;
     
     /*
      * Default constructor for ReinitializingDataClusteringIterationStrategy
      */
-    public ReinitializingDataClusteringIterationStrategy() {
+    public ReinitializingDataClusteringPSOIterationStrategy() {
         super();
         delegate = new StandardDataClusteringIterationStrategy();
         changeDetectionStrategy = new IterationBasedChangeDetectionStrategy();
@@ -37,7 +37,7 @@ public class ReinitializingDataClusteringIterationStrategy extends SinglePopulat
     /*
      * Copy constructor for ReinitializingDataClusteringIterationStrategy
      */
-    public ReinitializingDataClusteringIterationStrategy(ReinitializingDataClusteringIterationStrategy copy) {
+    public ReinitializingDataClusteringPSOIterationStrategy(ReinitializingDataClusteringPSOIterationStrategy copy) {
         super(copy);
         delegate = copy.delegate;
         changeDetectionStrategy = copy.changeDetectionStrategy;
@@ -47,8 +47,8 @@ public class ReinitializingDataClusteringIterationStrategy extends SinglePopulat
      * Clone method for ReinitializingDataClusteringIterationStrategy
      */
     @Override
-    public ReinitializingDataClusteringIterationStrategy getClone() {
-        return new ReinitializingDataClusteringIterationStrategy(this);
+    public ReinitializingDataClusteringPSOIterationStrategy getClone() {
+        return new ReinitializingDataClusteringPSOIterationStrategy(this);
     }
 
     /*
@@ -72,7 +72,7 @@ public class ReinitializingDataClusteringIterationStrategy extends SinglePopulat
      * Returns the delegate iteration strategy
      * @return delegate The delegate iteration strategy
      */
-    public SinglePopulationDataClusteringIterationStrategy getDelegate() {
+    public SinglePopulationDataClusteringPSOIterationStrategy getDelegate() {
         return delegate;
     }
     
@@ -80,7 +80,7 @@ public class ReinitializingDataClusteringIterationStrategy extends SinglePopulat
      * Sets teh delegate iteration strategy to the one received as a parameter
      * @param newDelegate The new delegate iteration strategy
      */
-    public void setDelegate(SinglePopulationDataClusteringIterationStrategy newDelegate){
+    public void setDelegate(SinglePopulationDataClusteringPSOIterationStrategy newDelegate){
         delegate = newDelegate;
     }
     

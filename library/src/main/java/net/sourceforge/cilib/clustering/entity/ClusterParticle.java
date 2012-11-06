@@ -26,7 +26,7 @@ import net.sourceforge.cilib.util.calculator.EntityBasedFitnessCalculator;
 /**
  * This is an entity developed to deal with CentroidHolders
  */
-public class ClusterParticle extends AbstractParticle{
+public class ClusterParticle extends AbstractParticle implements ClusterEntity{
 
     private ClusterParticle neighbourhoodBest;
     private int numberOfClusters;
@@ -315,6 +315,18 @@ public class ClusterParticle extends AbstractParticle{
      */
     public InitializationStrategy getCentroidInitializationStrategyBest() {
         return centroidInitialisationStrategyBest;
+    }
+
+    public int getNumberOfClusters() {
+        return numberOfClusters;
+    }
+
+    public void setNumberOfClusters(int numberOfClusters) {
+        this.numberOfClusters = numberOfClusters;
+    }
+
+    public InitializationStrategy getCentroidInitialisationStrategy() {
+        return centroidInitialisationStrategyCandidate;
     }
 
 

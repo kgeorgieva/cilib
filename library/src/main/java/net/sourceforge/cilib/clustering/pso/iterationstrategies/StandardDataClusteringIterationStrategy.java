@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import java.util.Iterator;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
@@ -30,7 +30,7 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * 
  * 
  */
-public class StandardDataClusteringIterationStrategy extends SinglePopulationDataClusteringIterationStrategy {
+public class StandardDataClusteringIterationStrategy extends SinglePopulationDataClusteringPSOIterationStrategy {
     /*
      * Default constructor for StandardDataClusteringIterationStrategy
      */

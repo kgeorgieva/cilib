@@ -12,8 +12,8 @@ import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationIni
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.iterationstrategies.SinglePopulationDataClusteringIterationStrategy;
-import net.sourceforge.cilib.clustering.iterationstrategies.StandardDataClusteringIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.coevolution.cooperative.ParticipatingAlgorithm;
 import net.sourceforge.cilib.coevolution.cooperative.contributionselection.ContributionSelectionStrategy;
 import net.sourceforge.cilib.coevolution.cooperative.contributionselection.ZeroContributionSelectionStrategy;
@@ -51,7 +51,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
     IterationStrategy<DataClusteringPSO> iterationStrategy;
     private ContributionSelectionStrategy contributionSelection;
     private boolean isExplorer;
-    private int numberOfCentroids;
 
     /*
      * Default Constructor for DataClusteringPSO
@@ -64,7 +63,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         window = new SlidingWindow();
         iterationStrategy = new StandardDataClusteringIterationStrategy();
         isExplorer = false;
-        numberOfCentroids = 1;
     }
 
     /*
@@ -79,7 +77,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         iterationStrategy = copy.iterationStrategy;
         contributionSelection = copy.contributionSelection;
         isExplorer = copy.isExplorer;
-        numberOfCentroids = copy.numberOfCentroids;
     }
 
     /*
@@ -134,7 +131,7 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         topology.clear();
         topology.addAll(Lists.<ClusterParticle>newLinkedList(particles));
 
-        ((SinglePopulationDataClusteringIterationStrategy) iterationStrategy).setWindow(window);
+        ((SinglePopulationDataClusteringPSOIterationStrategy) iterationStrategy).setWindow(window);
     }
 
     /*

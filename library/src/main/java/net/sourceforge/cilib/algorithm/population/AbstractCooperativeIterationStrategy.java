@@ -71,6 +71,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
         Vector addedPattern;
         DistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
         int patternIndex;
+        int centroidIndex;
         
         for(int i = 0; i < dataset.size(); i++) {
                 euclideanDistance = Double.POSITIVE_INFINITY;
