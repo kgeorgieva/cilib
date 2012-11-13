@@ -4,34 +4,31 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import junit.framework.Assert;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
-import net.sourceforge.cilib.clustering.CooperativePSO;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.measurement.generic.Iterations;
 import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
 import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstraint;
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
-import net.sourceforge.cilib.stoppingcondition.Maximum;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
 import org.junit.Test;
 
-public class DynamicCooperativeDataClusteringPSOIterationStrategyTest {
+public class ReinitializingDataClusteringIterationStrategyTest {
     
     /**
-     * Test of performIteration method, of class DynamicCooperativeDataClusteringPSOIterationStrategy.
+     * Test of algorithmIteration method, of class ReinitializingDataClusteringIterationStrategy.
      */
     @Test
-    public void testPerformIteration() {
+    public void testAlgorithmIteration() {
         DataClusteringPSO instance = new DataClusteringPSO();
         
         QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
         problem.setDomain("R(-5.12:5.12)");
-        IterationStrategy strategy = new StandardDataClusteringIterationStrategy();
+        IterationStrategy strategy = new ReinitializingDataClusteringPSOIterationStrategy();
         CentroidBoundaryConstraint constraint = new CentroidBoundaryConstraint();
         constraint.setDelegate(new RandomBoundaryConstraint());
         strategy.setBoundaryConstraint(constraint);
@@ -47,19 +44,38 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategyTest {
         instance.setOptimisationProblem(problem);
         instance.addStoppingCondition(new MeasuredStoppingCondition());
         
-        CooperativePSO cooperative = new CooperativePSO();
-        cooperative.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 30));
-        cooperative.addPopulationBasedAlgorithm(instance);
-        cooperative.setOptimisationProblem(problem);
-        
-        cooperative.performInitialisation();
+        instance.performInitialisation();
         
         ClusterParticle particleBefore = instance.getTopology().get(0).getClone();
         
-        cooperative.run();
+        instance.run();
         
         ClusterParticle particleAfter = instance.getTopology().get(0).getClone();
         
         Assert.assertFalse(particleAfter.getCandidateSolution().containsAll(particleBefore.getCandidateSolution()));
+    }
+    
+    /**
+     * Test of getDelegate method, of class ReinitializingDataClusteringIterationStrategy.
+     */
+    @Test
+    public void testGetDelegate() {
+        ReinitializingDataClusteringPSOIterationStrategy instance = new ReinitializingDataClusteringPSOIterationStrategy();
+        StandardDataClusteringIterationStrategy strategy = new StandardDataClusteringIterationStrategy();
+        instance.setDelegate(strategy);
+        
+        Assert.assertEquals(strategy, instance.getDelegate());
+    }
+
+    /**
+     * Test of setDelegate method, of class ReinitializingDataClusteringIterationStrategy.
+     */
+    @Test
+    public void testSetDelegate() {
+        ReinitializingDataClusteringPSOIterationStrategy instance = new ReinitializingDataClusteringPSOIterationStrategy();
+        StandardDataClusteringIterationStrategy strategy = new StandardDataClusteringIterationStrategy();
+        instance.setDelegate(strategy);
+        
+        Assert.assertEquals(strategy, instance.getDelegate());
     }
 }

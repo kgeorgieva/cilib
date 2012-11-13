@@ -11,8 +11,8 @@ import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationIni
 import net.sourceforge.cilib.algorithm.initialisation.PopulationInitialisationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.iterationstrategies.SinglePopulationDataClusteringIterationStrategy;
-import net.sourceforge.cilib.clustering.iterationstrategies.StandardDataClusteringIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.coevolution.cooperative.contributionselection.TopologyBestContributionSelectionStrategy;
 import net.sourceforge.cilib.entity.Particle;
 import net.sourceforge.cilib.entity.Topology;
@@ -39,7 +39,7 @@ public class DataClusteringPSOTest {
         
         QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
         problem.setDomain("R(-5.12:5.12)");
-        IterationStrategy strategy = new StandardDataClusteringIterationStrategy();
+        StandardDataClusteringIterationStrategy strategy = new StandardDataClusteringIterationStrategy();
         CentroidBoundaryConstraint constraint = new CentroidBoundaryConstraint();
         constraint.setDelegate(new RandomBoundaryConstraint());
         strategy.setBoundaryConstraint(constraint);
@@ -120,7 +120,7 @@ public class DataClusteringPSOTest {
         instance.setSourceURL("library/src/test/resources/datasets/iris2.arff");
         instance.performInitialisation();
         
-        Assert.assertTrue(((SinglePopulationDataClusteringIterationStrategy) instance.getIterationStrategy()).getDataset().size() > 0);
+        Assert.assertTrue(((SinglePopulationDataClusteringPSOIterationStrategy) instance.getIterationStrategy()).getDataset().size() > 0);
         Assert.assertTrue(!instance.getTopology().isEmpty());
     }
 

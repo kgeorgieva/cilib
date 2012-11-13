@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import junit.framework.Assert;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
@@ -15,6 +15,13 @@ import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
 import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstraint;
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
+import net.sourceforge.cilib.type.types.container.CentroidHolder;
+import net.sourceforge.cilib.type.types.container.ClusterCentroid;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class StandardDataClusteringIterationStrategyTest {

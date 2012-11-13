@@ -12,8 +12,8 @@ import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.entity.Entity;
+import net.sourceforge.cilib.entity.initialization.DataDependantInitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.StandardCentroidInitializationStrategy;
-import net.sourceforge.cilib.entity.initialization.DataPatternInitializationStrategy;
 import net.sourceforge.cilib.io.ARFFFileReader;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.DataTableBuilder;
@@ -95,28 +95,19 @@ public class DataDependantPopulationInitializationStrategy <E extends Entity> im
      */
     @Override
     public Iterable<E> initialise(Problem problem) {
-        if(((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy() instanceof StandardCentroidInitializationStrategy) {
-            StandardCentroidInitializationStrategy strategy = (StandardCentroidInitializationStrategy) ((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy();
+            DataDependantInitializationStrategy strategy = (DataDependantInitializationStrategy) ((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy();
             strategy.setBounds(getBounds());
+            strategy.setDataset(dataset);
             
             if(prototypeEntity instanceof ClusterParticle) {
                 StandardCentroidInitializationStrategy strategy2 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
                 strategy2.setBounds(getBounds());
+                strategy2.setDataset(dataset);
                 StandardCentroidInitializationStrategy strategy3 = (StandardCentroidInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
                 strategy3.setBounds(getBounds());
-            }
-        } else{
-            DataPatternInitializationStrategy strategy = (DataPatternInitializationStrategy) ((ClusterEntity) prototypeEntity).getCentroidInitialisationStrategy();
-            strategy.setDataset(dataset);
-            
-            if(prototypeEntity instanceof ClusterParticle) {
-                DataPatternInitializationStrategy strategy2 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyVelocity();
-                strategy2.setDataset(dataset);
-                DataPatternInitializationStrategy strategy3 = (DataPatternInitializationStrategy) ((ClusterParticle) prototypeEntity).getCentroidInitializationStrategyBest();
                 strategy3.setDataset(dataset);
             }
-        }
-
+        
         delegate.setEntityType(prototypeEntity);
         delegate.setEntityNumber(entityNumber);
         return delegate.initialise(problem);

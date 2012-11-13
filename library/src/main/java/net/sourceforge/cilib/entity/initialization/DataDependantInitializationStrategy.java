@@ -61,4 +61,21 @@ public abstract class DataDependantInitializationStrategy <E extends Entity> imp
         return tableBuilder;
     }
     
+    /*
+     * Sets the dataset that will be used to initialize the entity
+     * @param table The dataset that will be used to initialize the entity
+     */
+    public void setDataset(DataTable table) {
+        dataset = table;
+    }
+  
+    /*
+     * Returns the dataset that was used to initialize the entity
+     * @return dataset The dataset that was used to initialize the entity
+     */
+    public DataTable getDataset() {
+        return dataset;
+    }
+    
+    public abstract void reinitialize(Enum<?> key, E entity);
 }

@@ -12,8 +12,13 @@ import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationIni
 import net.sourceforge.cilib.algorithm.initialisation.PopulationInitialisationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.iterationstrategies.SinglePopulationDataClusteringIterationStrategy;
-import net.sourceforge.cilib.clustering.iterationstrategies.StandardDataClusteringIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.measurement.generic.Iterations;
+import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
+import net.sourceforge.cilib.stoppingcondition.Maximum;
+import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
+import net.sourceforge.cilib.algorithm.population.IterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.measurement.generic.Iterations;
 import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
@@ -211,7 +216,7 @@ public class CooperativePSOTest {
         CooperativePSO instance = new CooperativePSO();
         instance.addPopulationBasedAlgorithm(standard);
         
-        Assert.assertTrue(((SinglePopulationDataClusteringIterationStrategy)((DataClusteringPSO) instance.getPopulations().get(0)).getIterationStrategy()).getDataset().size() > 0);
+        Assert.assertTrue(((SinglePopulationDataClusteringPSOIterationStrategy)((DataClusteringPSO) instance.getPopulations().get(0)).getIterationStrategy()).getDataset().size() > 0);
         Assert.assertTrue(!instance.getPopulations().isEmpty());
         Assert.assertTrue(!instance.getPopulations().get(0).getTopology().isEmpty());
     }

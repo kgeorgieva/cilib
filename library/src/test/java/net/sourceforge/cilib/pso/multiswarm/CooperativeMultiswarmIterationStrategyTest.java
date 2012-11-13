@@ -19,6 +19,13 @@ import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstrai
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.Maximum;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
+import net.sourceforge.cilib.algorithm.population.IterationStrategy;
+import net.sourceforge.cilib.clustering.CooperativePSO;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.CooperativeDataClusteringPSOIterationStrategy;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CooperativeMultiswarmIterationStrategyTest {

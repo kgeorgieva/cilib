@@ -20,7 +20,8 @@ import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstrai
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.Maximum;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
-import net.sourceforge.cilib.type.types.container.CentroidHolder;
+import net.sourceforge.cilib.clustering.SlidingWindow;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
 import static org.junit.Assert.*;

@@ -67,26 +67,9 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
         
         for(ClusterIndividual individual : topology) {
             CentroidHolder candidateSolution = (CentroidHolder) individual.getCandidateSolution();
-            for(int i = 0; i < dataset.size(); i++) {
-                euclideanDistance = Double.POSITIVE_INFINITY;
-                addedPattern = Vector.of();
-                pattern = ((StandardPattern) dataset.getRow(i)).getVector();
-                int centroidIndex = 0;
-                int patternIndex = 0;
-                for(ClusterCentroid centroid : candidateSolution) {
-                    if(distanceMeasure.distance(centroid.toVector(), pattern) < euclideanDistance) {
-                        euclideanDistance = distanceMeasure.distance(centroid.toVector(), pattern);
-                        addedPattern = Vector.copyOf(pattern);
-                        patternIndex = centroidIndex;
-                    }
-                    centroidIndex++;
-                }
-                
-                candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
-            }
             
+            assignDataPatternsToIndividual(candidateSolution, dataset);
             individual.setCandidateSolution(candidateSolution);
-            
             individual.calculateFitness();
             
             ClusterIndividual targetEntity = (ClusterIndividual) targetVectorSelectionStrategy.on(topology).exclude(individual).select();
@@ -96,17 +79,15 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
             ClusterIndividual offspring = getOffspring(individual, trialEntity);
             
             boundaryConstraint.enforce(offspring);
+            assignDataPatternsToIndividual((CentroidHolder) offspring.getCandidateSolution(), dataset);
             offspring.calculateFitness();
             
-            System.out.println("Offsping: " + offspring.getCandidateSolution());
-            System.out.println("Fitnes: " + offspring.getFitness());
             if (offspring.getFitness().compareTo(individual.getFitness()) > 0) { // the trial vector is better than the parent
                 topology.set(index, offspring); // Replace the parent with the offspring individual
             }
             
             index++;
         }
-        System.out.println("-----------------------------------------");
         
         dataset = window.slideWindow();
         

@@ -84,7 +84,7 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
                         particleWithContext.setNeighbourhoodBest(contextParticle);
                         ((CentroidHolder) particleWithContext.getCandidateSolution()).set(populationIndex, ((CentroidHolder) particle.getCandidateSolution()).get(populationIndex).getClone());
                         particleWithContext.getProperties().put(EntityType.Particle.Count.PBEST_STAGNATION_COUNTER, particle.getProperties().get(EntityType.Particle.Count.PBEST_STAGNATION_COUNTER).getClone());
-                        particleWithContext.setCentroidInitialisationStrategy(particle.getCentroidInitializationStrategyCandidate().getClone());
+                        particleWithContext.setCentroidInitialisationStrategy(particle.getCentroidInitializationStrategyCandidate());
 
                         clearDataPatterns(particleWithContext);
                         assignDataPatternsToParticle((CentroidHolder) particleWithContext.getCandidateSolution(), table);

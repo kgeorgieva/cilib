@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
 import junit.framework.Assert;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
@@ -18,6 +18,13 @@ import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
 import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstraint;
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
+import net.sourceforge.cilib.io.pattern.StandardPattern;
+import net.sourceforge.cilib.type.types.container.Vector;
+import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
+import junit.framework.Assert;
+import net.sourceforge.cilib.clustering.SlidingWindow;
+import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
@@ -64,11 +71,11 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
     }
 
     /**
-     * Test of getDistanceMeasure method, of class SinglePopulationDataClusteringIterationStrategy.
+     * Test of getDistanceMeasure method, of class SinglePopulationDataClusteringPSOIterationStrategy.
      */
     @Test
     public void testGetDistanceMeasure() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         Assert.assertTrue(instance.getDistanceMeasure() instanceof EuclideanDistanceMeasure);
     }
 
@@ -77,7 +84,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testGetDataset() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         SlidingWindow window = new SlidingWindow();
         window.setSourceURL("library/src/test/resources/datasets/iris2.arff");
         window.setWindowSize(1);
@@ -97,7 +104,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testSetReinitialisationInterval() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         instance.setReinitialisationInterval(2);
         
         assertEquals(instance.getReinitialisationInterval(), 2);
@@ -107,7 +114,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testGetReinitialisationInterval() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         instance.setReinitialisationInterval(2);
         
         assertEquals(instance.getReinitialisationInterval(), 2);
@@ -118,7 +125,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testSetDimensions() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         instance.setDimensions(2);
         
         assertEquals(instance.dimensions, 2);
@@ -129,7 +136,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testSetWindow() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         SlidingWindow window = new SlidingWindow();
         window.setSourceURL("library/src/test/resources/datasets/iris2.arff");
         window.setWindowSize(1);
@@ -143,7 +150,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testGetWindow() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         SlidingWindow window = new SlidingWindow();
         window.setSourceURL("library/src/test/resources/datasets/iris2.arff");
         window.setWindowSize(1);
@@ -157,7 +164,7 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
      */
     @Test
     public void testAssignDataPatternsToParticle() {
-        SinglePopulationDataClusteringIterationStrategy instance = new StandardDataClusteringIterationStrategy();
+        SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
         CentroidHolder candidateSolution = new CentroidHolder();
         SlidingWindow window = new SlidingWindow();
         window.setSourceURL("library/src/test/resources/datasets/iris2.arff");

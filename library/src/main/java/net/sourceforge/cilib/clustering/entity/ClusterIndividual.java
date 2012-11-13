@@ -7,6 +7,7 @@ package net.sourceforge.cilib.clustering.entity;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
+import net.sourceforge.cilib.entity.initialization.DataDependantInitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.StandardCentroidInitializationStrategy;
 import net.sourceforge.cilib.problem.ClusteringProblem;
@@ -25,7 +26,7 @@ import net.sourceforge.cilib.util.calculator.EntityBasedFitnessCalculator;
  */
 public class ClusterIndividual extends Individual implements ClusterEntity{
     private int numberOfClusters;
-    private InitializationStrategy centroidInitialisationStrategy;
+    private DataDependantInitializationStrategy centroidInitialisationStrategy;
     
     /**
      * Create an instance of {@linkplain Individual}.
@@ -43,7 +44,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     public ClusterIndividual(ClusterIndividual copy) {
         super(copy);
         numberOfClusters = copy.numberOfClusters;
-        centroidInitialisationStrategy = copy.centroidInitialisationStrategy.getClone();
+        centroidInitialisationStrategy = copy.centroidInitialisationStrategy;
     }
 
     /**
@@ -81,8 +82,8 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
         
         this.getProperties().put(EntityType.CANDIDATE_SOLUTION, new CentroidHolder(numberOfClusters, problem.getDomain().getDimension()));
         
-        if(centroidInitialisationStrategy instanceof StandardCentroidInitializationStrategy)
-            ((StandardCentroidInitializationStrategy) centroidInitialisationStrategy).setInitialisationStrategy(super.initialisationStrategy);
+        //if(centroidInitialisationStrategy instanceof StandardCentroidInitializationStrategy)
+        centroidInitialisationStrategy.setInitialisationStrategy(super.initialisationStrategy);
         
         centroidInitialisationStrategy.initialize(EntityType.CANDIDATE_SOLUTION, this);
         
@@ -157,11 +158,11 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
         this.numberOfClusters = numberOfClusters;
     }
 
-    public InitializationStrategy getCentroidInitialisationStrategy() {
+    public DataDependantInitializationStrategy getCentroidInitialisationStrategy() {
         return centroidInitialisationStrategy;
     }
 
-    public void setCentroidInitialisationStrategy(InitializationStrategy centroidInitialisationStrategy) {
+    public void setCentroidInitialisationStrategy(DataDependantInitializationStrategy centroidInitialisationStrategy) {
         this.centroidInitialisationStrategy = centroidInitialisationStrategy;
     }
     

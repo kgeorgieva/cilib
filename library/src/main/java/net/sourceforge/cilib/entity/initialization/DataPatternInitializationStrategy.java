@@ -74,20 +74,10 @@ public class DataPatternInitializationStrategy <E extends Entity> extends DataDe
         }
         entity.getProperties().put(key, holder);
     }
+
+    @Override
+    public void reinitialize(Enum<?> key, E entity) {
+        initialize(key, entity);
+    }
     
-    /*
-     * Sets the dataset that will be used to initialize the entity
-     * @param table The dataset that will be used to initialize the entity
-     */
-    public void setDataset(DataTable table) {
-        dataset = table;
-    }
-  
-    /*
-     * Returns the dataset that was used to initialize the entity
-     * @return dataset The dataset that was used to initialize the entity
-     */
-    public DataTable getDataset() {
-        return dataset;
-    }
 }

@@ -5,6 +5,7 @@
 package net.sourceforge.cilib.clustering.entity;
 
 import net.sourceforge.cilib.entity.Entity;
+import net.sourceforge.cilib.entity.initialization.DataDependantInitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
 
 /**
@@ -16,8 +17,8 @@ public interface ClusterEntity extends Entity{
 
     public void setNumberOfClusters(int numberOfClusters);
     
-    public InitializationStrategy getCentroidInitialisationStrategy();
+    public DataDependantInitializationStrategy getCentroidInitialisationStrategy();
 
-    public void setCentroidInitialisationStrategy(InitializationStrategy centroidInitialisationStrategy);
+    public void setCentroidInitialisationStrategy(DataDependantInitializationStrategy centroidInitialisationStrategy);
     
 }

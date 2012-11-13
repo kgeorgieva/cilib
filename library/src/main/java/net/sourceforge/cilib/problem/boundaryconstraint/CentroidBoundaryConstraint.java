@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.problem.boundaryconstraint;
 
+import net.sourceforge.cilib.clustering.entity.ClusterEntity;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
