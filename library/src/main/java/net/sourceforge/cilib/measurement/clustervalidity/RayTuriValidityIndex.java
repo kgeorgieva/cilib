@@ -76,14 +76,10 @@ public class RayTuriValidityIndex extends ValidityIndex {
      */
     protected double getInterClusterDistance(CentroidHolder centroidHolder) {
         double minimum = Double.POSITIVE_INFINITY;
-        CentroidHolder centroidHolder2;
         double distance;
-        for(ClusterCentroid centroid : centroidHolder) {
-            centroidHolder2 = centroidHolder.getClone();
-            centroidHolder2.remove(centroid);
-            
-            for(ClusterCentroid centroid2 : centroidHolder2) {
-                distance = distanceMeasure.distance(centroid.toVector(), centroid2.toVector());
+        for(int k = 0; k < centroidHolder.size() - 1; k++) {
+            for(int j = k + 1; j < centroidHolder.size(); j++) {
+                distance = distanceMeasure.distance(centroidHolder.get(k).toVector(), centroidHolder.get(j).toVector());
                 if(distance < minimum) {
                     minimum = distance;
                 }

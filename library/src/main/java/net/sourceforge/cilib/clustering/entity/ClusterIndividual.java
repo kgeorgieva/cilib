@@ -78,6 +78,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
      */
     @Override
     public void initialise(Problem problem) {
+        
         numberOfClusters = ((ClusteringProblem) problem).getNumberOfClusters();
         
         this.getProperties().put(EntityType.CANDIDATE_SOLUTION, new CentroidHolder(numberOfClusters, problem.getDomain().getDimension()));

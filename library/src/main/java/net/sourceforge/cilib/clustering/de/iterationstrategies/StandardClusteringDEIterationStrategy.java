@@ -14,6 +14,7 @@ import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
+import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.entity.operators.creation.CreationStrategy;
 import net.sourceforge.cilib.entity.operators.creation.RandCreationStrategy;
@@ -93,7 +94,7 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
         
     }
     
-    public ClusterIndividual getTrialEntity(ClusterIndividual targetEntity, ClusterIndividual current, Topology<ClusterIndividual> topology) {
+    protected ClusterIndividual getTrialEntity(ClusterIndividual targetEntity, ClusterIndividual current, Topology<ClusterIndividual> topology) {
         Entity trialEntity;
         CentroidHolder holder = new CentroidHolder();
         Individual tempTarget;
@@ -107,6 +108,7 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
             for(ClusterIndividual cindiv : topology) {
                 tempIndiv = new Individual();
                 tempIndiv.setCandidateSolution(((CentroidHolder) cindiv.getCandidateSolution()).get(index).toVector());
+                tempIndiv.getProperties().put(EntityType.FITNESS, cindiv.getFitness());
                 tempTopology.add(tempIndiv.getClone());
             }
             
@@ -128,7 +130,7 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
         return trialIndividual;
     }
     
-    public ClusterIndividual getOffspring(ClusterIndividual current, ClusterIndividual trialEntity) {
+    protected ClusterIndividual getOffspring(ClusterIndividual current, ClusterIndividual trialEntity) {
         CentroidHolder holder = new CentroidHolder();
         List<Entity> centroidOffspring;
         Entity currentCentroid;

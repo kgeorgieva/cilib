@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
+import net.sourceforge.cilib.clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.coevolution.cooperative.contributionselection.ZeroContributionSelectionStrategy;
@@ -35,6 +36,7 @@ public class DataClusteringEC extends EC{
         initialisationStrategy = new DataDependantPopulationInitializationStrategy<ClusterParticle>();
         window = new SlidingWindow();
         isExplorer = false;
+        iterationStrategy = new StandardClusteringDEIterationStrategy();
     }
     
     public DataClusteringEC(DataClusteringEC copy) {
@@ -42,6 +44,7 @@ public class DataClusteringEC extends EC{
         initialisationStrategy = copy.initialisationStrategy;
         window = copy.window;
         isExplorer = copy.isExplorer;
+        iterationStrategy = copy.iterationStrategy;
     }
     
     /**
@@ -66,6 +69,7 @@ public class DataClusteringEC extends EC{
         super.topology.addAll(Lists.<ClusterIndividual>newLinkedList(individuals));
 
         ((SinglePopulationDataClusteringDEIterationStrategy) iterationStrategy).setWindow(window);
+        
     }
     
     @Override
@@ -75,10 +79,6 @@ public class DataClusteringEC extends EC{
 
     public SlidingWindow getWindow() {
         return window;
-    }
-
-    public boolean isIsExplorer() {
-        return isExplorer;
     }
 
     public void setIsExplorer(boolean isExplorer) {

@@ -118,6 +118,7 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
 
     public void setWindow(SlidingWindow window) {
         this.window = window;
+        dataset = window.getCurrentDataset();
     }
 
     public int getReinitialisationInterval() {
