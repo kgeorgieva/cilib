@@ -148,7 +148,9 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
      */
     @Override
     public void reinitialise() {
-        throw new UnsupportedOperationException("Implementation is required for this method");
+        this.centroidInitialisationStrategy.reinitialize(EntityType.CANDIDATE_SOLUTION, this);
+        
+        this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
     }
 
     public int getNumberOfClusters() {

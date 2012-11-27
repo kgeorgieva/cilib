@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.pso.multiswarm;
 
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
@@ -87,7 +88,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
         double dimensions = algorithm.getOptimisationProblem().getDomain().getDimension();
         double X = ((Vector) algorithm.getOptimisationProblem().getDomain().getBuiltRepresentation()).get(0).getBounds().getUpperBound()
                 - ((Vector) algorithm.getOptimisationProblem().getDomain().getBuiltRepresentation()).get(0).getBounds().getLowerBound();
-        double populationSize = ((MultiSwarm) algorithm).getPopulations().size();
+        double populationSize = ((StandardMultipopulationAlgorithm) algorithm).getPopulations().size();
         return X / (2 * Math.pow(populationSize, 1 / dimensions));
     }
 

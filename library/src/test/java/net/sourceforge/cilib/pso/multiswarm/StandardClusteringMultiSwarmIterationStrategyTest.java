@@ -24,6 +24,18 @@ import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
+import junit.framework.Assert;
+import net.sourceforge.cilib.clustering.DataClusteringPSO;
+import net.sourceforge.cilib.clustering.entity.ClusterParticle;
+import net.sourceforge.cilib.io.DataTable;
+import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
+import net.sourceforge.cilib.type.types.container.CentroidHolder;
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -56,7 +68,7 @@ public class StandardClusteringMultiSwarmIterationStrategyTest {
      */
     @Test
     public void testCalculateRadius() {
-        MultiSwarm multiswarm = new MultiSwarm();
+        StandardMultipopulationAlgorithm multiswarm = new StandardMultipopulationAlgorithm();
         multiswarm.addPopulationBasedAlgorithm(new DataClusteringPSO());
         multiswarm.addPopulationBasedAlgorithm(new DataClusteringPSO());
         
@@ -77,7 +89,7 @@ public class StandardClusteringMultiSwarmIterationStrategyTest {
      */
     @Test
     public void testIsConverged() {
-        MultiSwarm multiswarm = new MultiSwarm();
+        StandardMultipopulationAlgorithm multiswarm = new StandardMultipopulationAlgorithm();
         DataClusteringPSO pso = new DataClusteringPSO();
         
         
@@ -150,7 +162,7 @@ public class StandardClusteringMultiSwarmIterationStrategyTest {
         instance.setOptimisationProblem(problem);
         instance.addStoppingCondition(new MeasuredStoppingCondition());
         
-        MultiSwarm ms = new MultiSwarm();
+        StandardMultipopulationAlgorithm ms = new StandardMultipopulationAlgorithm();
         ms.setMultiSwarmIterationStrategy(strategy);
         ms.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 30));
         ms.addPopulationBasedAlgorithm(instance);

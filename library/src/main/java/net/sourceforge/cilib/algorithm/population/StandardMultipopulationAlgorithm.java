@@ -4,7 +4,7 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.pso.multiswarm;
+package net.sourceforge.cilib.algorithm.population;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,27 +14,28 @@ import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.problem.dataset.DataSetBuilder;
 import net.sourceforge.cilib.problem.solution.OptimisationSolution;
+import net.sourceforge.cilib.pso.multiswarm.MultiSwarmIterationStrategy;
 import net.sourceforge.cilib.type.DomainRegistry;
 
 /**
  *
  */
-public class MultiSwarm extends MultiPopulationBasedAlgorithm {
+public class StandardMultipopulationAlgorithm extends MultiPopulationBasedAlgorithm {
     private static final long serialVersionUID = -3859431217295779546L;
-    protected  IterationStrategy<MultiSwarm> multiSwarmsIterationStrategy;
-    public MultiSwarm() {
+    protected  IterationStrategy<StandardMultipopulationAlgorithm> multiSwarmsIterationStrategy;
+    public StandardMultipopulationAlgorithm() {
         super();
         this.multiSwarmsIterationStrategy = new MultiSwarmIterationStrategy();
     }
 
-    public MultiSwarm(MultiSwarm copy) {
+    public StandardMultipopulationAlgorithm(StandardMultipopulationAlgorithm copy) {
         super(copy);
         this.multiSwarmsIterationStrategy = copy.multiSwarmsIterationStrategy;
     }
 
     @Override
-    public MultiSwarm getClone() {
-        return new MultiSwarm(this);
+    public StandardMultipopulationAlgorithm getClone() {
+        return new StandardMultipopulationAlgorithm(this);
     }
 
     /**
@@ -96,11 +97,11 @@ public class MultiSwarm extends MultiPopulationBasedAlgorithm {
         multiSwarmsIterationStrategy.performIteration(this);
     }
 
-    public IterationStrategy<MultiSwarm> getMultiSwarmIterationStrategy() {
+    public IterationStrategy<StandardMultipopulationAlgorithm> getMultiSwarmIterationStrategy() {
         return multiSwarmsIterationStrategy;
     }
 
-    public void setMultiSwarmIterationStrategy(IterationStrategy<MultiSwarm> MultiSwarmIterationStrategy) {
+    public void setMultiSwarmIterationStrategy(IterationStrategy<StandardMultipopulationAlgorithm> MultiSwarmIterationStrategy) {
         this.multiSwarmsIterationStrategy = MultiSwarmIterationStrategy;
     }
 

@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.pso.multiswarm;
 
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
@@ -45,7 +46,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  *
  *
  */
-public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<MultiSwarm> {
+public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm> {
 
     private static final long serialVersionUID = 1416926223484924869L;
     private double exclusionRadius = 2.0;
@@ -78,7 +79,7 @@ public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<Multi
         //            - ((Vector) Algorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation()).getNumeric(0).getBounds().getLowerBound();
         double X = ((Vector) AbstractAlgorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation()).get(0).getBounds().getUpperBound()
                 - ((Vector) AbstractAlgorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation()).get(0).getBounds().getLowerBound();
-        double M = ((MultiSwarm) (AbstractAlgorithm.get())).getPopulations().size();
+        double M = ((StandardMultipopulationAlgorithm) (AbstractAlgorithm.get())).getPopulations().size();
         return X / (2 * Math.pow(M, 1 / d));
     }
 
@@ -91,7 +92,7 @@ public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<Multi
     }
 
     @Override
-    public void performIteration(MultiSwarm ca) {
+    public void performIteration(StandardMultipopulationAlgorithm ca) {
         int converged = 0;
         for (PopulationBasedAlgorithm current : ca.getPopulations()) {
             if (isConverged(current)) {

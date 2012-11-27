@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.pso.multiswarm;
 
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.algorithm.population.AbstractCooperativeIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
@@ -118,7 +119,7 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
             contextParticle.getProperties().put(EntityType.FITNESS, contextParticle.getBestFitness().getClone());
         }
                             
-        MultiSwarm multiswarm = convertCooperativePSOToMultiswarm(algorithm);
+        StandardMultipopulationAlgorithm multiswarm = convertCooperativePSOToMultiswarm(algorithm);
         delegate.performIteration(multiswarm);
         convertMultiswarmToCooperative(multiswarm, algorithm);
           
@@ -130,8 +131,8 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
      * @param algorithm The algorithm to be converted
      * @return multiswarm The new multi-swarm algorithm holding the topology of algorithm
      */
-    private MultiSwarm convertCooperativePSOToMultiswarm(MultiPopulationBasedAlgorithm algorithm) {
-        MultiSwarm multiSwarm = new MultiSwarm();
+    private StandardMultipopulationAlgorithm convertCooperativePSOToMultiswarm(MultiPopulationBasedAlgorithm algorithm) {
+        StandardMultipopulationAlgorithm multiSwarm = new StandardMultipopulationAlgorithm();
         multiSwarm.setPopulations(algorithm.getPopulations());
         multiSwarm.setOptimisationProblem(algorithm.getOptimisationProblem());
         
@@ -143,7 +144,7 @@ public class CooperativeMultiswarmIterationStrategy extends AbstractCooperativeI
      * @param multiswarm The multi-swarm with the new topology
      * @param algorithm The current algorith to which the multi-swarm's topology will be assigned.
      */
-    private void convertMultiswarmToCooperative(MultiSwarm multiswarm, MultiPopulationBasedAlgorithm algorithm) {
+    private void convertMultiswarmToCooperative(StandardMultipopulationAlgorithm multiswarm, MultiPopulationBasedAlgorithm algorithm) {
         algorithm.setPopulations(multiswarm.getPopulations());
     }
     

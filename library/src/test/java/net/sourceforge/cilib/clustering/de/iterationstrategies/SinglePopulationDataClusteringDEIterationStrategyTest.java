@@ -45,7 +45,7 @@ public class SinglePopulationDataClusteringDEIterationStrategyTest {
         QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
         problem.setDomain("R(-5.12:5.12)");
         instance.setOptimisationProblem(problem);
-        instance.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 5));
+        instance.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 10));
         DataDependantPopulationInitializationStrategy init = new DataDependantPopulationInitializationStrategy<ClusterIndividual>();
         RandomBoundedInitializationStrategy initStrategy = new RandomBoundedInitializationStrategy();
         ClusterIndividual indiv = new ClusterIndividual();

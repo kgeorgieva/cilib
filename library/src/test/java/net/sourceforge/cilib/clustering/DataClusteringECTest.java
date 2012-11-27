@@ -64,7 +64,7 @@ public class DataClusteringECTest {
         QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
         problem.setDomain("R(-5.12:5.12)");
         instance.setOptimisationProblem(problem);
-        instance.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 2));
+        instance.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 10));
         PopulationInitialisationStrategy init = new DataDependantPopulationInitializationStrategy<ClusterIndividual>();
         RandomBoundedInitializationStrategy initStrategy = new RandomBoundedInitializationStrategy();
         ClusterIndividual indiv = new ClusterIndividual();

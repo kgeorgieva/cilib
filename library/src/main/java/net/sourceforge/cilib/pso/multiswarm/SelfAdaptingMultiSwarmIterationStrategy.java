@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.pso.multiswarm;
 
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import java.util.ListIterator;
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
@@ -29,7 +30,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  *
  *
  */
-public class SelfAdaptingMultiSwarmIterationStrategy extends AbstractIterationStrategy<MultiSwarm> {
+public class SelfAdaptingMultiSwarmIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm> {
 
     private static final long serialVersionUID = -5097047091224569980L;
     private double dynamicConvergenceRadius = 5;//reinitialise swarms that are within each other's exclusion radius
@@ -77,7 +78,7 @@ public class SelfAdaptingMultiSwarmIterationStrategy extends AbstractIterationSt
         double X = ((Vector) AbstractAlgorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation()).boundsOf(0).getUpperBound()
                 - ((Vector) AbstractAlgorithm.get().getOptimisationProblem().getDomain().getBuiltRepresentation()).boundsOf(0).getLowerBound();
 
-        double M = ((MultiSwarm) (AbstractAlgorithm.get())).getPopulations().size();
+        double M = ((StandardMultipopulationAlgorithm) (AbstractAlgorithm.get())).getPopulations().size();
         return X / (2 * Math.pow(M, 1 / d));
 
     }
@@ -91,7 +92,7 @@ public class SelfAdaptingMultiSwarmIterationStrategy extends AbstractIterationSt
     }
 
     @Override
-    public void performIteration(MultiSwarm ca) {
+    public void performIteration(StandardMultipopulationAlgorithm ca) {
         //public void performIteration(MultiSwarms ca) {
         int converged = 0;
         for (ListIterator it = ca.getPopulations().listIterator(); it.hasNext();) {
