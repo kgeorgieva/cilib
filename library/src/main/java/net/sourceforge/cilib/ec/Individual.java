@@ -159,11 +159,13 @@ public class Individual extends AbstractEntity {
         throw new UnsupportedOperationException("Implementation is required for this method");
     }
     
-    public InitializationStrategy getInitialisationStrategy() {
+    public InitializationStrategy<Individual> getInitialisationStrategy() {
         return initialisationStrategy;
     }
-    
-    public void setInitializationStrategy(InitializationStrategy strategy) {
-        initialisationStrategy = strategy;
+
+    public void setInitialisationStrategy(InitializationStrategy<Individual> initialisationStrategy) {
+        this.initialisationStrategy = initialisationStrategy;
     }
+    
+    
 }
