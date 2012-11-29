@@ -46,11 +46,11 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * ReinitializingDataClusteringIterationStrategy
  */
 public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements ParticipatingAlgorithm {
-    private Topology<ClusterParticle> topology;
-    private SlidingWindow window;
-    IterationStrategy<DataClusteringPSO> iterationStrategy;
-    private ContributionSelectionStrategy contributionSelection;
-    private boolean isExplorer;
+    protected Topology<ClusterParticle> topology;
+    protected SlidingWindow window;
+    protected IterationStrategy<DataClusteringPSO> iterationStrategy;
+    protected ContributionSelectionStrategy contributionSelection;
+    protected boolean isExplorer;
 
     /*
      * Default Constructor for DataClusteringPSO

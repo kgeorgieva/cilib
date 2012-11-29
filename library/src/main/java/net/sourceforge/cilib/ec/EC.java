@@ -34,7 +34,7 @@ public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingA
 
     private static final long serialVersionUID = -4324446523858690744L;
     protected Problem problem;
-    private IterationStrategy<EC> iterationStrategy;
+    protected IterationStrategy<EC> iterationStrategy;
     protected Topology<Individual> topology;
     protected InitializationStrategy<Entity> strategyParameterInitialization;
     protected ContributionSelectionStrategy contributionSelection;

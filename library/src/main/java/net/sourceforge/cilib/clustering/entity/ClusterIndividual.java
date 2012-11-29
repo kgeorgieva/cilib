@@ -7,8 +7,9 @@ package net.sourceforge.cilib.clustering.entity;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
+import net.sourceforge.cilib.ec.update.UpdateStrategy;
+import net.sourceforge.cilib.ec.update.clustering.StandardClusteringDEUpdateStrategy;
 import net.sourceforge.cilib.entity.initialization.DataDependantInitializationStrategy;
-import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.StandardCentroidInitializationStrategy;
 import net.sourceforge.cilib.problem.ClusteringProblem;
 import net.sourceforge.cilib.problem.Problem;
@@ -27,6 +28,7 @@ import net.sourceforge.cilib.util.calculator.EntityBasedFitnessCalculator;
 public class ClusterIndividual extends Individual implements ClusterEntity{
     private int numberOfClusters;
     private DataDependantInitializationStrategy centroidInitialisationStrategy;
+    private UpdateStrategy updateStrategy;
     
     /**
      * Create an instance of {@linkplain Individual}.
@@ -35,6 +37,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
         super();
         numberOfClusters = 1;
         centroidInitialisationStrategy = new StandardCentroidInitializationStrategy();
+        updateStrategy = new StandardClusteringDEUpdateStrategy();
     }
 
     /**
@@ -45,6 +48,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
         super(copy);
         numberOfClusters = copy.numberOfClusters;
         centroidInitialisationStrategy = copy.centroidInitialisationStrategy;
+        updateStrategy = copy.updateStrategy;
     }
 
     /**
@@ -168,6 +172,13 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     public void setCentroidInitialisationStrategy(DataDependantInitializationStrategy centroidInitialisationStrategy) {
         this.centroidInitialisationStrategy = centroidInitialisationStrategy;
     }
-    
+
+    public UpdateStrategy getUpdateStrategy() {
+        return updateStrategy;
+    }
+
+    public void setUpdateStrategy(UpdateStrategy updateStrategy) {
+        this.updateStrategy = updateStrategy;
+    }
     
 }

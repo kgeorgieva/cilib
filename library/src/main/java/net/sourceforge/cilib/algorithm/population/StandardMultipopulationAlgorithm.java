@@ -23,6 +23,7 @@ import net.sourceforge.cilib.type.DomainRegistry;
 public class StandardMultipopulationAlgorithm extends MultiPopulationBasedAlgorithm {
     private static final long serialVersionUID = -3859431217295779546L;
     protected  IterationStrategy<StandardMultipopulationAlgorithm> multiSwarmsIterationStrategy;
+    
     public StandardMultipopulationAlgorithm() {
         super();
         this.multiSwarmsIterationStrategy = new MultiSwarmIterationStrategy();

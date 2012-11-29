@@ -223,7 +223,6 @@ public class StandardClusteringMultiSwarmIterationStrategyTest {
     @Test
     public void testAssignDataPatternsToParticle() {
         StandardClusteringMultiSwarmIterationStrategy instance = new StandardClusteringMultiSwarmIterationStrategy();
-        DataClusteringPSO pso = new DataClusteringPSO();
         StandardDataClusteringIterationStrategy standardStrategy = new StandardDataClusteringIterationStrategy();
         
         CentroidHolder candidateSolution = new CentroidHolder();

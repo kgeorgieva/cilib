@@ -20,7 +20,7 @@ import net.sourceforge.cilib.stoppingcondition.Maximum;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.clustering.CooperativePSO;
-import net.sourceforge.cilib.clustering.pso.iterationstrategies.CooperativeDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.multipopulation.CooperativeDataClusteringPSOIterationStrategy;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

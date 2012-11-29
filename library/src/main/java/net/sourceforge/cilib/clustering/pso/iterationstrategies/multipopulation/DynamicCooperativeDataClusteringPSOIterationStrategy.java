@@ -4,8 +4,9 @@
  *  / /__/ / / / /_/ /   http://cilib.net
  *  \___/_/_/_/_.___/
  */
-package net.sourceforge.cilib.clustering.pso.iterationstrategies;
+package net.sourceforge.cilib.clustering.pso.iterationstrategies.multipopulation;
 
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.multipopulation.CooperativeDataClusteringPSOIterationStrategy;
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.CooperativePSO;
@@ -13,6 +14,7 @@ import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.util.changeDetection.ChangeDetectionStrategy;
 import net.sourceforge.cilib.util.changeDetection.IterationBasedChangeDetectionStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
+import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 

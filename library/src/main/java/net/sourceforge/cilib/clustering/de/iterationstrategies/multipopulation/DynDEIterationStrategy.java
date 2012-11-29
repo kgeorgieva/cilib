@@ -2,15 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.sourceforge.cilib.clustering.de.iterationstrategies;
+package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
 import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
-import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
-import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
@@ -27,18 +26,15 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  */
 public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopulationBasedAlgorithm>{
     private double exclusionRadius;
-    private IterationStrategy iterationStrategy;
     private DistanceMeasure measure;
     
     public DynDEIterationStrategy() {
         exclusionRadius = 1.0;
-        iterationStrategy = new StandardClusteringDEIterationStrategy();
         measure = new EuclideanDistanceMeasure();
     }
     
     public DynDEIterationStrategy(DynDEIterationStrategy copy) {
         exclusionRadius = copy.exclusionRadius;
-        iterationStrategy = copy.iterationStrategy.getClone();
         measure = copy.measure;
     }
     
@@ -49,7 +45,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
 
     @Override
     public void performIteration(MultiPopulationBasedAlgorithm algorithm) {
-        
+        evaluatePopulations(algorithm.getPopulations());
+        processPopulations(algorithm.getPopulations());
     }
     
     protected void evaluatePopulations(List<PopulationBasedAlgorithm> populations) {
@@ -68,7 +65,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
             weakest = algorithm;
             for(PopulationBasedAlgorithm otherAlgorithm : populations) {
                 if(!algorithm.equals(otherAlgorithm)) {
-                    if(measure.distance((Vector) algorithm.getBestSolution().getPosition(), (Vector) otherAlgorithm.getBestSolution().getPosition()) < exclusionRadius) {
+                    if(aDistanceIsSmallerThanRadius((CentroidHolder) algorithm.getBestSolution().getPosition(), (CentroidHolder) otherAlgorithm.getBestSolution().getPosition())) {
                         if (weakest.getBestSolution().compareTo(otherAlgorithm.getBestSolution()) > 0) {
                             weakest = otherAlgorithm;
                         }
@@ -82,8 +79,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
                 return true;
             }
             
-            if(algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
-                // perform algorithm
+            if(!algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
+                algorithm.performIteration();
             }
         }
         
@@ -94,12 +91,12 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
         for(Entity individual : algorithm.getTopology()) {
             individual.reinitialise();
             assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), 
-                    ((SinglePopulationDataClusteringPSOIterationStrategy) algorithm.getIterationStrategy()).getWindow().getCurrentDataset());
+                    ((SinglePopulationDataClusteringDEIterationStrategy) algorithm.getIterationStrategy()).getWindow().getCurrentDataset());
         }
     }
     
     
-    public void assignDataPatternsToEntity(CentroidHolder candidateSolution, DataTable dataset) {
+    protected void assignDataPatternsToEntity(CentroidHolder candidateSolution, DataTable dataset) {
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure aDistanceMeasure = new EuclideanDistanceMeasure();
@@ -122,4 +119,31 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
                 candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
             }
     }
+    
+    protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, CentroidHolder otherPosition) {
+        for(int i = 0; i < currentPosition.size(); i++) {
+            if(measure.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double getExclusionRadius() {
+        return exclusionRadius;
+    }
+
+    public void setExclusionRadius(double exclusionRadius) {
+        this.exclusionRadius = exclusionRadius;
+    }
+
+    public DistanceMeasure getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(DistanceMeasure measure) {
+        this.measure = measure;
+    }
+    
+    
 }
