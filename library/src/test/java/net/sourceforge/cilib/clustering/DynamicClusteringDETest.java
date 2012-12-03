@@ -4,13 +4,8 @@
  */
 package net.sourceforge.cilib.clustering;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import net.sourceforge.cilib.ec.update.clustering.StandardClusteringDEUpdateStrategy;
 import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
@@ -21,7 +16,6 @@ import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
 import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
 import net.sourceforge.cilib.measurement.generic.Iterations;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
-import net.sourceforge.cilib.clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy;
 import net.sourceforge.cilib.entity.initialization.RandomBoundedInitializationStrategy;
 
 /**

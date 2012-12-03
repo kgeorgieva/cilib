@@ -1,45 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
-import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
-import net.sourceforge.cilib.clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy;
-import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.type.types.container.Vector;
-import net.sourceforge.cilib.entity.topologies.GBestTopology;
 import net.sourceforge.cilib.clustering.DynamicClusteringDE;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
 import net.sourceforge.cilib.algorithm.initialisation.PopulationInitialisationStrategy;
-import net.sourceforge.cilib.coevolution.cooperative.contributionselection.TopologyBestContributionSelectionStrategy;
-import net.sourceforge.cilib.entity.Topology;
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
+import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.entity.topologies.GBestTopology;
 import net.sourceforge.cilib.measurement.generic.Iterations;
 import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
-import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstraint;
-import net.sourceforge.cilib.problem.boundaryconstraint.ClampingBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.Maximum;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy;
-import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.entity.initialization.RandomBoundedInitializationStrategy;
-import net.sourceforge.cilib.entity.EntityType;
-import net.sourceforge.cilib.problem.solution.MinimisationFitness;
 import net.sourceforge.cilib.clustering.SlidingWindow;
-import net.sourceforge.cilib.problem.solution.InferiorFitness;
+import net.sourceforge.cilib.math.random.generator.seeder.SeedSelectionStrategy;
+import net.sourceforge.cilib.math.random.generator.seeder.Seeder;
+import net.sourceforge.cilib.math.random.generator.seeder.ZeroSeederStrategy;
 /**
  *
  * @author Kris
@@ -48,18 +38,44 @@ public class DynDEIterationStrategyTest {
     
     @Test
     public void performIterationTest() {
-        
-    }
-    
-    @Test
-    public void evaluatePopulationsTest() {
-        
-        
+        SeedSelectionStrategy seedStrategy = Seeder.getSeederStrategy();
+        Seeder.setSeederStrategy(new ZeroSeederStrategy());
+
+        try {
+             StandardMultipopulationAlgorithm instance = new StandardMultipopulationAlgorithm();
+             DataClusteringEC alg = new DataClusteringEC();
+             QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
+             problem.setDomain("R(-5.12:5.12)");
+             instance.setOptimisationProblem(problem);
+             instance.addStoppingCondition(new MeasuredStoppingCondition(new Iterations(), new Maximum(), 5));
+             DataDependantPopulationInitializationStrategy init = new DataDependantPopulationInitializationStrategy<ClusterIndividual>();
+             RandomBoundedInitializationStrategy initStrategy = new RandomBoundedInitializationStrategy();
+             ClusterIndividual indiv = new ClusterIndividual();
+             indiv.setInitialisationStrategy(initStrategy);
+             init.setEntityType(indiv);
+             init.setEntityNumber(3);
+             alg.setInitialisationStrategy(init);
+             alg.setSourceURL("library/src/test/resources/datasets/iris2.arff");
+             instance.addPopulationBasedAlgorithm(alg);
+             DynDEIterationStrategy strategy = new DynDEIterationStrategy();
+             instance.setMultiSwarmIterationStrategy(strategy);
+             instance.performInitialisation();
+             
+             ClusterIndividual individualBefore = (ClusterIndividual) instance.getPopulations().get(0).getTopology().get(0).getClone();
+
+             instance.run();
+
+             ClusterIndividual individualAfter = (ClusterIndividual) instance.getPopulations().get(0).getTopology().get(0).getClone();
+                
+             Assert.assertFalse(individualAfter.getCandidateSolution().containsAll(individualBefore.getCandidateSolution())); 
+        } finally {
+            Seeder.setSeederStrategy(seedStrategy);
+        }
     }
     
     @Test
     public void processPopulationsTest() {
-        
+        performIterationTest();
     }
     
     @Test

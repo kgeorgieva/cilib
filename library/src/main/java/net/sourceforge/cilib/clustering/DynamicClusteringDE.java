@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.clustering;
 
@@ -9,12 +11,10 @@ import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationIni
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
-import net.sourceforge.cilib.ec.EC;
 import net.sourceforge.cilib.ec.update.UpdateStrategy;
 import net.sourceforge.cilib.ec.update.clustering.BrownianClusteringUpdateStrategy;
 import net.sourceforge.cilib.ec.update.clustering.StandardClusteringDEUpdateStrategy;
 import net.sourceforge.cilib.entity.Entity;
-import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
 import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;

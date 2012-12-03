@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
@@ -8,6 +10,7 @@ import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
+import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.entity.Entity;
@@ -24,7 +27,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  *
  * @author Kris
  */
-public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopulationBasedAlgorithm>{
+public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm>{
     private double exclusionRadius;
     private DistanceMeasure measure;
     
@@ -39,25 +42,26 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
     }
     
     @Override
-    public AbstractIterationStrategy<MultiPopulationBasedAlgorithm> getClone() {
+    public AbstractIterationStrategy<StandardMultipopulationAlgorithm> getClone() {
         return new DynDEIterationStrategy(this);
     }
 
     @Override
-    public void performIteration(MultiPopulationBasedAlgorithm algorithm) {
-        evaluatePopulations(algorithm.getPopulations());
+    public void performIteration(StandardMultipopulationAlgorithm algorithm) {
+        evaluatePopulations(algorithm);
         processPopulations(algorithm.getPopulations());
     }
     
-    protected void evaluatePopulations(List<PopulationBasedAlgorithm> populations) {
-        for(PopulationBasedAlgorithm algorithm : populations) {
-            for(Entity individual : algorithm.getTopology()) {
+    protected void evaluatePopulations(MultiPopulationBasedAlgorithm algorithm) {
+        for(PopulationBasedAlgorithm alg : algorithm.getPopulations()) {
+            for(Entity individual : alg.getTopology()) {
+                assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) alg).getIterationStrategy()).getWindow().getCurrentDataset());
                 individual.calculateFitness();
             }
         }
     }
     
-    protected boolean processPopulations(List<PopulationBasedAlgorithm> populations) {
+    protected void processPopulations(List<PopulationBasedAlgorithm> populations) {
         boolean distanceIsSmaller;
         PopulationBasedAlgorithm weakest;
         for(PopulationBasedAlgorithm algorithm : populations) {
@@ -76,7 +80,6 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
             
             if(distanceIsSmaller) {
                 reinitialisePopulation((DataClusteringEC) weakest);
-                return true;
             }
             
             if(!algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
@@ -84,7 +87,6 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<MultiPopul
             }
         }
         
-        return false;
     }
     
     protected void reinitialisePopulation(DataClusteringEC algorithm) {
