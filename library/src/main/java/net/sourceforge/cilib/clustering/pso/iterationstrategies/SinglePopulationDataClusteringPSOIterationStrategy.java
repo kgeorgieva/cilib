@@ -142,7 +142,7 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
      * @param candidateSolution The solution holding all the centroids
      * @param dataset The dataset holding all the data patterns
      */
-    public void assignDataPatternsToIndividual(CentroidHolder candidateSolution, DataTable dataset) {
+    public void assignDataPatternsToParticle(CentroidHolder candidateSolution, DataTable dataset) {
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure aDistanceMeasure = new EuclideanDistanceMeasure();

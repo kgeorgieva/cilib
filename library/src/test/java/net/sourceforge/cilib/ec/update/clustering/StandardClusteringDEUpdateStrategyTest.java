@@ -7,6 +7,8 @@
 package net.sourceforge.cilib.ec.update.clustering;
 
 import junit.framework.Assert;
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
+import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.EntityType;
@@ -50,8 +52,10 @@ public class StandardClusteringDEUpdateStrategyTest {
         topology.add(individual3);
         topology.add(individual4);
         StandardClusteringDEUpdateStrategy instance = new StandardClusteringDEUpdateStrategy();
+        SinglePopulationBasedAlgorithm algorithm = new DataClusteringEC();
+        algorithm.setTopology(topology);
         
-        Individual newIndividual = (Individual) instance.update(individual, topology);
+        Individual newIndividual = (Individual) instance.update(individual, algorithm);
         
         Assert.assertFalse(newIndividual.getCandidateSolution().containsAll(holder));
     }

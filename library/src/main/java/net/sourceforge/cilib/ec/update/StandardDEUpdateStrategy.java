@@ -8,6 +8,7 @@ package net.sourceforge.cilib.ec.update;
 
 import java.util.Arrays;
 import java.util.List;
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.entity.operators.creation.CreationStrategy;
@@ -57,7 +58,8 @@ public class StandardDEUpdateStrategy implements UpdateStrategy{
      * Updates the parameter using the standard DE operators
      * 
      */
-    public Entity update(Entity currentEntity, Topology topology) {
+    public Entity update(Entity currentEntity, SinglePopulationBasedAlgorithm algorithm) {
+            Topology topology = algorithm.getTopology();
             Entity targetEntity = (Entity) targetVectorSelectionStrategy.on(topology).exclude(currentEntity).select();
             
             Entity trialEntity = trialVectorCreationStrategy.create(targetEntity, currentEntity, topology);

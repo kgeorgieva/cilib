@@ -6,10 +6,12 @@
  */
 package net.sourceforge.cilib.ec.update;
 
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.entity.Entity;
-import net.sourceforge.cilib.entity.Topology;
+import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.math.random.GaussianDistribution;
 import net.sourceforge.cilib.type.types.Numeric;
+import net.sourceforge.cilib.type.types.container.StructuredType;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
@@ -48,17 +50,20 @@ public class BrownianUpdateStrategy implements UpdateStrategy{
      * Creates a brownian individual by generating a point around the best 
      * individual by adding a random variable sampled form a normal distribution.
      */
-    public Entity update(Entity currentEntity, Topology topology) {
-        Vector solution = (Vector) currentEntity.getCandidateSolution();
+    public Entity update(Entity currentEntity, SinglePopulationBasedAlgorithm algorithm) {
+        Entity bestEntity = currentEntity.getClone();
+        bestEntity.setCandidateSolution((StructuredType) algorithm.getBestSolution().getPosition().getClone());
+        bestEntity.getProperties().put(EntityType.FITNESS, algorithm.getBestSolution().getFitness().getClone());
+        
+        Vector solution = (Vector) bestEntity.getCandidateSolution();
         Vector.Builder builder = Vector.newBuilder();
         for(Numeric number : solution) {
             builder.add(number.doubleValue() + random.getRandomNumber());
         }
         
-        Entity newEntity = currentEntity.getClone();
-        newEntity.setCandidateSolution(builder.build());
+        bestEntity.setCandidateSolution(builder.build());
         
-        return newEntity;
+        return bestEntity;
     }
     
 }

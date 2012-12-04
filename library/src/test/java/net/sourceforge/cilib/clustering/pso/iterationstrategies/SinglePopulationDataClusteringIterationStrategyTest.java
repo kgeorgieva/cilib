@@ -6,22 +6,15 @@
  */
 package net.sourceforge.cilib.clustering.pso.iterationstrategies;
 
-import junit.framework.Assert;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
 import net.sourceforge.cilib.algorithm.population.IterationStrategy;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
-import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.io.DataTable;
-import net.sourceforge.cilib.io.pattern.StandardPattern;
 import net.sourceforge.cilib.problem.QuantizationErrorMinimizationProblem;
 import net.sourceforge.cilib.problem.boundaryconstraint.CentroidBoundaryConstraint;
 import net.sourceforge.cilib.problem.boundaryconstraint.RandomBoundaryConstraint;
 import net.sourceforge.cilib.stoppingcondition.MeasuredStoppingCondition;
-import net.sourceforge.cilib.clustering.pso.iterationstrategies.StandardDataClusteringIterationStrategy;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
-import net.sourceforge.cilib.type.types.container.Vector;
-import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 import junit.framework.Assert;
 import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.io.DataTable;

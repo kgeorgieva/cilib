@@ -92,7 +92,7 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
         int index = 0;
         for(int i = index; i < topology.size(); i+=reinitialisationInterval) {
                 ((ClusterParticle) topology.get(i)).reinitialise();
-                assignDataPatternsToIndividual(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()), dataset);
+                assignDataPatternsToParticle(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()), dataset);
         }
         
     }

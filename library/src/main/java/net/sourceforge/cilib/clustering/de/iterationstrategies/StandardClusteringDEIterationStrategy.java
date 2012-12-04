@@ -63,7 +63,7 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
             individual.setCandidateSolution(candidateSolution);
             individual.calculateFitness();
           
-            ClusterIndividual offspring = (ClusterIndividual) individual.getUpdateStrategy().update(individual, topology);
+            ClusterIndividual offspring = (ClusterIndividual) individual.getUpdateStrategy().update(individual, algorithm);
             
             boundaryConstraint.enforce(offspring);
             assignDataPatternsToIndividual((CentroidHolder) offspring.getCandidateSolution(), dataset);

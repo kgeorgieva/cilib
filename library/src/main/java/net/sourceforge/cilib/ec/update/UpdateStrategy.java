@@ -6,8 +6,9 @@
  */
 package net.sourceforge.cilib.ec.update;
 
+import net.sourceforge.cilib.algorithm.Algorithm;
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.entity.Entity;
-import net.sourceforge.cilib.entity.Topology;
 
 /**
  * Interface holding the structure of Update strategies
@@ -23,5 +24,5 @@ public interface UpdateStrategy {
     /*
      * Updates the parameter accordingly
      */
-    Entity update(Entity currentEntity, Topology topology);
+    Entity update(Entity currentEntity, SinglePopulationBasedAlgorithm algorithm);
 }

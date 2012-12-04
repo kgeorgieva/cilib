@@ -8,6 +8,8 @@ package net.sourceforge.cilib.ec.update.clustering;
 
 import java.util.Arrays;
 import java.util.List;
+import net.sourceforge.cilib.algorithm.Algorithm;
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
@@ -64,7 +66,8 @@ public class StandardClusteringDEUpdateStrategy implements UpdateStrategy{
     /*
      * Updates the parameter using the standard DE operators
      */
-    public Entity update(Entity entity, Topology topology) {
+    public Entity update(Entity entity, SinglePopulationBasedAlgorithm algorithm) {
+        Topology topology = algorithm.getTopology();
         ClusterIndividual currentEntity = (ClusterIndividual) entity;
         ClusterIndividual targetEntity = (ClusterIndividual) targetVectorSelectionStrategy.on(topology).exclude(currentEntity).select();
             

@@ -8,9 +8,6 @@ package net.sourceforge.cilib.algorithm.population;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.sourceforge.cilib.algorithm.population.IterationStrategy;
-import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
-import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.problem.dataset.DataSetBuilder;
 import net.sourceforge.cilib.problem.solution.OptimisationSolution;
