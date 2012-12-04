@@ -18,8 +18,8 @@ import net.sourceforge.cilib.util.selection.recipes.RandomSelector;
 import net.sourceforge.cilib.util.selection.recipes.Selector;
 
 /**
- *
- * @author Kris
+ * Standard DE update strategy where the individual receied is updated using the 
+ * normal DE operators.
  */
 public class StandardDEUpdateStrategy implements UpdateStrategy{
 
@@ -27,22 +27,36 @@ public class StandardDEUpdateStrategy implements UpdateStrategy{
     private CreationStrategy trialVectorCreationStrategy;
     private CrossoverStrategy crossoverStrategy;
     
+    /*
+     * Default Constructor for the StandardDEUpdateStrategy
+     */
     public StandardDEUpdateStrategy() {
         this.targetVectorSelectionStrategy = new RandomSelector();
         this.trialVectorCreationStrategy = new RandCreationStrategy();
         this.crossoverStrategy = new DifferentialEvolutionBinomialCrossover();
     }
     
+    /*
+     * Copy constructor for the StandardDEUpdateStrategy
+     */
     public StandardDEUpdateStrategy(StandardDEUpdateStrategy copy) {
         this.targetVectorSelectionStrategy = copy.targetVectorSelectionStrategy;
         this.trialVectorCreationStrategy = copy.trialVectorCreationStrategy.getClone();
         this.crossoverStrategy = copy.crossoverStrategy.getClone();
     }
     
+    /*
+     * Clone method for the StandardDEUpdateStrategy
+     * @return A new instance of this StandardDEUpdateStrategy
+     */
     public StandardDEUpdateStrategy getClone() {
         return new StandardDEUpdateStrategy(this);
     }
 
+    /*
+     * Updates the parameter using the standard DE operators
+     * 
+     */
     public Entity update(Entity currentEntity, Topology topology) {
             Entity targetEntity = (Entity) targetVectorSelectionStrategy.on(topology).exclude(currentEntity).select();
             

@@ -16,26 +16,42 @@ import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 
 /**
- *
- * @author Kris
+ * The Brownian update strategy described in Mendes and Mohais' 
+ * 2005 IEEE paper "DynDE: a Differential Evolution for Dynamic Optimization Problems".
+ * This one is specific to clustering problems as it deals with CentroidHolders
  */
 public class BrownianClusteringUpdateStrategy implements UpdateStrategy{
     GaussianDistribution random;
     
+    /*
+     * Default Constructor for BrownianClusteringUpdateStrategy
+     */
     public BrownianClusteringUpdateStrategy() {
         random = new GaussianDistribution();
         random.setMean(0);
         random.setDeviation(0.2);
     }
     
+    /*
+     * Copy constructor for BrownianClusteringUpdateStrategy
+     * @param copy The BrownianClusteringUpdateStrategy to be copied
+     */
      public BrownianClusteringUpdateStrategy(BrownianClusteringUpdateStrategy copy) {
          random = copy.random;
      }
     
+     /*
+      * Clone method for BrownianClusteringUpdateStrategy
+      * @return A new instance of this BrownianClusteringUpdateStrategy
+      */
     public UpdateStrategy getClone() {
         return new BrownianClusteringUpdateStrategy(this);
     }
 
+    /*
+     * Creates a brownian individual by generating a point around the best 
+     * individual by adding a random variable sampled form a normal distribution.
+     */
     public Entity update(Entity currentEntity, Topology topology) {
         CentroidHolder solution = (CentroidHolder) currentEntity.getCandidateSolution();
         CentroidHolder newSolution = new CentroidHolder();

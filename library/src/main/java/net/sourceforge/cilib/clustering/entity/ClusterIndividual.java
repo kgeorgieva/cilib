@@ -24,8 +24,8 @@ import net.sourceforge.cilib.util.calculator.EntityBasedFitnessCalculator;
 
 
 /**
- *
- * @author Kris
+ * An individual that holds a ClusterHolder as a candidate solution and 
+ * performs all tasks of an individual on this particular structure.
  */
 public class ClusterIndividual extends Individual implements ClusterEntity{
     private int numberOfClusters;
@@ -33,7 +33,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     private UpdateStrategy updateStrategy;
     
     /**
-     * Create an instance of {@linkplain Individual}.
+     * Create an instance of {@linkplain ClusterIndividual}.
      */
     public ClusterIndividual() {
         super();
@@ -43,8 +43,8 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     }
 
     /**
-     * Copy constructor. Creates a copy of the given {@linkplain Individual}.
-     * @param copy The {@linkplain Individual} to copy.
+     * Copy constructor. Creates a copy of the given {@linkplain ClusterIndividual}.
+     * @param copy The {@linkplain ClusterIndividual} to copy.
      */
     public ClusterIndividual(ClusterIndividual copy) {
         super(copy);
@@ -54,33 +54,17 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     }
 
     /**
-     * {@inheritDoc}
+     * Clone method for ClusterIndividual
+     * @return A new instance of this ClusterIndividual
      */
     @Override
     public ClusterIndividual getClone() {
         return new ClusterIndividual(this);
     }
 
-
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + super.hashCode();
-        return hash;
-    }
-
-    /**
-     * Resets the fitness to <code>InferiorFitness</code>.
-     */
-    public void resetFitness() {
-        this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
-    }
-
-    /**
-     * {@inheritDoc}
+     * Initialises the ClusterIndividual using the centroid initialisation strategy
+     * @param problem The clustering problem
      */
     @Override
     public void initialise(Problem problem) {
@@ -105,22 +89,6 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
      * {@inheritDoc}
      */
     @Override
-    public int compareTo(Entity o) {
-        return this.getFitness().compareTo(o.getFitness());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setCandidateSolution(StructuredType type) {
-        super.setCandidateSolution(type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void calculateFitness() {
         EntityBasedFitnessCalculator f = new EntityBasedFitnessCalculator();
         Fitness fitness = f.getFitness(this);
@@ -128,29 +96,7 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getDimension() {
-        return getCandidateSolution().size();
-    }
-
-    /**
-     * Create a textual representation of the current {@linkplain Individual}. The
-     * returned {@linkplain String} will contain both the genotypes and penotypes for
-     * the current {@linkplain Individual}.
-     * @return The textual representation of this {@linkplain Individual}.
-     */
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append(getCandidateSolution().toString());
-        str.append(getProperties().get(EntityType.STRATEGY_PARAMETERS));
-        return str.toString();
-    }
-
-    /**
-     * {@inheritDoc}
+     * Reinitialises the ClusterIndividual using the centroidInitialisationStrategy
      */
     @Override
     public void reinitialise() {
@@ -159,26 +105,50 @@ public class ClusterIndividual extends Individual implements ClusterEntity{
         this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
     }
 
+    /*
+     * Gets the total number of clusters
+     * @return The total number of clusters
+     */
     public int getNumberOfClusters() {
         return numberOfClusters;
     }
 
+    /*
+     * Sets the total number of clusters
+     * @param numberOfClusters The new number of clusters
+     */
     public void setNumberOfClusters(int numberOfClusters) {
         this.numberOfClusters = numberOfClusters;
     }
 
+    /*
+     * Gets the centroid initialisation strategy
+     * @return The centroid initialisation strategy
+     */
     public DataDependantInitializationStrategy getCentroidInitialisationStrategy() {
         return centroidInitialisationStrategy;
     }
 
+    /*
+     * Sets the centroid initialisation strategy
+     * @param The new centroid initialisation strategy
+     */
     public void setCentroidInitialisationStrategy(DataDependantInitializationStrategy centroidInitialisationStrategy) {
         this.centroidInitialisationStrategy = centroidInitialisationStrategy;
     }
 
+    /*
+     * Gets the update strategy that this individual is updated with
+     * @return The update strategy 
+     */
     public UpdateStrategy getUpdateStrategy() {
         return updateStrategy;
     }
 
+    /*
+     * Sets the update strategy to the one received asa  parameter
+     * @param updateStrategy The new update strategy
+     */
     public void setUpdateStrategy(UpdateStrategy updateStrategy) {
         this.updateStrategy = updateStrategy;
     }

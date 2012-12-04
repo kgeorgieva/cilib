@@ -18,10 +18,6 @@ import net.sourceforge.cilib.measurement.generic.Iterations;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.entity.initialization.RandomBoundedInitializationStrategy;
 
-/**
- *
- * @author Kris
- */
 public class DynamicClusteringDETest {
     
    @Test

@@ -20,7 +20,7 @@ import net.sourceforge.cilib.util.DistanceMeasure;
 import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 
 /**
- *This class holds the methods that are shared by certain clustering iteration strategies
+ *This class holds the methods that are shared by certain clustering PSO iteration strategies
  */
 public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends AbstractIterationStrategy<DataClusteringPSO>{
     protected DataTable dataset;
@@ -142,7 +142,7 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
      * @param candidateSolution The solution holding all the centroids
      * @param dataset The dataset holding all the data patterns
      */
-    public void assignDataPatternsToParticle(CentroidHolder candidateSolution, DataTable dataset) {
+    public void assignDataPatternsToIndividual(CentroidHolder candidateSolution, DataTable dataset) {
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure aDistanceMeasure = new EuclideanDistanceMeasure();

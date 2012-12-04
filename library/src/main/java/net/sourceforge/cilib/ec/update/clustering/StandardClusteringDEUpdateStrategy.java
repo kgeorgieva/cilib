@@ -25,30 +25,45 @@ import net.sourceforge.cilib.util.selection.recipes.RandomSelector;
 import net.sourceforge.cilib.util.selection.recipes.Selector;
 
 /**
- *
- * @author Kris
+ * Standard DE update strategy where the individual receied is updated using the 
+ * normal DE operators.
+ * This one is specific to clustering problems as it deals with CentroidHolders
  */
 public class StandardClusteringDEUpdateStrategy implements UpdateStrategy{
     private Selector targetVectorSelectionStrategy;
     private CreationStrategy trialVectorCreationStrategy;
     private CrossoverStrategy crossoverStrategy;
     
+    /*
+     * Default constructor for StandardClusteringDEUpdateStrategy
+     */
     public StandardClusteringDEUpdateStrategy() {
         this.targetVectorSelectionStrategy = new RandomSelector();
         this.trialVectorCreationStrategy = new RandCreationStrategy();
         this.crossoverStrategy = new DifferentialEvolutionBinomialCrossover();
     }
     
+    /*
+     * Copy constructor for StandardClusteringDEUpdateStrategy
+     * @param copy The StandardClusteringDEUpdateStrategy to be copied
+     */
     public StandardClusteringDEUpdateStrategy(StandardClusteringDEUpdateStrategy copy) {
         this.targetVectorSelectionStrategy = copy.targetVectorSelectionStrategy;
         this.trialVectorCreationStrategy = copy.trialVectorCreationStrategy.getClone();
         this.crossoverStrategy = copy.crossoverStrategy.getClone();
     }
     
+    /*
+     * Clone method for StandardClusteringDEUpdateStrategy
+     * @return A new instance of this StandardClusteringDEUpdateStrategy
+     */
     public StandardClusteringDEUpdateStrategy getClone() {
         return new StandardClusteringDEUpdateStrategy(this);
     }
     
+    /*
+     * Updates the parameter using the standard DE operators
+     */
     public Entity update(Entity entity, Topology topology) {
         ClusterIndividual currentEntity = (ClusterIndividual) entity;
         ClusterIndividual targetEntity = (ClusterIndividual) targetVectorSelectionStrategy.on(topology).exclude(currentEntity).select();

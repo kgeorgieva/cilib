@@ -24,34 +24,57 @@ import net.sourceforge.cilib.util.DistanceMeasure;
 import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 
 /**
- *
- * @author Kris
+ * Dynamic Differential Evolution iteration strategy described in 
+ * Mendes and Mohais' 2005 IEEE paper "DynDE: a Differential Evolution
+ * for Dynamic Optimization Problems".
  */
 public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm>{
     private double exclusionRadius;
     private DistanceMeasure measure;
     
+    /*
+     * Default constructor for DynDEIterationStrategy
+     */
     public DynDEIterationStrategy() {
         exclusionRadius = 1.0;
         measure = new EuclideanDistanceMeasure();
     }
     
+    /*
+     * Copy constructor for DynDEIterationStrategy
+     * @param copy The DynDEIterationStrategy to be copied
+     */
     public DynDEIterationStrategy(DynDEIterationStrategy copy) {
         exclusionRadius = copy.exclusionRadius;
         measure = copy.measure;
     }
     
+    /*
+     * Clone method for DynDEIterationStrategy
+     * @return A new instance of this DynDEIterationStrategy
+     */
     @Override
     public AbstractIterationStrategy<StandardMultipopulationAlgorithm> getClone() {
         return new DynDEIterationStrategy(this);
     }
 
+    /*
+     * Performs one iteration of the Dynamic DE algorithm.
+     * Populations are first evalueated and then processed
+     * @param algorithm The multipopulation algorithm being used
+     */
     @Override
     public void performIteration(StandardMultipopulationAlgorithm algorithm) {
         evaluatePopulations(algorithm);
         processPopulations(algorithm.getPopulations());
     }
     
+    /*
+     * Assigns data patterns to all centroids of each population and determines the
+     * fitness of each individual using these.
+     * @param The multipopulation algorithm holding all the populations to be
+     * evaluated
+     */
     protected void evaluatePopulations(MultiPopulationBasedAlgorithm algorithm) {
         for(PopulationBasedAlgorithm alg : algorithm.getPopulations()) {
             for(Entity individual : alg.getTopology()) {
@@ -61,6 +84,11 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         }
     }
     
+    /*
+     * Determines which populations must be reinitialised and for which
+     * populations an iteration of the clustering algorithm must take place.
+     * @param populations The populations being dealt with
+     */
     protected void processPopulations(List<PopulationBasedAlgorithm> populations) {
         boolean distanceIsSmaller;
         PopulationBasedAlgorithm weakest;
@@ -89,6 +117,10 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         
     }
     
+    /*
+     * Reinitialises the population held by the algorithm sent as a parameter
+     * @param algorithm The algorithm whose population must be reinitialised
+     */
     protected void reinitialisePopulation(DataClusteringEC algorithm) {
         for(Entity individual : algorithm.getTopology()) {
             individual.reinitialise();
@@ -97,7 +129,11 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         }
     }
     
-    
+    /*
+     * Adds the data patterns closest to a centrid to its data pattern list
+     * @param candidateSolution The solution holding all the centroids
+     * @param dataset The dataset holding all the data patterns
+     */
     protected void assignDataPatternsToEntity(CentroidHolder candidateSolution, DataTable dataset) {
         double euclideanDistance;
         Vector addedPattern;
@@ -122,6 +158,12 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
             }
     }
     
+    /*
+     * Checks whether populations are within radius distance of each other
+     * @param currentPosition The CentoridHolder being compared
+     * @param otherPosition The CentroidHolder being compared against
+     * @return True if the populations are close enough, false if they are still far appart
+     */
     protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, CentroidHolder otherPosition) {
         for(int i = 0; i < currentPosition.size(); i++) {
             if(measure.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius) {
@@ -131,18 +173,34 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         return false;
     }
 
+    /*
+     * Gets the value of the exclusion radius
+     * @return The value of the exclusion radius
+     */
     public double getExclusionRadius() {
         return exclusionRadius;
     }
 
+    /*
+     * Sets the value of the exclusion radius
+     * @param exclusionRadius The new value for the exclusion radius
+     */
     public void setExclusionRadius(double exclusionRadius) {
         this.exclusionRadius = exclusionRadius;
     }
 
+    /*
+     * Gets the measure used to determine the proximity of two populations
+     * @return The measure used to determine the proximity of two populations
+     */
     public DistanceMeasure getMeasure() {
         return measure;
     }
 
+    /*
+     * Sets the measure used to determine the proximity of two populations
+     * @param measure The new measure
+     */
     public void setMeasure(DistanceMeasure measure) {
         this.measure = measure;
     }

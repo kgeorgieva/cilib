@@ -13,32 +13,47 @@ import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ * Standard data clustering differential evolution iteration strategy described in 
+ * Sai Hanuman A., Dr Vinaya Babu A., Dr Govardhan A., Dr S C Satapathy's 2010 paper
+ * "Data Clustering using almost parameter free Differential Evolution".
  */
 public class StandardClusteringDEIterationStrategy extends SinglePopulationDataClusteringDEIterationStrategy{
     
+    /*
+     * Default constructor for StandardClusteringDEIterationStrategy
+     */
     public StandardClusteringDEIterationStrategy() {
         super();
     }
     
+    /*
+     * Copy constructor for StandardClusteringDEIterationStrategy
+     * @param copy The StandardClusteringDEIterationStrategy to be copied
+     */
     public StandardClusteringDEIterationStrategy(StandardClusteringDEIterationStrategy copy) {
         super(copy);
     }
     
+    /*
+     * Clone method for StandardClusteringDEIterationStrategy
+     * @return A new instance of StandardClusteringDEIterationStrategy
+     */
     @Override
     public StandardClusteringDEIterationStrategy getClone() {
         return new StandardClusteringDEIterationStrategy(this);
     }
     
+    /*
+     * Performs one iteration of the standard clustering DE algorithm where 
+     * patterns are assigned to individuals, DE is performed and the best 
+     * individual between the offspring and parent is selected to survive to
+     * the next generation.
+     */
     @Override
     public void performIteration(DataClusteringEC algorithm) {
         Topology<ClusterIndividual> topology = (Topology<ClusterIndividual>) algorithm.getTopology();
-        double euclideanDistance;
-        Vector addedPattern;
         clearCentroidDistanceValues(topology);
         reinitialized = false;
-        Vector pattern;
         int index = 0;
         
         for(ClusterIndividual individual : topology) {

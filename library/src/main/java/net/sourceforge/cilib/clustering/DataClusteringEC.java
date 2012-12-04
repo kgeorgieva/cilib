@@ -24,14 +24,17 @@ import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ * Generic EC skeleton algorithm for data clustering problems. The algorithm is altered by defining the
+ * appropriate clustering iteration strategy.
  */
 public class DataClusteringEC extends EC{
     protected SlidingWindow window;
     protected boolean isExplorer;
     protected IterationStrategy<DataClusteringEC> iterationStrategy;
     
+    /*
+     * Default constructor for the DataClusteringEC
+     */
     public DataClusteringEC() {
         super();
         contributionSelection = new ZeroContributionSelectionStrategy();
@@ -41,6 +44,10 @@ public class DataClusteringEC extends EC{
         iterationStrategy = new StandardClusteringDEIterationStrategy();
     }
     
+    /*
+     * Copy constructor for the DataClusteringEC
+     * @param copy The DataClusteringEC to be copied
+     */
     public DataClusteringEC(DataClusteringEC copy) {
         super(copy);
         initialisationStrategy = copy.initialisationStrategy;
@@ -50,13 +57,18 @@ public class DataClusteringEC extends EC{
     }
     
     /**
-     * {@inheritDoc}
+     * Clone method for DataClusteringEC
+     * @return A new instance of this DataClusteringEC
      */
     @Override
     public DataClusteringEC getClone() {
         return new DataClusteringEC(this);
     }
     
+    /*
+     * Initialises the population appropriately using the initialisation strategy
+     * selected and the dataset. It also initialises the window.
+     */
     @Override
     public void algorithmInitialisation() {
         DataTable dataset = window.initializeWindow();
@@ -74,24 +86,44 @@ public class DataClusteringEC extends EC{
         
     }
     
+    /*
+     * Calls the iteration strategy to perform one iteration of the algorithm.
+     */
     @Override
     public void algorithmIteration() {
         iterationStrategy.performIteration(this);
     }
 
+    /*
+     * Gets the current window
+     * @return The current window
+     */
     public SlidingWindow getWindow() {
         return window;
     }
 
+    /*
+     * Sets the algorithm to be an explorer or not
+     * @param isExplorer The boolean indicating whether the algorithm must be an
+     * explorer or not
+     */
     public void setIsExplorer(boolean isExplorer) {
         this.isExplorer = isExplorer;
     }
 
+    /*
+     * Gets the clustering iteration strategy
+     * @return The clustering iteration strategy
+     */
     @Override
     public IterationStrategy getIterationStrategy() {
         return iterationStrategy;
     }
 
+    /*
+     * Sets the iteration straetgy to the one received as a parameter
+     * @param iterationStrategy The new iteration strategy
+     */
     @Override
     public void setIterationStrategy(IterationStrategy iterationStrategy) {
         this.iterationStrategy = iterationStrategy;
@@ -134,6 +166,5 @@ public class DataClusteringEC extends EC{
 
         return solution;
     }
-
     
 }

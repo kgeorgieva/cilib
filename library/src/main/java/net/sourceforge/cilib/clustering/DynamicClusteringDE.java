@@ -23,8 +23,9 @@ import net.sourceforge.cilib.problem.ClusteringProblem;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ * Dynamic Differential Evolution algorithm described in 
+ * Mendes and Mohais' 2005 IEEE paper "DynDE: a Differential Evolution for Dynamic
+ * Optimization Problems".
  */
 public class DynamicClusteringDE extends DataClusteringEC {
     private ProbabilityDistributionFunction random;
@@ -32,6 +33,9 @@ public class DynamicClusteringDE extends DataClusteringEC {
     private UpdateStrategy secondUpdateStrategy;
     private double updateStrategyProbability;
     
+    /*
+     * Default constructor for the DynamicClusteringDE
+     */
     public DynamicClusteringDE() {
         random = new UniformDistribution();
         firstUpdateStrategy = new StandardClusteringDEUpdateStrategy();
@@ -40,6 +44,10 @@ public class DynamicClusteringDE extends DataClusteringEC {
         updateStrategyProbability = 0.5;
     }
     
+    /*
+     * Copy constructor for the DynamicClusteringDE
+     * @param copy The DynamicClusteringDE to be copied
+     */
     public DynamicClusteringDE(DynamicClusteringDE copy) {
         random = copy.random;
         firstUpdateStrategy = copy.firstUpdateStrategy;
@@ -47,11 +55,20 @@ public class DynamicClusteringDE extends DataClusteringEC {
         updateStrategyProbability = copy.updateStrategyProbability;
     }
     
+    /*
+     * Clone method for the DynamicClusteringDE
+     * @return A new instance of this DynamicClusteringDE
+     */
     @Override
     public DynamicClusteringDE getClone() {
         return new DynamicClusteringDE(this);
     }
     
+    /*
+     * Initialises the algorithm according to Mendes and Mohais' paper.
+     * It uses an initialisation strategy to initialise individuals
+     * and then randomly assigns an update strategy to eaach individual.
+     */
     @Override
     public void algorithmInitialisation() {
         DataTable dataset = window.initializeWindow();
@@ -79,34 +96,70 @@ public class DynamicClusteringDE extends DataClusteringEC {
         
     }
 
+    /*
+     * Gets the probability distribution function used to select an update
+     * strategy during initialisation of the individuals.
+     * @return The probability distribution fi=unction used during initialisation
+     */
     public ProbabilityDistributionFunction getRandom() {
         return random;
     }
 
+    /*
+     * Set the probability distribution function to be used to select an
+     * update strategy during the initialisation of individuals
+     * @param random The new probability distribution function
+     */
     public void setRandom(ProbabilityDistributionFunction random) {
         this.random = random;
     }
 
+    /*
+     * Gets one of the update strategies to be assigned to each individual
+     * @return The update strategy
+     */
     public UpdateStrategy getFirstUpdateStrategy() {
         return firstUpdateStrategy;
     }
 
+    /*
+     * Sets one of the update strategies to be assigned to each individual
+     * @param firstUpdateStrategy The new update strategy
+     */
     public void setFirstUpdateStrategy(UpdateStrategy firstUpdateStrategy) {
         this.firstUpdateStrategy = firstUpdateStrategy;
     }
 
+    /*
+     * Gets the other update strategy to be assigned to each individual
+     * @return The update strategy
+     */
     public UpdateStrategy getSecondUpdateStrategy() {
         return secondUpdateStrategy;
     }
 
+    /*
+     * Sets the other update strategy to be assigned to each individual
+     * @param secondUpdateStrategy The new update strategy
+     */
     public void setSecondUpdateStrategy(UpdateStrategy secondUpdateStrategy) {
         this.secondUpdateStrategy = secondUpdateStrategy;
     }
 
+    /*
+     * Gets the probability that an update strategy will be selected and 
+     * assigned to an individual
+     * @return The update strategy selection probability
+     */
     public double getUpdateStrategyProbability() {
         return updateStrategyProbability;
     }
 
+    /*
+     * Sets the probability that an update strategy will be selected and 
+     * assigned to an individual.
+     * @param The new update strategy selection probability
+     */
     public void setUpdateStrategyProbability(double updateStrategyProbability) {
         this.updateStrategyProbability = updateStrategyProbability;
     }

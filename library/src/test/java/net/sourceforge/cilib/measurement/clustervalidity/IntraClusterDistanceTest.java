@@ -1,24 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.measurement.clustervalidity;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
 
-/**
- *
- * @author Kris
- */
 public class IntraClusterDistanceTest {
    @Test
    public void calculateIntraClusterDistanceTest() {

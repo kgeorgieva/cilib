@@ -9,7 +9,9 @@ package net.sourceforge.cilib.ec.update.clustering;
 import junit.framework.Assert;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.ec.Individual;
+import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.entity.topologies.GBestTopology;
+import net.sourceforge.cilib.problem.solution.MinimisationFitness;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import org.junit.Test;
@@ -59,7 +61,44 @@ public class StandardClusteringDEUpdateStrategyTest {
      */
     @Test
     public void testGetTrialEntity() {
-       
+        ClusterIndividual indiv1 = new ClusterIndividual();
+        CentroidHolder holder1 = new CentroidHolder();
+        holder1.add(ClusterCentroid.of(1,2));
+        holder1.add(ClusterCentroid.of(3,4));
+        indiv1.setCandidateSolution(holder1);
+        indiv1.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        
+        ClusterIndividual indiv2 = new ClusterIndividual();
+        CentroidHolder holder2 = new CentroidHolder();
+        holder2.add(ClusterCentroid.of(1,2));
+        holder2.add(ClusterCentroid.of(3,4));
+        indiv2.setCandidateSolution(holder2);
+        indiv2.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        
+        ClusterIndividual indiv3 = new ClusterIndividual();
+        CentroidHolder holder3 = new CentroidHolder();
+        holder3.add(ClusterCentroid.of(1,2));
+        holder3.add(ClusterCentroid.of(3,4));
+        indiv3.setCandidateSolution(holder3);
+        indiv3.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        
+        ClusterIndividual indiv4 = new ClusterIndividual();
+        CentroidHolder holder4 = new CentroidHolder();
+        holder4.add(ClusterCentroid.of(1,2));
+        holder4.add(ClusterCentroid.of(3,4));
+        indiv4.setCandidateSolution(holder4);
+        indiv4.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        
+        GBestTopology topology = new GBestTopology();
+        topology.add(indiv1);
+        topology.add(indiv2);
+        topology.add(indiv3);
+        topology.add(indiv4);
+        
+        StandardClusteringDEUpdateStrategy instance = new StandardClusteringDEUpdateStrategy();
+        ClusterIndividual result = instance.getTrialEntity(indiv1, indiv2, topology);
+        
+        Assert.assertTrue(result.getCandidateSolution().containsAll(indiv1.getCandidateSolution()));
     }
 
     /**
@@ -67,6 +106,27 @@ public class StandardClusteringDEUpdateStrategyTest {
      */
     @Test
     public void testGetOffspring() {
+        ClusterIndividual indiv1 = new ClusterIndividual();
+        CentroidHolder holder1 = new CentroidHolder();
+        holder1.add(ClusterCentroid.of(1,2));
+        holder1.add(ClusterCentroid.of(3,4));
+        indiv1.setCandidateSolution(holder1);
+        indiv1.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
         
+        ClusterIndividual indiv2 = new ClusterIndividual();
+        CentroidHolder holder2 = new CentroidHolder();
+        holder2.add(ClusterCentroid.of(1,2));
+        holder2.add(ClusterCentroid.of(4,3));
+        indiv2.setCandidateSolution(holder2);
+        indiv2.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        
+        StandardClusteringDEUpdateStrategy instance = new StandardClusteringDEUpdateStrategy();
+        ClusterIndividual result = instance.getOffspring(indiv1, indiv2);
+        
+        boolean resultToCheck = (((CentroidHolder) result.getCandidateSolution()).get(1).get(0).doubleValue() == 3.0 ||
+                ((CentroidHolder) result.getCandidateSolution()).get(1).get(0).doubleValue() == 4.0) &&
+                (((CentroidHolder) result.getCandidateSolution()).get(1).get(1).doubleValue() == 3.0 ||
+                ((CentroidHolder) result.getCandidateSolution()).get(1).get(1).doubleValue() == 4.0);
+        Assert.assertTrue(resultToCheck);
     }
 }

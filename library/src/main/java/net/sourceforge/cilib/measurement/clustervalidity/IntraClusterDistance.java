@@ -13,30 +13,52 @@ import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ *Measures the intra-cluster distance of a clustering problem
  */
 public class IntraClusterDistance extends ValidityIndex{
     
+    /*
+     * Default constructor for IntraClusterDistance
+     */
     public IntraClusterDistance() {
         super();
     }
 
+    /*
+     * Copy constructor for IntraClusterDistance
+     * @param copy The IntraClusterDistance to be copied
+     */
     public IntraClusterDistance(IntraClusterDistance copy) {
         super(copy);
     }
     
+    /*
+     * Clone method for IntraClusterDistance
+     * @return A new instance of this IntraClusterDistance
+     */
     @Override
     public Measurement<Real> getClone() {
         return new IntraClusterDistance(this);
     }
 
+    /*
+     * Gets the intra-cluster distance value
+     * @param algorithm The algorithm being measured
+     * @return The intra-cluster distance
+     */
     @Override
     public Real getValue(Algorithm algorithm) {
         CentroidHolder position = (CentroidHolder) algorithm.getBestSolution().getPosition();
         return Real.valueOf(calculateIntraClusterDistance(position));
     }
     
+    /*
+     * Calculates the intra-cluster distance using the patterns assigned
+     * to each centroid.
+     * @param position The CentroidHolder holding the cluster centroids being 
+     * compared
+     * @return The intra-cluster distance
+     */
     protected double calculateIntraClusterDistance(CentroidHolder position) {
         double sum = 0;
         int totalDataPatterns = 0;

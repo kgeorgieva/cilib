@@ -10,12 +10,18 @@ import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
 
 /**
- *
- * @author Kris
+ * Interface holding the structure of Update strategies
  */
 public interface UpdateStrategy {
     
+    /*
+     * Clone method for an UpdateStrategy
+     * @return A new instance of this UpdateStrategy
+     */
     UpdateStrategy getClone();
 
+    /*
+     * Updates the parameter accordingly
+     */
     Entity update(Entity currentEntity, Topology topology);
 }

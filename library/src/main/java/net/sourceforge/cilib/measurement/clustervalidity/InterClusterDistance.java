@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.measurement.clustervalidity;
 
@@ -12,30 +14,51 @@ import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ * Measures the InterClusterDistane of a Clustering Problem
  */
 public class InterClusterDistance extends ValidityIndex{
     
+    /*
+     * Default constructor for InterClusterDistance
+     */
     public InterClusterDistance() {
         super();
     }
 
+    /* 
+     * Copy constructor for 
+     * @param copy The InterClusterDistance to be copied
+     */
     public InterClusterDistance(InterClusterDistance copy) {
         super(copy);
     }
     
+    /*
+     * Clone method for InterClusterDistance
+     * @return A new instance of this InterClusterDistance
+     */
     @Override
     public Measurement<Real> getClone() {
         return new InterClusterDistance(this);
     }
 
+    /*
+     * Gets the final inter-cluster distance value
+     * @param algorithm The algorithm being measured
+     * @return The inter-cluster distance
+     */
     @Override
     public Real getValue(Algorithm algorithm) {
         CentroidHolder position = (CentroidHolder) algorithm.getBestSolution().getPosition();
         return Real.valueOf(calculateInterClusterDistance(position));
     }
     
+    /*
+     * Calculates the inter cluster distance using the distance between all
+     * cluster centroids
+     * @param position The centroig holder that contains the centroids to be compared
+     * @return The inter-cluster distance
+     */
     protected double calculateInterClusterDistance(CentroidHolder position) {
         double sum = 0;
         for(int k = 0; k < position.size() - 1; k++) {

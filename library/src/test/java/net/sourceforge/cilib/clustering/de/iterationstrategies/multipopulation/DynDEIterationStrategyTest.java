@@ -30,10 +30,7 @@ import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.math.random.generator.seeder.SeedSelectionStrategy;
 import net.sourceforge.cilib.math.random.generator.seeder.Seeder;
 import net.sourceforge.cilib.math.random.generator.seeder.ZeroSeederStrategy;
-/**
- *
- * @author Kris
- */
+
 public class DynDEIterationStrategyTest {
     
     @Test
