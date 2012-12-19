@@ -134,22 +134,36 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
     
     protected void updateWeakest(SinglePopulationBasedAlgorithm algorithm) {
         Topology<Individual> topology = (Topology<Individual>) algorithm.getTopology();
-        Individual weakest = topology.get(0);
-        ArrayList<Individual> weakestIndividuals = new ArrayList<Individual>();
+        int weakest = 0;
+        int individualCount;
+        int[] weakestIndividuals = new int[totalReplaceableIndividuals];
         
         for(int i = 0; i < totalReplaceableIndividuals; i++) {
+            individualCount = 0;
+            weakest = 0;
             for(Individual individual : topology) {
-                if(!weakestIndividuals.contains(individual) && weakest.getFitness().compareTo(individual.getFitness()) > 0) {
-                    weakest = individual;
+                if(!contains(weakestIndividuals, individualCount) && topology.get(weakest).getFitness().compareTo(individual.getFitness()) > 0) {
+                    weakest = individualCount;
                 }
+                individualCount++;
             }
 
-            weakestIndividuals.add(weakest);
+            weakestIndividuals[i] = weakest;
+        }
+                
+        for(int individualID : weakestIndividuals) {
+            topology.set(individualID, (Individual) updateStrategyForWeakestIndividuals.update(topology.get(individualID), algorithm));
         }
         
-        for(Individual individual : weakestIndividuals) {
-            individual = (Individual) updateStrategyForWeakestIndividuals.update(individual, algorithm);
+    }
+    
+    private boolean contains(int[] array, int value) {
+        for(int val : array) {
+            if(val == value) {
+                return true;
+            }
         }
+        return false;
     }
     
     /*
