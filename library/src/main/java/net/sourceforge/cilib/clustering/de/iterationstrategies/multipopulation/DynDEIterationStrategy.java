@@ -11,6 +11,7 @@ import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
+import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
@@ -126,12 +127,13 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
                 algorithm.performIteration();
             }
             
-            updateWeakest((Topology<Individual>) algorithm.getTopology());
+            updateWeakest((SinglePopulationBasedAlgorithm) algorithm);
         }
         
     }
     
-    protected void updateWeakest(Topology<Individual> topology) {
+    protected void updateWeakest(SinglePopulationBasedAlgorithm algorithm) {
+        Topology<Individual> topology = (Topology<Individual>) algorithm.getTopology();
         Individual weakest = topology.get(0);
         ArrayList<Individual> weakestIndividuals = new ArrayList<Individual>();
         
@@ -146,7 +148,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         }
         
         for(Individual individual : weakestIndividuals) {
-            individual = (Individual) updateStrategyForWeakestIndividuals.update(individual, topology);
+            individual = (Individual) updateStrategyForWeakestIndividuals.update(individual, algorithm);
         }
     }
     

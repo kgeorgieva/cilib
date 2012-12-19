@@ -13,7 +13,6 @@ import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.type.types.container.Vector;
-import net.sourceforge.cilib.clustering.DynamicClusteringDE;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.algorithm.initialisation.DataDependantPopulationInitializationStrategy;
 import net.sourceforge.cilib.algorithm.initialisation.PopulationInitialisationStrategy;
@@ -77,7 +76,7 @@ public class DynDEIterationStrategyTest {
     
     @Test
     public void reinitialisePopulationTest() {
-        DynamicClusteringDE de = new DynamicClusteringDE();
+        DataClusteringEC de = new DataClusteringEC();
         DynDEIterationStrategy instance = new DynDEIterationStrategy();
         GBestTopology topology = new GBestTopology();
         QuantizationErrorMinimizationProblem problem = new QuantizationErrorMinimizationProblem();
