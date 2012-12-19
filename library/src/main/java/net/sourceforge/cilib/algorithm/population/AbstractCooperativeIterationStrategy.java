@@ -143,7 +143,7 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
         }
     }
 
-    public boolean getetIsElitist() {
+    public boolean geteIsElitist() {
         return elitist;
     }
 

@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
@@ -13,7 +14,11 @@ import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
+import net.sourceforge.cilib.ec.Individual;
+import net.sourceforge.cilib.ec.update.UpdateStrategy;
+import net.sourceforge.cilib.ec.update.clustering.BrownianClusteringUpdateStrategy;
 import net.sourceforge.cilib.entity.Entity;
+import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
 import net.sourceforge.cilib.problem.solution.InferiorFitness;
@@ -31,6 +36,8 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm>{
     private double exclusionRadius;
     private DistanceMeasure measure;
+    private int totalReplaceableIndividuals;
+    private UpdateStrategy updateStrategyForWeakestIndividuals;
     
     /*
      * Default constructor for DynDEIterationStrategy
@@ -38,6 +45,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
     public DynDEIterationStrategy() {
         exclusionRadius = 1.0;
         measure = new EuclideanDistanceMeasure();
+        updateStrategyForWeakestIndividuals = new BrownianClusteringUpdateStrategy();
+        totalReplaceableIndividuals = 5;
     }
     
     /*
@@ -47,6 +56,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
     public DynDEIterationStrategy(DynDEIterationStrategy copy) {
         exclusionRadius = copy.exclusionRadius;
         measure = copy.measure;
+        updateStrategyForWeakestIndividuals = copy.updateStrategyForWeakestIndividuals;
+        totalReplaceableIndividuals = copy.totalReplaceableIndividuals;
     }
     
     /*
@@ -91,15 +102,16 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      */
     protected void processPopulations(List<PopulationBasedAlgorithm> populations) {
         boolean distanceIsSmaller;
-        PopulationBasedAlgorithm weakest;
+        PopulationBasedAlgorithm weakestPopulation;
+        
         for(PopulationBasedAlgorithm algorithm : populations) {
             distanceIsSmaller = false;
-            weakest = algorithm;
+            weakestPopulation = algorithm;
             for(PopulationBasedAlgorithm otherAlgorithm : populations) {
                 if(!algorithm.equals(otherAlgorithm)) {
                     if(aDistanceIsSmallerThanRadius((CentroidHolder) algorithm.getBestSolution().getPosition(), (CentroidHolder) otherAlgorithm.getBestSolution().getPosition())) {
-                        if (weakest.getBestSolution().compareTo(otherAlgorithm.getBestSolution()) > 0) {
-                            weakest = otherAlgorithm;
+                        if (weakestPopulation.getBestSolution().compareTo(otherAlgorithm.getBestSolution()) > 0) {
+                            weakestPopulation = otherAlgorithm;
                         }
                         distanceIsSmaller = true;
                     }
@@ -107,14 +119,35 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
             }
             
             if(distanceIsSmaller) {
-                reinitialisePopulation((DataClusteringEC) weakest);
+                reinitialisePopulation((DataClusteringEC) weakestPopulation);
             }
             
             if(!algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
                 algorithm.performIteration();
             }
+            
+            updateWeakest((Topology<Individual>) algorithm.getTopology());
         }
         
+    }
+    
+    protected void updateWeakest(Topology<Individual> topology) {
+        Individual weakest = topology.get(0);
+        ArrayList<Individual> weakestIndividuals = new ArrayList<Individual>();
+        
+        for(int i = 0; i < totalReplaceableIndividuals; i++) {
+            for(Individual individual : topology) {
+                if(!weakestIndividuals.contains(individual) && weakest.getFitness().compareTo(individual.getFitness()) > 0) {
+                    weakest = individual;
+                }
+            }
+
+            weakestIndividuals.add(weakest);
+        }
+        
+        for(Individual individual : weakestIndividuals) {
+            individual = (Individual) updateStrategyForWeakestIndividuals.update(individual, topology);
+        }
     }
     
     /*
