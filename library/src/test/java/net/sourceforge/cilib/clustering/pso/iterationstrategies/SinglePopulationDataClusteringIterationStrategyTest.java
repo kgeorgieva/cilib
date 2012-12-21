@@ -98,9 +98,9 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
     @Test
     public void testSetReinitialisationInterval() {
         SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
-        instance.setReinitialisationInterval(2);
+        instance.setReinitialisationPercentage(2);
         
-        assertEquals(instance.getReinitialisationInterval(), 2);
+        assertEquals(instance.getReinitialisationPercentage(), 2);
     }
     /**
      * Test of getReinitialisationInterval method, of class SinglePopulationDataClusteringIterationStrategy.
@@ -108,9 +108,9 @@ public class SinglePopulationDataClusteringIterationStrategyTest {
     @Test
     public void testGetReinitialisationInterval() {
         SinglePopulationDataClusteringPSOIterationStrategy instance = new StandardDataClusteringIterationStrategy();
-        instance.setReinitialisationInterval(2);
+        instance.setReinitialisationPercentage(2);
         
-        assertEquals(instance.getReinitialisationInterval(), 2);
+        assertEquals(instance.getReinitialisationPercentage(), 2);
     }
 
     /**

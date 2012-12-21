@@ -1,11 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies;
 
 import net.sourceforge.cilib.clustering.DataClusteringEC;
-import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.math.random.UniformDistribution;
@@ -15,8 +16,9 @@ import net.sourceforge.cilib.util.changeDetection.ChangeDetectionStrategy;
 import net.sourceforge.cilib.util.changeDetection.IterationBasedChangeDetectionStrategy;
 
 /**
- *
- * @author Kris
+ * This class performs 1 iteration of the StandardClusteringDEIterationStrategy followed by a check to see
+ * if any changes have occurred in the dataset. If changes have occurred, part of the population 
+ * (or the whole population) is re-initialized.
  */
 public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulationDataClusteringDEIterationStrategy{
     private SinglePopulationDataClusteringDEIterationStrategy delegate;
@@ -85,7 +87,7 @@ public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulatio
      * Reinitializes part of, or the whole, population
      * @param topology The population to be reinitialised
      */
-    private void reinitializePosition(Topology<ClusterIndividual> topology) {
+    protected void reinitializePosition(Topology<ClusterIndividual> topology) {
         int index = (int) new UniformDistribution().getRandomNumber(0, topology.size());
         int totalEntities = topology.size() * reinitialisationPercentage / 100;
         int[] alreadyChangedIndexes = new int[totalEntities];
@@ -106,6 +108,12 @@ public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulatio
         
     }
     
+    /*
+     * Checks if an array contains a value
+     * @param array The array to be checked
+     * @param value The value to be checked for
+     * @return True if the value is contained in the array, false otherwise
+     */
     private boolean contains(int[] array, int value) {
         for(int val : array) {
             if(val == value) {

@@ -171,18 +171,17 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
     }
 
     /*
-     * Gets the value of the reinitialisation interval
-     * @return The reinitialisation interval
+     * Gets the value of the reinitialisation percentage
+     * @return The reinitialisation percentage
      */
     public int getReinitialisationPercentage() {
         return reinitialisationPercentage;
     }
 
     /*
-     * Sets the itnerval at which the individuals will be re-initialized if reinitialization 
-     * due to change in environment is required. In other words, every how-many particles
-     * must be initialized? To initialize all, the interval is 1
-     * @param reinitialisationInterval the new interval
+     * Sets the percentage of individuals that will be re-initialized if reinitialization 
+     * due to change in environment is required. 
+     * @param reinitialisationPercentage the new percentage
      */
     public void setReinitialisationPercentage(int reinitialisationPercentage) {
         this.reinitialisationPercentage = reinitialisationPercentage;

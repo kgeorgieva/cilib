@@ -109,6 +109,12 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
         
     }
     
+    /*
+     * Checks if an array contains a value
+     * @param array The array to be checked
+     * @param value The value to be checked for
+     * @return True if the value is contained in the array, false otherwise
+     */
     private boolean contains(int[] array, int value) {
         for(int val : array) {
             if(val == value) {

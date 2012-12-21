@@ -95,18 +95,17 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
     }
     
     /*
-     * Sets the itnerval at which the particles will be re-initialized if reinitialization 
-     * due to change in environment is required. In other words, every how-many particles
-     * must be initialized? To initialize all, the interval is 1
-     * @param interval the new interval
+     * Sets the percentage of particles that will be re-initialized if reinitialization 
+     * due to change in environment is required.
+     * @param percentage the new percentage
      */
     public void setReinitialisationPercentage(int percentage) {
         reinitialisationPercentage = percentage;
     }
     
     /*
-     * Returns the value of the reinitialisation interval
-     * @return reinitialisationInterval The value of the reinitialisation interval
+     * Returns the value of the reinitialisation percentage
+     * @return reinitialisationPercentage The value of the reinitialisation percentage
      */
     public int getReinitialisationPercentage() {
         return reinitialisationPercentage;

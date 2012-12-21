@@ -90,6 +90,12 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
         super.performIteration(algorithm);
     }
     
+    /*
+     * Checks if an array contains a value
+     * @param array The array to be checked
+     * @param value The value to be checked for
+     * @return True if the value is contained in the array, false otherwise
+     */
     private boolean contains(int[] array, int value) {
         for(int val : array) {
             if(val == value) {
@@ -113,16 +119,16 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
     }
     
     /*
-     * Returns the interval at which entities are re-initialized
-     * @return reinitializationInterval The interval at which entities are re-initialized
+     * Returns the percentage of entities to be re-initialized
+     * @return reinitializationPercentage The percentage at which entities are re-initialized
      */
     public int getReinitialisationPercentage() {
         return reinitialisationPercentage;
     }
     
     /*
-     * Sets the interval at which entities must be re-initialized
-     * @param interval The interval at which entities must be
+     * Sets the percentage of entities to be re-initialized
+     * @param percentage The percentage of entities to be reinitialised
      */
     public void setReinitialisationPercentage(int percentage) {
         reinitialisationPercentage = percentage;

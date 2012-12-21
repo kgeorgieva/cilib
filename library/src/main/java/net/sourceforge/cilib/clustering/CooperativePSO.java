@@ -25,7 +25,6 @@ import net.sourceforge.cilib.type.types.container.Vector;
  */
 public class CooperativePSO extends MultiPopulationBasedAlgorithm{
     private IterationStrategy<CooperativePSO> iterationStrategy;
-    private int interval;
     OptimisationSolution bestSolution;
 
     /*
@@ -34,7 +33,6 @@ public class CooperativePSO extends MultiPopulationBasedAlgorithm{
     public CooperativePSO() {
         super();
         iterationStrategy = new CooperativeDataClusteringPSOIterationStrategy();
-        interval = 0;
         bestSolution = new OptimisationSolution(Vector.of(Double.POSITIVE_INFINITY), new MinimisationFitness(Double.POSITIVE_INFINITY));
 
     }
@@ -46,7 +44,6 @@ public class CooperativePSO extends MultiPopulationBasedAlgorithm{
     public CooperativePSO(CooperativePSO copy) {
         super(copy);
         iterationStrategy = copy.iterationStrategy;
-        interval = copy.interval;
         bestSolution = copy.bestSolution;
     }
 
