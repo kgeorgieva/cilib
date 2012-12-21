@@ -6,16 +6,14 @@
  */
 package net.sourceforge.cilib.clustering.pso.iterationstrategies.multipopulation;
 
-import net.sourceforge.cilib.clustering.pso.iterationstrategies.multipopulation.CooperativeDataClusteringPSOIterationStrategy;
-import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.CooperativePSO;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.util.changeDetection.ChangeDetectionStrategy;
 import net.sourceforge.cilib.util.changeDetection.IterationBasedChangeDetectionStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
-import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
 import net.sourceforge.cilib.entity.Topology;
+import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 
 /**
@@ -24,7 +22,7 @@ import net.sourceforge.cilib.type.types.container.CentroidHolder;
  * particle as well as part of or the whole population.
  */
 public class DynamicCooperativeDataClusteringPSOIterationStrategy extends CooperativeDataClusteringPSOIterationStrategy{
-    int reinitializationInterval;
+    int reinitialisationPercentage;
     ChangeDetectionStrategy changeDetectionStrategy;
     
     /*
@@ -32,7 +30,7 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
      */
     public DynamicCooperativeDataClusteringPSOIterationStrategy() {
         super();
-        reinitializationInterval = 1;
+        reinitialisationPercentage = 1;
         changeDetectionStrategy = new IterationBasedChangeDetectionStrategy();
     }
     
@@ -41,7 +39,7 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
      */
     public DynamicCooperativeDataClusteringPSOIterationStrategy(DynamicCooperativeDataClusteringPSOIterationStrategy copy) {
         super(copy);
-        reinitializationInterval = copy.reinitializationInterval;
+        reinitialisationPercentage = copy.reinitialisationPercentage;
         changeDetectionStrategy = copy.changeDetectionStrategy;
     }
     
@@ -66,19 +64,40 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
         if(changeDetectionStrategy.detectChange()) {
                this.reinitializeContext(algorithm);
                for(PopulationBasedAlgorithm currentAlgorithm : algorithm.getPopulations()) {
-                 topology = currentAlgorithm.getTopology();
+                    topology = currentAlgorithm.getTopology();
 
-                 for(int i = 0; i < topology.size(); i+=reinitializationInterval) {
-                    ((ClusterParticle) topology.get(i)).reinitialise();
-                    clearDataPatterns((ClusterParticle) topology.get(i));
-                    assignDataPatternsToParticle(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()),
-                            ((SinglePopulationDataClusteringPSOIterationStrategy)(((DataClusteringPSO) currentAlgorithm).getIterationStrategy())).getDataset());
-                }
+                    int index = (int) new UniformDistribution().getRandomNumber(0, topology.size());
+                    int totalEntities = topology.size() * reinitialisationPercentage / 100;
+                    int[] alreadyChangedIndexes = new int[totalEntities];
+
+                    for(int j = 0; j < alreadyChangedIndexes.length; j++) {
+                        alreadyChangedIndexes[j] = -1;
+                    }
+
+                    for(int i = 0; i < totalEntities; i++) {
+                        while(contains(alreadyChangedIndexes, index)) {
+                            index = (int) new UniformDistribution().getRandomNumber(0, topology.size());
+                        }
+
+                        ((ClusterParticle) topology.get(i)).reinitialise();
+                        assignDataPatternsToParticle(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()), table);
+                        alreadyChangedIndexes[i] = index;
+                    }
              }
                
         }
         
         super.performIteration(algorithm);
+    }
+    
+    private boolean contains(int[] array, int value) {
+        for(int val : array) {
+            if(val == value) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /*
@@ -97,16 +116,16 @@ public class DynamicCooperativeDataClusteringPSOIterationStrategy extends Cooper
      * Returns the interval at which entities are re-initialized
      * @return reinitializationInterval The interval at which entities are re-initialized
      */
-    public int getReinitializationInterval() {
-        return reinitializationInterval;
+    public int getReinitialisationPercentage() {
+        return reinitialisationPercentage;
     }
     
     /*
      * Sets the interval at which entities must be re-initialized
      * @param interval The interval at which entities must be
      */
-    public void setReinitializationInterval(int interval) {
-        reinitializationInterval = interval;
+    public void setReinitialisationPercentage(int percentage) {
+        reinitialisationPercentage = percentage;
     }
     
     /*
