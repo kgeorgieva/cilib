@@ -10,7 +10,6 @@ import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.entity.Particle;
 import net.sourceforge.cilib.entity.initialization.DataDependantInitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.StandardCentroidInitializationStrategy;
-import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
 import net.sourceforge.cilib.entity.initialization.RandomBoundedInitializationStrategy;
 import net.sourceforge.cilib.problem.ClusteringProblem;
 import net.sourceforge.cilib.problem.solution.Fitness;

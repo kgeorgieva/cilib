@@ -1,65 +1,62 @@
-/**           __  __
- *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
- *   / ___/ / / / __ \   (c) CIRG @ UP
- *  / /__/ / / / /_/ /   http://cilib.net
- *  \___/_/_/_/_.___/
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
-package net.sourceforge.cilib.clustering.pso.iterationstrategies;
+package net.sourceforge.cilib.clustering.de.iterationstrategies;
 
-import net.sourceforge.cilib.clustering.DataClusteringPSO;
-import net.sourceforge.cilib.util.changeDetection.ChangeDetectionStrategy;
-import net.sourceforge.cilib.util.changeDetection.IterationBasedChangeDetectionStrategy;
-import net.sourceforge.cilib.clustering.entity.ClusterParticle;
+import net.sourceforge.cilib.clustering.DataClusteringEC;
+import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.problem.boundaryconstraint.BoundaryConstraint;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
+import net.sourceforge.cilib.util.changeDetection.ChangeDetectionStrategy;
+import net.sourceforge.cilib.util.changeDetection.IterationBasedChangeDetectionStrategy;
 
 /**
  *
- * This class performs 1 iteration of the StandardDataClusteringIterationStrategy followed by a check to see
- * if any changes have occurred in the dataset. If changes have occurred, part of the population 
- * (or the whole population) is re-initialized.
+ * @author Kris
  */
-public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopulationDataClusteringPSOIterationStrategy{
-    private SinglePopulationDataClusteringPSOIterationStrategy delegate;
+public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulationDataClusteringDEIterationStrategy{
+    private SinglePopulationDataClusteringDEIterationStrategy delegate;
     private ChangeDetectionStrategy changeDetectionStrategy;
     
     /*
-     * Default constructor for ReinitializingDataClusteringIterationStrategy
+     * Default constructor for ReinitialisingClusteringDEIterationStrategy
      */
-    public ReinitializingDataClusteringPSOIterationStrategy() {
+    public ReinitialisingClusteringDEIterationStrategy() {
         super();
-        delegate = new StandardDataClusteringIterationStrategy();
+        delegate = new StandardClusteringDEIterationStrategy();
         changeDetectionStrategy = new IterationBasedChangeDetectionStrategy();
     }
     
     /*
-     * Copy constructor for ReinitializingDataClusteringIterationStrategy
+     * Copy constructor for ReinitialisingClusteringDEIterationStrategy
      */
-    public ReinitializingDataClusteringPSOIterationStrategy(ReinitializingDataClusteringPSOIterationStrategy copy) {
+    public ReinitialisingClusteringDEIterationStrategy(ReinitialisingClusteringDEIterationStrategy copy) {
         super(copy);
         delegate = copy.delegate;
         changeDetectionStrategy = copy.changeDetectionStrategy;
     }
     
     /*
-     * Clone method for ReinitializingDataClusteringIterationStrategy
+     * Clone method for ReinitializingDataClusteringDEIterationStrategy
      */
     @Override
-    public ReinitializingDataClusteringPSOIterationStrategy getClone() {
-        return new ReinitializingDataClusteringPSOIterationStrategy(this);
+    public ReinitialisingClusteringDEIterationStrategy getClone() {
+        return new ReinitialisingClusteringDEIterationStrategy(this);
     }
 
     /*
-     * Performs an iteration of it's delegate iteration startegy (by default the StandardDataClusteringIterationStrategy).
+     * Performs an iteration of it's delegate iteration startegy (by default the StandardClusteringDEIterationStrategy).
      * Reinitializes part of, or the whole, population if a change has taken place.
      * @param algorithm The algorithm using this iteration strategy
      */
     @Override
-    public void performIteration(DataClusteringPSO algorithm) {
+    public void performIteration(DataClusteringEC algorithm) {
         if(changeDetectionStrategy.detectChange()) {
-            reinitializePosition(algorithm.getTopology());
+            reinitializePosition((Topology<ClusterIndividual>) algorithm.getTopology());
             reinitialized = true;
         }
         
@@ -72,7 +69,7 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
      * Returns the delegate iteration strategy
      * @return delegate The delegate iteration strategy
      */
-    public SinglePopulationDataClusteringPSOIterationStrategy getDelegate() {
+    public SinglePopulationDataClusteringDEIterationStrategy getDelegate() {
         return delegate;
     }
     
@@ -80,7 +77,7 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
      * Sets teh delegate iteration strategy to the one received as a parameter
      * @param newDelegate The new delegate iteration strategy
      */
-    public void setDelegate(SinglePopulationDataClusteringPSOIterationStrategy newDelegate){
+    public void setDelegate(SinglePopulationDataClusteringDEIterationStrategy newDelegate){
         delegate = newDelegate;
     }
     
@@ -88,7 +85,7 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
      * Reinitializes part of, or the whole, population
      * @param topology The population to be reinitialised
      */
-    private void reinitializePosition(Topology<ClusterParticle> topology) {
+    private void reinitializePosition(Topology<ClusterIndividual> topology) {
         int index = (int) new UniformDistribution().getRandomNumber(0, topology.size());
         int totalEntities = topology.size() * reinitialisationPercentage / 100;
         int[] alreadyChangedIndexes = new int[totalEntities];
@@ -102,8 +99,8 @@ public class ReinitializingDataClusteringPSOIterationStrategy extends SinglePopu
                 index = (int) new UniformDistribution().getRandomNumber(0, topology.size());
             }
             
-            ((ClusterParticle) topology.get(i)).reinitialise();
-            assignDataPatternsToParticle(((CentroidHolder)((ClusterParticle) topology.get(i)).getCandidateSolution()), dataset);
+            ((ClusterIndividual) topology.get(i)).reinitialise();
+            assignDataPatternsToIndividual(((CentroidHolder)((ClusterIndividual) topology.get(i)).getCandidateSolution()), dataset);
             alreadyChangedIndexes[i] = index;
         }
         

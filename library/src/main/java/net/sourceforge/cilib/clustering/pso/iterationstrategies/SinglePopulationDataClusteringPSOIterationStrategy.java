@@ -26,7 +26,7 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
     protected DataTable dataset;
     protected EuclideanDistanceMeasure distanceMeasure;
     protected SlidingWindow window;
-    protected int reinitialisationInterval;
+    protected int reinitialisationPercentage;
     protected int dimensions;
     protected boolean reinitialized;
     
@@ -39,7 +39,7 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
         distanceMeasure = new EuclideanDistanceMeasure();
         boundaryConstraint = new CentroidBoundaryConstraint();
         window = new SlidingWindow();
-        reinitialisationInterval = 1;
+        reinitialisationPercentage = 1;
         dimensions = 0;
         
     }
@@ -53,7 +53,7 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
         distanceMeasure = copy.distanceMeasure;
         boundaryConstraint = copy.boundaryConstraint;
         window = copy.window;
-        reinitialisationInterval = copy.reinitialisationInterval;
+        reinitialisationPercentage = copy.reinitialisationPercentage;
         dimensions = copy.dimensions;
         reinitialized = copy.reinitialized;
     }
@@ -100,16 +100,16 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
      * must be initialized? To initialize all, the interval is 1
      * @param interval the new interval
      */
-    public void setReinitialisationInterval(int interval) {
-        reinitialisationInterval = interval;
+    public void setReinitialisationPercentage(int percentage) {
+        reinitialisationPercentage = percentage;
     }
     
     /*
      * Returns the value of the reinitialisation interval
      * @return reinitialisationInterval The value of the reinitialisation interval
      */
-    public int getReinitialisationInterval() {
-        return reinitialisationInterval;
+    public int getReinitialisationPercentage() {
+        return reinitialisationPercentage;
     }
     
     /*
@@ -166,4 +166,5 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
                 candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
             }
     }
+    
 }
