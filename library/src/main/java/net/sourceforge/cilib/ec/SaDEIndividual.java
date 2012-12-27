@@ -13,9 +13,7 @@ import net.sourceforge.cilib.controlparameter.initialisation.ControlParameterIni
 import net.sourceforge.cilib.controlparameter.initialisation.RandomParameterInitialisationStrategy;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
-import net.sourceforge.cilib.entity.operators.creation.CreationStrategy;
 import net.sourceforge.cilib.entity.operators.creation.RandCreationStrategy;
-import net.sourceforge.cilib.entity.operators.crossover.CrossoverStrategy;
 import net.sourceforge.cilib.entity.operators.crossover.de.DifferentialEvolutionBinomialCrossover;
 import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.problem.solution.Fitness;
@@ -27,13 +25,13 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * the parameter adaptation strategies. It is specific to self adapting DE problems. 
  */
 public class SaDEIndividual extends ParameterizedIndividual{
-     private ParameterAdaptationStrategy scalingFactorParameterAdaptationStrategy;
-     private ParameterAdaptationStrategy crossoverProbabilityParameterAdaptationStrategy;
+     protected ParameterAdaptationStrategy scalingFactorParameterAdaptationStrategy;
+     protected ParameterAdaptationStrategy crossoverProbabilityParameterAdaptationStrategy;
      
-     private ControlParameterInitialisationStrategy scalingFactorInitialisationStrategy;
-     private ControlParameterInitialisationStrategy  crossoverProbabilityInitialisationStrategy;
+     protected ControlParameterInitialisationStrategy scalingFactorInitialisationStrategy;
+     protected ControlParameterInitialisationStrategy  crossoverProbabilityInitialisationStrategy;
      
-     private Fitness previousFitness;
+     protected Fitness previousFitness;
      
      /*
       * Default constructor for SaDEIndividual
@@ -113,38 +111,6 @@ public class SaDEIndividual extends ParameterizedIndividual{
                 acceptedEntity, accepted);
         crossoverProbabilityParameterAdaptationStrategy.accepted((SettableControlParameter) crossoverStrategy.getCrossoverPointProbability(),
                 acceptedEntity, accepted);
-    }
-
-    /*
-     * Returns the trialVectorCreationStrategy held by the individual
-     * @return The trialVectorCreationStrategy
-     */
-    public CreationStrategy getTrialVectorCreationStrategy() {
-        return trialVectorCreationStrategy;
-    }
-
-    /*
-     * Sets the trialVectorCreationStrategy to the one received as a parameter
-     * @param trialVectorCreationStrategy The new trial vector creation strategy
-     */
-    public void setTrialVectorCreationStrategy(CreationStrategy trialVectorCreationStrategy) {
-        this.trialVectorCreationStrategy = trialVectorCreationStrategy;
-    }
-
-    /*
-     * Returns the crossoverStrategy held by the individual
-     * @return The crossoverStrategy
-     */
-    public CrossoverStrategy getCrossoverStrategy() {
-        return crossoverStrategy;
-    }
-
-    /*
-     * Sets the crossoverStrategy to the one received as a parameter
-     * @param crossoverStrategy The new crossoverStrategy
-     */
-    public void setCrossoverStrategy(CrossoverStrategy crossoverStrategy) {
-        this.crossoverStrategy = crossoverStrategy;
     }
 
     /*

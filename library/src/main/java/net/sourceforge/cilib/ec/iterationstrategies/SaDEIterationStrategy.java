@@ -95,7 +95,6 @@ public class SaDEIterationStrategy extends AbstractIterationStrategy<EC> {
         
         for (int i = 0; i < topology.size(); i++) {
             SaDEIndividual current = (SaDEIndividual) topology.get(i);
-            
             //System.out.println("Parameter: " + current.getTrialVectorCreationStrategy().getScaleParameter().getParameter());
             
             current.calculateFitness();
