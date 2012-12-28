@@ -184,7 +184,7 @@ public class SaDDEIterationStrategy extends AbstractIterationStrategy<EC> {
                 selectorList.add(tempOffspringEntity);
                 
                 //Select the best offspring so far
-                if(current.getTotalOffspring() > 1) {
+                if(0 > 1) {
                     offspringEntity = ((ParameterizedIndividual) offspringSelectionStrategy.on(selectorList).select()).getClone();
                 } else {
                     offspringEntity = tempOffspringEntity.getClone();

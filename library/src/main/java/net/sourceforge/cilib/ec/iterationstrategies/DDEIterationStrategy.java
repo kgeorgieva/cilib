@@ -146,7 +146,7 @@ public class DDEIterationStrategy  extends AbstractIterationStrategy<EC> {
                 selectorList.add(tempOffspringEntity);
                 
                 //Select the best offspring so far
-                if(totalOffspring > 1) {
+                if(o > 1) {
                     offspringEntity = ((Entity) offspringSelectionStrategy.on(selectorList).select()).getClone();
                 } else {
                     offspringEntity = tempOffspringEntity.getClone();
