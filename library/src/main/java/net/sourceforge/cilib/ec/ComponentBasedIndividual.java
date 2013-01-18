@@ -5,14 +5,17 @@
 package net.sourceforge.cilib.ec;
 
 import java.util.ArrayList;
-import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.controlparameter.adaptation.ParameterAdaptationStrategy;
-import net.sourceforge.cilib.controlparameter.adaptation.SaDEParameterAdaptationStrategy;
+import net.sourceforge.cilib.controlparameter.adaptation.VarianceBasedUpdateStrategy;
+import net.sourceforge.cilib.controlparameter.adaptation.VarianceCrossoverProbabilityUpdateStrategy;
+import net.sourceforge.cilib.controlparameter.adaptation.VarianceGreedUpdateStrategy;
+import net.sourceforge.cilib.controlparameter.adaptation.VarianceScalingFactorUpdateStrategy;
 import net.sourceforge.cilib.controlparameter.initialisation.ControlParameterInitialisationStrategy;
 import net.sourceforge.cilib.controlparameter.initialisation.RandomParameterInitialisationStrategy;
 import net.sourceforge.cilib.entity.EntityType;
+import net.sourceforge.cilib.entity.initialization.InitializationStrategy;
 import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.problem.solution.InferiorFitness;
 import net.sourceforge.cilib.type.types.container.Vector;
@@ -21,12 +24,16 @@ import net.sourceforge.cilib.type.types.container.Vector;
  *
  * @author Kris
  */
-public class ComponentBasedIndividual extends SaDEIndividual{
+public class ComponentBasedIndividual extends Individual{
     private ArrayList<SettableControlParameter> crossoverProbabilityPerComponent;
     private ArrayList<SettableControlParameter> scalingFactorPerComponent;
     private ArrayList<SettableControlParameter> greedPerComponent;
     private double parameterChangeCount;
-    private ParameterAdaptationStrategy greedParameterAdaptationStrategy;
+    private VarianceBasedUpdateStrategy greedParameterAdaptationStrategy;
+    private VarianceBasedUpdateStrategy scalingFactorParameterAdaptationStrategy;
+    private VarianceBasedUpdateStrategy crossoverProbabilityParameterAdaptationStrategy;
+    private ControlParameterInitialisationStrategy scalingFactorInitialisationStrategy;
+    private ControlParameterInitialisationStrategy  crossoverProbabilityInitialisationStrategy;
     
     private ControlParameterInitialisationStrategy greedInitialisationStrategy;
     
@@ -36,7 +43,11 @@ public class ComponentBasedIndividual extends SaDEIndividual{
         scalingFactorPerComponent = new ArrayList<SettableControlParameter>();
         greedPerComponent = new ArrayList<SettableControlParameter>();
         greedInitialisationStrategy = new RandomParameterInitialisationStrategy();
-        greedParameterAdaptationStrategy = new SaDEParameterAdaptationStrategy();
+        greedParameterAdaptationStrategy = new VarianceGreedUpdateStrategy();
+        scalingFactorParameterAdaptationStrategy = new VarianceScalingFactorUpdateStrategy();
+        crossoverProbabilityParameterAdaptationStrategy = new VarianceCrossoverProbabilityUpdateStrategy();
+        scalingFactorInitialisationStrategy = new RandomParameterInitialisationStrategy();
+        crossoverProbabilityInitialisationStrategy = new RandomParameterInitialisationStrategy();
         parameterChangeCount = 0;
     }
     
@@ -48,6 +59,10 @@ public class ComponentBasedIndividual extends SaDEIndividual{
         greedInitialisationStrategy = copy.greedInitialisationStrategy;
         greedParameterAdaptationStrategy = copy.greedParameterAdaptationStrategy;
         parameterChangeCount = copy.parameterChangeCount;
+        scalingFactorParameterAdaptationStrategy = copy.scalingFactorParameterAdaptationStrategy;
+        crossoverProbabilityParameterAdaptationStrategy = copy.crossoverProbabilityParameterAdaptationStrategy;
+        scalingFactorInitialisationStrategy = copy.scalingFactorInitialisationStrategy.getClone();
+        crossoverProbabilityInitialisationStrategy = copy.crossoverProbabilityInitialisationStrategy.getClone();
     }
     
     @Override
@@ -65,6 +80,9 @@ public class ComponentBasedIndividual extends SaDEIndividual{
         
         this.getProperties().put(EntityType.STRATEGY_PARAMETERS, strategy);
         this.getProperties().put(EntityType.FITNESS, InferiorFitness.instance());
+        scalingFactorPerComponent = new ArrayList<SettableControlParameter>();
+        crossoverProbabilityPerComponent = new ArrayList<SettableControlParameter>();
+        greedPerComponent = new ArrayList<SettableControlParameter>();
         
         for(int i =0; i < getCandidateSolution().size(); i++) {
             StandardUpdatableControlParameter sParameter = new StandardUpdatableControlParameter();
@@ -81,23 +99,127 @@ public class ComponentBasedIndividual extends SaDEIndividual{
         }
      }
     
-     public void updateParameters(double varianceOfOldPopulation, double varianceOfNewPopulation) {
+     public void updateParameters(Vector variance, int totalIndividuals) {
+         
          if(parameterChangeCount == 0) {
+             int index = 0;
              for(SettableControlParameter parameter : scalingFactorPerComponent) {
                  //set parameters needed
+                 scalingFactorParameterAdaptationStrategy.setUpdateParameters(variance.get(index).doubleValue(), totalIndividuals, crossoverProbabilityPerComponent.get(0).getParameter());
                  scalingFactorParameterAdaptationStrategy.change(parameter);
+                 index++;
              }
          } else if(parameterChangeCount == 1) {
+             int index = 0;
              for(SettableControlParameter parameter : crossoverProbabilityPerComponent) {
                  //set parameters needed
+                 crossoverProbabilityParameterAdaptationStrategy.setUpdateParameters(variance.get(index).doubleValue(), totalIndividuals, scalingFactorPerComponent.get(0).getParameter());
                  crossoverProbabilityParameterAdaptationStrategy.change(parameter);
+                 index++;
              }
          } else if(parameterChangeCount == 2) {
+             int index = 0;
              for(SettableControlParameter parameter : greedPerComponent) {
                  //set parameters needed
+                 greedParameterAdaptationStrategy.setUpdateParameters(variance.get(index).doubleValue(), totalIndividuals, crossoverProbabilityPerComponent.get(0).getParameter());
                  greedParameterAdaptationStrategy.change(parameter);
+                 index++;
              }
          }
+         
+         if(parameterChangeCount == 2) {
+             parameterChangeCount = 0;
+         } else {
+             parameterChangeCount++;
+         }
      }
+
+    public ArrayList<SettableControlParameter> getCrossoverProbabilityPerComponent() {
+        return crossoverProbabilityPerComponent;
+    }
+
+    public void setCrossoverProbabilityPerComponent(ArrayList<SettableControlParameter> crossoverProbabilityPerComponent) {
+        this.crossoverProbabilityPerComponent = crossoverProbabilityPerComponent;
+    }
+
+    public ArrayList<SettableControlParameter> getScalingFactorPerComponent() {
+        return scalingFactorPerComponent;
+    }
+
+    public void setScalingFactorPerComponent(ArrayList<SettableControlParameter> scalingFactorPerComponent) {
+        this.scalingFactorPerComponent = scalingFactorPerComponent;
+    }
+
+    public ArrayList<SettableControlParameter> getGreedPerComponent() {
+        return greedPerComponent;
+    }
+
+    public void setGreedPerComponent(ArrayList<SettableControlParameter> greedPerComponent) {
+        this.greedPerComponent = greedPerComponent;
+    }
+
+    public double getParameterChangeCount() {
+        return parameterChangeCount;
+    }
+
+    public void setParameterChangeCount(double parameterChangeCount) {
+        this.parameterChangeCount = parameterChangeCount;
+    }
+
+    public ParameterAdaptationStrategy getGreedParameterAdaptationStrategy() {
+        return greedParameterAdaptationStrategy;
+    }
+
+    public void setGreedParameterAdaptationStrategy(VarianceBasedUpdateStrategy greedParameterAdaptationStrategy) {
+        this.greedParameterAdaptationStrategy = greedParameterAdaptationStrategy;
+    }
+
+    public ControlParameterInitialisationStrategy getGreedInitialisationStrategy() {
+        return greedInitialisationStrategy;
+    }
+
+    public void setGreedInitialisationStrategy(ControlParameterInitialisationStrategy greedInitialisationStrategy) {
+        this.greedInitialisationStrategy = greedInitialisationStrategy;
+    }
+
+    public VarianceBasedUpdateStrategy getScalingFactorParameterAdaptationStrategy() {
+        return scalingFactorParameterAdaptationStrategy;
+    }
+
+    public void setScalingFactorParameterAdaptationStrategy(VarianceBasedUpdateStrategy scalingFactorParameterAdaptationStrategy) {
+        this.scalingFactorParameterAdaptationStrategy = scalingFactorParameterAdaptationStrategy;
+    }
+
+    public VarianceBasedUpdateStrategy getCrossoverProbabilityParameterAdaptationStrategy() {
+        return crossoverProbabilityParameterAdaptationStrategy;
+    }
+
+    public void setCrossoverProbabilityParameterAdaptationStrategy(VarianceBasedUpdateStrategy crossoverProbabilityParameterAdaptationStrategy) {
+        this.crossoverProbabilityParameterAdaptationStrategy = crossoverProbabilityParameterAdaptationStrategy;
+    }
+
+    public ControlParameterInitialisationStrategy getScalingFactorInitialisationStrategy() {
+        return scalingFactorInitialisationStrategy;
+    }
+
+    public void setScalingFactorInitialisationStrategy(ControlParameterInitialisationStrategy scalingFactorInitialisationStrategy) {
+        this.scalingFactorInitialisationStrategy = scalingFactorInitialisationStrategy;
+    }
+
+    public ControlParameterInitialisationStrategy getCrossoverProbabilityInitialisationStrategy() {
+        return crossoverProbabilityInitialisationStrategy;
+    }
+
+    public void setCrossoverProbabilityInitialisationStrategy(ControlParameterInitialisationStrategy crossoverProbabilityInitialisationStrategy) {
+        this.crossoverProbabilityInitialisationStrategy = crossoverProbabilityInitialisationStrategy;
+    }
+
+    public InitializationStrategy<Individual> getInitialisationStrategy() {
+        return initialisationStrategy;
+    }
+
+    public void setInitialisationStrategy(InitializationStrategy<Individual> initialisationStrategy) {
+        this.initialisationStrategy = initialisationStrategy;
+    }
      
 }

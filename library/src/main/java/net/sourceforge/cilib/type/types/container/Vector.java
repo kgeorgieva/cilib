@@ -472,6 +472,14 @@ public class Vector implements StructuredType<Numeric>,
         }
         return this.multiply(1.0 / scalar);
     }
+    
+    public final Vector divide(Vector vector) {
+        Numeric[] result = new Numeric[components.length];
+        for (int i = 0, n = components.length; i < n; i++) {
+            result[i] = Real.valueOf(components[i].doubleValue() / vector.get(i).doubleValue(), components[i].getBounds());
+        }
+        return new Vector(result);
+    }
 
     /**
      * {@inheritDoc}
@@ -886,6 +894,15 @@ public class Vector implements StructuredType<Numeric>,
      */
     public static Builder newBuilder() {
         return new Builder();
+    }
+    
+    public Vector pow(int exponent) {
+        Numeric[] result = new Numeric[components.length];
+        for (int i = 0, n = components.length; i < n; i++) {
+            result[i] = Real.valueOf(Math.pow(components[i].doubleValue(), 2), components[i].getBounds());
+        }
+        
+        return new Vector(result);
     }
 
     /**

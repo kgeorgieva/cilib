@@ -11,36 +11,35 @@ import net.sourceforge.cilib.entity.Entity;
  *
  * @author Kris
  */
-public class VarianceScalingFactorUpdateStrategy implements VarianceBasedUpdateStrategy{
+public class VarianceGreedUpdateStrategy implements VarianceBasedUpdateStrategy{
     private double variance;
     private double totalIndividuals;
     private double minimalParameterValue;
-    private double crossoverProbability;
+    private double scalingFactor;
     
-    public VarianceScalingFactorUpdateStrategy() {
+    public VarianceGreedUpdateStrategy() {
         variance = 0.0;
         totalIndividuals = 50;
-        minimalParameterValue = 1 / Math.sqrt(totalIndividuals);
-        crossoverProbability = 0.0;
+        minimalParameterValue = 1;
+        scalingFactor = 0.0;
     }
     
-    public VarianceScalingFactorUpdateStrategy(VarianceScalingFactorUpdateStrategy copy) {
+    public VarianceGreedUpdateStrategy(VarianceGreedUpdateStrategy copy) {
         variance = copy.variance;
         totalIndividuals = copy.totalIndividuals;
         minimalParameterValue = copy.minimalParameterValue;
-        crossoverProbability = copy.crossoverProbability;
+        scalingFactor = copy.scalingFactor;
     }
 
-    public VarianceScalingFactorUpdateStrategy getClone() {
-        return new VarianceScalingFactorUpdateStrategy(this);
+    public ParameterAdaptationStrategy getClone() {
+        return new VarianceGreedUpdateStrategy(this);
     }
 
     public void change(SettableControlParameter parameter) {
         double newParameter = 0;
-        double probability = totalIndividuals * (variance - 1) + crossoverProbability * (2 - crossoverProbability);
         
-        if(probability >= 0) {
-            newParameter = Math.sqrt((totalIndividuals * (variance - 1) + crossoverProbability * (2 - crossoverProbability)) / (2 * totalIndividuals * crossoverProbability));
+        if(variance >= 2 * Math.pow(scalingFactor, 2)) {
+            newParameter = 1 - Math.sqrt((totalIndividuals / (totalIndividuals - 1)) * (variance - 2 * Math.pow(scalingFactor, 2)));
         } else {
             newParameter = minimalParameterValue;
         }
@@ -48,18 +47,18 @@ public class VarianceScalingFactorUpdateStrategy implements VarianceBasedUpdateS
         parameter.update(newParameter);
     }
     
-    public void setUpdateParameters(double variance, int totalIndividuals,  double crossoverProbability) {
+    public void setUpdateParameters(double variance, int totalIndividuals, double crossoverProbability) {
         this.variance = variance;
         this.totalIndividuals = totalIndividuals;
-        this.crossoverProbability = crossoverProbability;
+        this.scalingFactor = crossoverProbability;
     }
 
     public void accepted(SettableControlParameter parameter, Entity entity, boolean accepted) {
-        throw new UnsupportedOperationException("Not applicable to this update trategy");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public double recalculateAdaptiveVariables() {
-        throw new UnsupportedOperationException("Not applicable to this update trategy");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public double getMinimalParameterValue() {
@@ -69,6 +68,5 @@ public class VarianceScalingFactorUpdateStrategy implements VarianceBasedUpdateS
     public void setMinimalParameterValue(double minimalParameterValue) {
         this.minimalParameterValue = minimalParameterValue;
     }
-    
     
 }

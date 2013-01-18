@@ -11,7 +11,7 @@ import net.sourceforge.cilib.entity.Entity;
  *
  * @author Kris
  */
-public class VarianceCrossoverProbabilityUpdateStrategy implements ParameterAdaptationStrategy{
+public class VarianceCrossoverProbabilityUpdateStrategy implements VarianceBasedUpdateStrategy{
     private double variance;
     private double totalIndividuals;
     private double minimalParameterValue;
@@ -48,10 +48,9 @@ public class VarianceCrossoverProbabilityUpdateStrategy implements ParameterAdap
         parameter.update(newParameter);
     }
     
-    public void setUpdateParameters(double variance, int totalIndividuals, double minimalParameterValue, double scalingFactor) {
+    public void setUpdateParameters(double variance, int totalIndividuals, double scalingFactor) {
         this.variance = variance;
         this.totalIndividuals = totalIndividuals;
-        this.minimalParameterValue = minimalParameterValue;
         this.scalingFactor = scalingFactor;
     }
 
@@ -61,5 +60,13 @@ public class VarianceCrossoverProbabilityUpdateStrategy implements ParameterAdap
 
     public double recalculateAdaptiveVariables() {
         throw new UnsupportedOperationException("Not applicable to this update trategy");
+    }
+
+    public double getMinimalParameterValue() {
+        return minimalParameterValue;
+    }
+
+    public void setMinimalParameterValue(double minimalParameterValue) {
+        this.minimalParameterValue = minimalParameterValue;
     }
 }
