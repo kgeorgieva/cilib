@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.entity.operators.crossover.de;
 
@@ -17,26 +19,49 @@ import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.type.types.container.Vector;
 
 /**
- *
- * @author Kris
+ * Component based version of the binomial crossover strategy. Described by 
+ * Zaharie in her 2003 paper "Control of Population Diversity and Adaptation 
+ * in Differential Evolution Algorithms" published in the Proceedings of Mendel
+ * 2003, 9th International Conference on Soft Computing.
+ * 
+ * It performs the same task as the DifferentialEvolutionBinomialCrossover creation
+ * strategy but uses the  * parameters held by the individual instead of by the 
+ * strategy. A different parameter is used for each different dimension (component).
  */
 public class ComponentBasedBinomialCrossover implements CrossoverStrategy {
 
     private ProbabilityDistributionFunction random;
     
+    /*
+     * Default constructor for ComponentBasedBinomialCrossover
+     */
     public ComponentBasedBinomialCrossover() {
         this.random = new UniformDistribution();
     }
     
+    /*
+     * Copy constructor for ComponentBasedBinomialCrossover
+     * @param copy The ComponentBasedBinomialCrossover to be copied
+     */
     public ComponentBasedBinomialCrossover(ComponentBasedBinomialCrossover copy) {
         this.random = copy.random;
     }
 
+    /*
+     * Clone method for ComponentBasedBinomialCrossover
+     * @return A new instance of the ComponentBasedBinomialCrossover
+     */
     @Override
     public ComponentBasedBinomialCrossover getClone() {
         return new ComponentBasedBinomialCrossover(this);
     }
     
+    /*
+     * Combines the parents to generate an offspring entity using the list
+     * of parameters held by the individual.
+     * @param parentCollection The list of parents to be crossed over
+     * @return A list of offspring entities
+     */
     @Override
     public <E extends Entity> List<E> crossover(List<E> parentCollection) {
         Preconditions.checkArgument(parentCollection.size() == 2, "DifferentialEvolutionBinomialCrossover requires 2 parents.");
@@ -50,7 +75,7 @@ public class ComponentBasedBinomialCrossover implements CrossoverStrategy {
         int i = Double.valueOf(random.getRandomNumber(0, parentVector.size())).intValue();
 
         for (int j = 0; j < parentVector.size(); j++) {
-            ControlParameter crossoverPointProbability = current.getCrossoverProbabilityPerComponent().get(i);
+            ControlParameter crossoverPointProbability = current.getCrossoverProbabilityPerComponent().get(j);
             if (random.getRandomNumber() < crossoverPointProbability.getParameter() || j == i) {
                 offspringVector.add(trialVector.get(j));
             } else {
@@ -64,10 +89,20 @@ public class ComponentBasedBinomialCrossover implements CrossoverStrategy {
         return Arrays.asList(offspring);
     }
 
+    /*
+     * Set the probability distribution function to be used to determine the index of the dimension
+     * of parent 1 which will always be included.
+     * @param random The probability districution function
+     */
     public void setRandom(ProbabilityDistributionFunction random) {
         this.random = random;
     }
 
+    /*
+     * Gets the probability distribution function to be used to determine the index of the dimension
+     * of parent 1 which will always be included.
+     * @return The probability districution function
+     */
     public ProbabilityDistributionFunction getRandom() {
         return random;
     }
@@ -80,6 +115,10 @@ public class ComponentBasedBinomialCrossover implements CrossoverStrategy {
         throw new UnsupportedOperationException("Can not get. Component specific parameter held by parent entity. Each dimension has its own.");
     }
 
+    /*
+     * Gets the total number of parents required to perform this crossover
+     * @return The total number of parents required to perform this crossover
+     */
     @Override
     public int getNumberOfParents() {
         return 2;

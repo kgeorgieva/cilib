@@ -91,7 +91,7 @@ public class RandCreationStrategy implements CreationStrategy {
         while (iterator.hasNext()) {
             Vector first = (Vector) iterator.next().getCandidateSolution();
             Vector second = (Vector) iterator.next().getCandidateSolution();
-
+            
             Vector difference = first.subtract(second);
             distanceVector = distanceVector.plus(difference);
         }

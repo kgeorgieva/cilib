@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
@@ -21,8 +23,14 @@ import net.sourceforge.cilib.util.selection.recipes.RandomSelector;
 import net.sourceforge.cilib.util.selection.recipes.Selector;
 
 /**
- *
- * @author Kris
+ * This is the iteration strategy described by Zaharie in her 2003 paper "Control 
+ * of Population Diversity and Adaptation in Differential Evolution Algorithms"
+ * published in the Proceedings of Mendel 2003, 9th International Conference on
+ * Soft Computing.
+ * 
+ * It is a component based method which adapts the parameters of the algorithm
+ * at the end of every iteration. These parameters are adapted using a variance
+ * value determined using the current topology.
  */
 public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC> {
     protected Selector targetVectorSelectionStrategy;
@@ -30,6 +38,9 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
     protected CrossoverStrategy crossoverStrategy;
     protected ZaharieComponentVariance variance;
     
+    /*
+     * Default constructor for VarianceSaDEIterationStrategy
+     */
     public VarianceSaDEIterationStrategy() {
         super();
         this.targetVectorSelectionStrategy = new RandomSelector();
@@ -38,6 +49,10 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
         variance = new ZaharieComponentVariance();
     }
 
+    /*
+     * Copy constructor for VarianceSaDEIterationStrategy
+     * @param copy The VarianceSaDEIterationStrategy to be copied
+     */
     public VarianceSaDEIterationStrategy(VarianceSaDEIterationStrategy copy) {
         this.targetVectorSelectionStrategy = copy.targetVectorSelectionStrategy;
         this.trialVectorCreationStrategy = copy.trialVectorCreationStrategy.getClone();
@@ -45,11 +60,20 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
         variance = copy.variance;
     }
     
+    /*
+     * Clone method for VarianceSaDEIterationStrategy
+     * @return A new instance of this VarianceSaDEIterationStrategy
+     */
     @Override
     public AbstractIterationStrategy<EC> getClone() {
         return new VarianceSaDEIterationStrategy(this);
     }
 
+    /*
+     * The iteration strategy which frist apdapts the particles in a component-based manner
+     * and proceeds to adapt the parameters using the variance of the topology.
+     * @param algorithm The current algorithm
+     */
     @Override
     public void performIteration(EC algorithm) {
         Topology<Entity> topology = (Topology<Entity>) algorithm.getTopology();
@@ -65,12 +89,13 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
 
             // Create the trial vector / entity
             Entity trialEntity = trialVectorCreationStrategy.create(targetEntity, current, topology);
-
+            
             // Create the offspring by applying cross-over
             List<Entity> offspring = (List<Entity>) this.crossoverStrategy.crossover(Arrays.asList(current, trialEntity)); // Order is VERY important here!!
 
             // Replace the parent (current) if the offspring is better
             Entity offspringEntity = offspring.get(0);
+            
             boundaryConstraint.enforce(offspringEntity);
             offspringEntity.calculateFitness();
 
@@ -79,7 +104,6 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
             }
             
         }
-        
         Vector currentVariance = variance.calculateVariance(topology);
         Vector zaharieVariance = variance.getZaharieMeasure(currentVariance, previousVariance);
         
@@ -87,28 +111,53 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
             ComponentBasedIndividual current = (ComponentBasedIndividual) topology.get(i);
             current.updateParameters(zaharieVariance, topology.size());
         }
+        
     }
 
+    /*
+     * Gets the selection strategy of the target vector
+     * @return The target vector selection strategy
+     */
     public Selector getTargetVectorSelectionStrategy() {
         return targetVectorSelectionStrategy;
     }
 
+    /*
+     * Sets the selection strategy of the target vector
+     * @param targetVectorSelectionStrategy The new target vector selection strategy
+     */
     public void setTargetVectorSelectionStrategy(Selector targetVectorSelectionStrategy) {
         this.targetVectorSelectionStrategy = targetVectorSelectionStrategy;
     }
 
+    /*
+     * Gets the creation strategy of the trial vector
+     * @return The trial vector creation strategy
+     */
     public CreationStrategy getTrialVectorCreationStrategy() {
         return trialVectorCreationStrategy;
     }
 
+     /*
+     * Sets the creation strategy of the trial vector
+     * @param trialVectorCreationStrategy The trial vector creation strategy
+     */
     public void setTrialVectorCreationStrategy(CreationStrategy trialVectorCreationStrategy) {
         this.trialVectorCreationStrategy = trialVectorCreationStrategy;
     }
-
+    
+    /*
+     * Gets the crossover strategy
+     * @return The crossover strategy
+     */
     public CrossoverStrategy getCrossoverStrategy() {
         return crossoverStrategy;
     }
 
+    /*
+     * Sets the crossover strategy
+     * @return crossoverStrategy The new crossover strategy
+     */
     public void setCrossoverStrategy(CrossoverStrategy crossoverStrategy) {
         this.crossoverStrategy = crossoverStrategy;
     }

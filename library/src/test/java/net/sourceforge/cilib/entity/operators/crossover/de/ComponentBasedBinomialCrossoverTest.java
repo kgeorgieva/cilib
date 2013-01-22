@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.entity.operators.crossover.de;
 
@@ -21,10 +23,6 @@ import net.sourceforge.cilib.type.types.container.Vector;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- *
- * @author Kris
- */
 public class ComponentBasedBinomialCrossoverTest {
     
      /**
@@ -69,14 +67,11 @@ public class ComponentBasedBinomialCrossoverTest {
             Vector parent2 = (Vector) i2.getCandidateSolution();
 
             Assert.assertEquals(1, children.size());
-            System.out.println("Child: " + child1);
-            System.out.println("Parent: " + parent1);
-            System.out.println("Parent2: " + parent2);
-
-            Assert.assertSame(child1.get(0), parent2.get(0));
-            Assert.assertNotSame(child1.get(1), parent2.get(1));
-            Assert.assertSame(child1.get(1), parent1.get(1));
-            Assert.assertNotSame(child1.get(0), parent1.get(0));
+            
+            Assert.assertSame(child1.get(0), parent1.get(0));
+            Assert.assertNotSame(child1.get(1), parent1.get(1));
+            Assert.assertSame(child1.get(1), parent2.get(1));
+            Assert.assertNotSame(child1.get(0), parent2.get(0));
             
          } finally {
             Seeder.setSeederStrategy(seedStrategy);

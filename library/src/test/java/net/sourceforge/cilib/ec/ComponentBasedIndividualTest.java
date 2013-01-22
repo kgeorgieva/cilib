@@ -1,6 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**           __  __
+ *    _____ _/ /_/ /_    Computational Intelligence Library (CIlib)
+ *   / ___/ / / / __ \   (c) CIRG @ UP
+ *  / /__/ / / / /_/ /   http://cilib.net
+ *  \___/_/_/_/_.___/
  */
 package net.sourceforge.cilib.ec;
 
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 import junit.framework.Assert;
 import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
-import net.sourceforge.cilib.controlparameter.adaptation.ParameterAdaptationStrategy;
 import net.sourceforge.cilib.controlparameter.adaptation.VarianceBasedUpdateStrategy;
 import net.sourceforge.cilib.controlparameter.adaptation.VarianceCrossoverProbabilityUpdateStrategy;
 import net.sourceforge.cilib.controlparameter.initialisation.ControlParameterInitialisationStrategy;
@@ -19,19 +20,9 @@ import net.sourceforge.cilib.entity.operators.creation.RandCreationStrategy;
 import net.sourceforge.cilib.entity.operators.crossover.de.DifferentialEvolutionBinomialCrossover;
 import net.sourceforge.cilib.functions.continuous.unconstrained.Spherical;
 import net.sourceforge.cilib.problem.FunctionOptimisationProblem;
-import net.sourceforge.cilib.problem.Problem;
 import net.sourceforge.cilib.type.types.container.Vector;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-/**
- *
- * @author Kris
- */
 public class ComponentBasedIndividualTest {
     
     /**
