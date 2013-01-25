@@ -44,8 +44,8 @@ public class RayTuriValidityIndex extends ValidityIndex {
     @Override
     public Real getValue(Algorithm algorithm) {
         CentroidHolder holder = (CentroidHolder) algorithm.getBestSolution().getPosition();
-        double result = getaverageClusterDistance(holder) / (double) getInterClusterDistance(holder);
         
+        double result = getaverageClusterDistance(holder) / (double) getInterClusterDistance(holder);
         return Real.valueOf(result);
     }
     

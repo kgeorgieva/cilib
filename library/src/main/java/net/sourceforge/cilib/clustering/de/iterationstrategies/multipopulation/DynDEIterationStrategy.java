@@ -15,6 +15,7 @@ import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm
 import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
+import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.ec.update.UpdateStrategy;
 import net.sourceforge.cilib.ec.update.clustering.BrownianClusteringUpdateStrategy;
@@ -89,9 +90,28 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      */
     protected void evaluatePopulations(MultiPopulationBasedAlgorithm algorithm) {
         for(PopulationBasedAlgorithm alg : algorithm.getPopulations()) {
+            clearCentroidDistanceValues((Topology<ClusterIndividual>) alg.getTopology());
             for(Entity individual : alg.getTopology()) {
                 assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) alg).getIterationStrategy()).getWindow().getCurrentDataset());
                 individual.calculateFitness();
+            }
+            
+        }
+        
+        
+    }
+    
+    /*
+     * Removes all previously assigned patterns from the centroids that they were assigned to
+     * @param topology The topology to be cleaned up
+     */
+    protected void clearCentroidDistanceValues(Topology<ClusterIndividual> topology) {
+        CentroidHolder candidateSolution;
+        for(ClusterIndividual particle : topology) {
+            candidateSolution = (CentroidHolder) particle.getCandidateSolution();
+            
+            for(ClusterCentroid centroid : candidateSolution) {
+                centroid.clearDataItems();
             }
         }
     }
@@ -105,7 +125,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         boolean distanceIsSmaller;
         PopulationBasedAlgorithm weakestPopulation;
         
-        for(PopulationBasedAlgorithm algorithm : populations) {
+        for(PopulationBasedAlgorithm algorithm : populations) {   
+            
             distanceIsSmaller = false;
             weakestPopulation = algorithm;
             for(PopulationBasedAlgorithm otherAlgorithm : populations) {
@@ -128,6 +149,13 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
             }
             
             updateWeakest((SinglePopulationBasedAlgorithm) algorithm);
+            
+            clearCentroidDistanceValues((Topology<ClusterIndividual>) algorithm.getTopology());
+            for(Entity individual : algorithm.getTopology()) {
+                assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) algorithm).getIterationStrategy()).getWindow().getCurrentDataset());
+                individual.calculateFitness();
+            }
+            
         }
         
     }
