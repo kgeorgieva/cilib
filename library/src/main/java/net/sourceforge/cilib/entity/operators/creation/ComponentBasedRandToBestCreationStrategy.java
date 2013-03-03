@@ -13,8 +13,6 @@ import net.sourceforge.cilib.ec.ComponentBasedIndividual;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topologies;
 import net.sourceforge.cilib.entity.Topology;
-import net.sourceforge.cilib.math.random.generator.MersenneTwister;
-import net.sourceforge.cilib.math.random.generator.RandomProvider;
 import net.sourceforge.cilib.type.types.Numeric;
 import net.sourceforge.cilib.type.types.container.Vector;
 import net.sourceforge.cilib.util.selection.Samples;
@@ -55,13 +53,11 @@ public class ComponentBasedRandToBestCreationStrategy extends RandCreationStrate
      * @return The generated trial entity
      */
     @Override
-    public Entity create(Entity targetEntity, Entity current,
-            Topology<? extends Entity> topology) {
-        Entity bestEntity = Topologies.getBestEntity(topology);
-        RandomProvider random = new MersenneTwister();
-        List<Entity> participants = (List<Entity>) Selection.copyOf(topology)
+    public <T extends Entity> T create(T targetEntity, T current, Topology<T> topology) {
+        T bestEntity = Topologies.getBestEntity(topology);
+        List<T> participants = Selection.copyOf(topology)
                 .exclude(targetEntity, bestEntity, current)
-                .orderBy(new RandomArrangement(random))
+                .orderBy(new RandomArrangement())
                 .select(Samples.first((int) numberOfDifferenceVectors.getParameter()).unique());
         Vector differenceVector = determineDistanceVector(participants);
 
@@ -95,7 +91,7 @@ public class ComponentBasedRandToBestCreationStrategy extends RandCreationStrate
         
         Vector trialVector = bestVector.plus(targetVector.plus(differenceVector));
 
-        Entity trialEntity = current.getClone();
+        T trialEntity = (T) current.getClone();
         trialEntity.setCandidateSolution(trialVector);
 
         return trialEntity;

@@ -32,16 +32,16 @@ import net.sourceforge.cilib.util.selection.recipes.Selector;
  * at the end of every iteration. These parameters are adapted using a variance
  * value determined using the current topology.
  */
-public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC> {
+public class ZaharieSaDEIterationStrategy extends AbstractIterationStrategy<EC> {
     protected Selector targetVectorSelectionStrategy;
     protected CreationStrategy trialVectorCreationStrategy;
     protected CrossoverStrategy crossoverStrategy;
     protected ZaharieComponentVariance variance;
     
     /*
-     * Default constructor for VarianceSaDEIterationStrategy
+     * Default constructor for ZaharieSaDEIterationStrategy
      */
-    public VarianceSaDEIterationStrategy() {
+    public ZaharieSaDEIterationStrategy() {
         super();
         this.targetVectorSelectionStrategy = new RandomSelector();
         this.trialVectorCreationStrategy = new ComponentBasedRandToBestCreationStrategy();
@@ -50,10 +50,10 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
     }
 
     /*
-     * Copy constructor for VarianceSaDEIterationStrategy
-     * @param copy The VarianceSaDEIterationStrategy to be copied
+     * Copy constructor for ZaharieSaDEIterationStrategy
+     * @param copy The ZaharieSaDEIterationStrategy to be copied
      */
-    public VarianceSaDEIterationStrategy(VarianceSaDEIterationStrategy copy) {
+    public ZaharieSaDEIterationStrategy(ZaharieSaDEIterationStrategy copy) {
         this.targetVectorSelectionStrategy = copy.targetVectorSelectionStrategy;
         this.trialVectorCreationStrategy = copy.trialVectorCreationStrategy.getClone();
         this.crossoverStrategy = copy.crossoverStrategy.getClone();
@@ -61,12 +61,12 @@ public class VarianceSaDEIterationStrategy extends AbstractIterationStrategy<EC>
     }
     
     /*
-     * Clone method for VarianceSaDEIterationStrategy
-     * @return A new instance of this VarianceSaDEIterationStrategy
+     * Clone method for ZaharieSaDEIterationStrategy
+     * @return A new instance of this ZaharieSaDEIterationStrategy
      */
     @Override
     public AbstractIterationStrategy<EC> getClone() {
-        return new VarianceSaDEIterationStrategy(this);
+        return new ZaharieSaDEIterationStrategy(this);
     }
 
     /*

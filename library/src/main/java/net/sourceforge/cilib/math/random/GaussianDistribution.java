@@ -8,13 +8,13 @@ package net.sourceforge.cilib.math.random;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
-import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.math.random.generator.Rand;
 
 
 public class GaussianDistribution implements ProbabilityDistributionFunction {
-    private ControlParameter mean;
-    private ControlParameter deviation;
+    private SettableControlParameter mean;
+    private SettableControlParameter deviation;
 
     /**
      * Default constructor.
@@ -93,7 +93,7 @@ public class GaussianDistribution implements ProbabilityDistributionFunction {
         return (locationScale[0] + locationScale[1] * v / u);
     }
 
-    public void setDeviation(ControlParameter deviation) {
+    public void setDeviation(SettableControlParameter deviation) {
 
         this.deviation = deviation;
     }

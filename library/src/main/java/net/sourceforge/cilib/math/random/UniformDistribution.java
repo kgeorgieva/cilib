@@ -70,28 +70,4 @@ public class UniformDistribution implements ProbabilityDistributionFunction {
         return lowerBound;
     }
 
-    public RandomProvider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(RandomProvider provider) {
-        this.provider = provider;
-    }
-
-    public ControlParameter getLowerBound() {
-        return lowerBound;
-    }
-
-    public void setLowerBound(ControlParameter lowerBound) {
-        this.lowerBound = lowerBound;
-    }
-
-    public ControlParameter getUpperBound() {
-        return upperBound;
-    }
-
-    public void setUpperBound(ControlParameter upperBound) {
-        this.upperBound = upperBound;
-    }
-    
 }

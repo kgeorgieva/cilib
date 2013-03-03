@@ -15,6 +15,7 @@ import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.EntityType;
 import net.sourceforge.cilib.math.random.CauchyDistribution;
 import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;
+import net.sourceforge.cilib.math.random.generator.Rand;
 import net.sourceforge.cilib.math.random.generator.seeder.SeedSelectionStrategy;
 import net.sourceforge.cilib.math.random.generator.seeder.Seeder;
 import net.sourceforge.cilib.math.random.generator.seeder.ZeroSeederStrategy;
@@ -32,50 +33,44 @@ public class ComponentBasedBinomialCrossoverTest {
     public void testCrossover() {
         System.out.println("crossover");
         
-        SeedSelectionStrategy seedStrategy = Seeder.getSeederStrategy();
-        Seeder.setSeederStrategy(new ZeroSeederStrategy());
+        Rand.setSeed(0);
+        ComponentBasedIndividual i1 = new ComponentBasedIndividual();
+        ComponentBasedIndividual i2 = new ComponentBasedIndividual();
 
-        try {
-            ComponentBasedIndividual i1 = new ComponentBasedIndividual();
-            ComponentBasedIndividual i2 = new ComponentBasedIndividual();
+        i1.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.of(0.0, 1.0));
+        i2.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.of(5.0, 6.0));
+        i1.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
+        i2.getProperties().put(EntityType.FITNESS, new MinimisationFitness(1.2));
 
-            i1.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.of(0.0, 1.0));
-            i2.getProperties().put(EntityType.CANDIDATE_SOLUTION, Vector.of(5.0, 6.0));
-            i1.getProperties().put(EntityType.FITNESS, new MinimisationFitness(2.0));
-            i2.getProperties().put(EntityType.FITNESS, new MinimisationFitness(1.2));
+        ArrayList<SettableControlParameter> crossoverParams = new ArrayList<SettableControlParameter>();
+        StandardUpdatableControlParameter par1 = new StandardUpdatableControlParameter();
+        par1.setParameter(0.0);
+        StandardUpdatableControlParameter par2 = new StandardUpdatableControlParameter();
+        par2.setParameter(1.0);
+        crossoverParams.add(par1);
+        crossoverParams.add(par2);
 
-            ArrayList<SettableControlParameter> crossoverParams = new ArrayList<SettableControlParameter>();
-            StandardUpdatableControlParameter par1 = new StandardUpdatableControlParameter();
-            par1.setParameter(0.0);
-            StandardUpdatableControlParameter par2 = new StandardUpdatableControlParameter();
-            par2.setParameter(1.0);
-            crossoverParams.add(par1);
-            crossoverParams.add(par2);
+        i1.setCrossoverProbabilityPerComponent(crossoverParams);
+        i2.setCrossoverProbabilityPerComponent(crossoverParams);
 
-            i1.setCrossoverProbabilityPerComponent(crossoverParams);
-            i2.setCrossoverProbabilityPerComponent(crossoverParams);
+        List<Entity> parents = new ArrayList<Entity>();
+        parents.add(i1);
+        parents.add(i2);
 
-            List<Entity> parents = new ArrayList<Entity>();
-            parents.add(i1);
-            parents.add(i2);
+        ComponentBasedBinomialCrossover crossoverStrategy = new ComponentBasedBinomialCrossover();
 
-            ComponentBasedBinomialCrossover crossoverStrategy = new ComponentBasedBinomialCrossover();
+        List<Entity> children = (List<Entity>) crossoverStrategy.crossover(parents);
+        Vector child1 = (Vector) children.get(0).getCandidateSolution();
+        Vector parent1 = (Vector) i1.getCandidateSolution();
+        Vector parent2 = (Vector) i2.getCandidateSolution();
 
-            List<Entity> children = (List<Entity>) crossoverStrategy.crossover(parents);
-            Vector child1 = (Vector) children.get(0).getCandidateSolution();
-            Vector parent1 = (Vector) i1.getCandidateSolution();
-            Vector parent2 = (Vector) i2.getCandidateSolution();
+        Assert.assertEquals(1, children.size());
 
-            Assert.assertEquals(1, children.size());
-            
-            Assert.assertSame(child1.get(0), parent1.get(0));
-            Assert.assertNotSame(child1.get(1), parent1.get(1));
-            Assert.assertSame(child1.get(1), parent2.get(1));
-            Assert.assertNotSame(child1.get(0), parent2.get(0));
-            
-         } finally {
-            Seeder.setSeederStrategy(seedStrategy);
-        }
+        Assert.assertSame(child1.get(0), parent1.get(0));
+        Assert.assertNotSame(child1.get(1), parent1.get(1));
+        Assert.assertSame(child1.get(1), parent2.get(1));
+        Assert.assertNotSame(child1.get(0), parent2.get(0));
+        
     }
 
     /**
