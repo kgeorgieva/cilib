@@ -160,7 +160,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
             }
         }
         
-        if (converged == ca.getPopulations().size()) {
+        /*if (converged == ca.getPopulations().size()) {
             PopulationBasedAlgorithm weakest = null;
             for (PopulationBasedAlgorithm current : ca.getPopulations()) {
                 ((DataClusteringPSO) current).setIsExplorer(false);
@@ -170,6 +170,25 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
                 }
             }
             reInitialise((DataClusteringPSO) weakest);
+        }*/
+        
+        DataClusteringPSO explorer = null;
+        if (converged == ca.getPopulations().size()) {
+            PopulationBasedAlgorithm weakest = null;
+            for (PopulationBasedAlgorithm current : ca.getPopulations()) {
+                if (weakest == null || weakest.getBestSolution().compareTo(current.getBestSolution()) > 0) {
+                    weakest = current;
+                }
+                
+                if(((DataClusteringPSO) current).isExplorer()) {
+                    explorer = (DataClusteringPSO) current.getClone();
+                }
+            }
+            
+            weakest = explorer.getClone();
+            ((DataClusteringPSO) weakest).setIsExplorer(false);
+            reInitialise((DataClusteringPSO) explorer);
+            ((DataClusteringPSO) explorer).setIsExplorer(true);
         }
 
         for (PopulationBasedAlgorithm current : ca.getPopulations()) {

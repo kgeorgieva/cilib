@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
+import com.google.common.collect.Lists;
 import net.sourceforge.cilib.entity.operators.creation.CreationStrategy;
 import net.sourceforge.cilib.entity.operators.creation.RandCreationStrategy;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.ec.EC;
+import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.entity.operators.crossover.CrossoverStrategy;
@@ -64,7 +66,7 @@ public class DifferentialEvolutionIterationStrategy extends AbstractIterationStr
      */
     @Override
     public void performIteration(EC ec) {
-        @SuppressWarnings("unchecked")
+        List<Entity> newTopology = Lists.newArrayList();
         Topology<Entity> topology = (Topology<Entity>) ec.getTopology();
 
         for (int i = 0; i < topology.size(); i++) {
@@ -86,10 +88,15 @@ public class DifferentialEvolutionIterationStrategy extends AbstractIterationStr
             offspringEntity.calculateFitness();
 
             if (offspringEntity.getFitness().compareTo(current.getFitness()) > 0) { // the trial vector is better than the parent
-                topology.set(i, offspringEntity); // Replace the parent with the offspring individual
+                newTopology.add(offspringEntity); // Replace the parent with the offspring individual
+            } else {
+                newTopology.add(current);
             }
             
         }
+        
+        topology.clear();
+        topology.addAll(newTopology);
     }
 
     /**

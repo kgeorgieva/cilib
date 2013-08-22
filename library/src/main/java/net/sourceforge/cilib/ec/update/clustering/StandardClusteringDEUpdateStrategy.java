@@ -114,7 +114,7 @@ public class StandardClusteringDEUpdateStrategy implements UpdateStrategy{
         return trialIndividual;
     }
     
-    protected ClusterIndividual getOffspring(ClusterIndividual current, ClusterIndividual trialEntity) {
+    public ClusterIndividual getOffspring(ClusterIndividual current, ClusterIndividual trialEntity) {
         CentroidHolder holder = new CentroidHolder();
         List<Entity> centroidOffspring;
         Entity currentCentroid;
@@ -138,6 +138,30 @@ public class StandardClusteringDEUpdateStrategy implements UpdateStrategy{
         offspring.setCandidateSolution(holder);
         
         return offspring;
+    }
+
+    public Selector getTargetVectorSelectionStrategy() {
+        return targetVectorSelectionStrategy;
+    }
+
+    public void setTargetVectorSelectionStrategy(Selector targetVectorSelectionStrategy) {
+        this.targetVectorSelectionStrategy = targetVectorSelectionStrategy;
+    }
+
+    public CreationStrategy getTrialVectorCreationStrategy() {
+        return trialVectorCreationStrategy;
+    }
+
+    public void setTrialVectorCreationStrategy(CreationStrategy trialVectorCreationStrategy) {
+        this.trialVectorCreationStrategy = trialVectorCreationStrategy;
+    }
+
+    public CrossoverStrategy getCrossoverStrategy() {
+        return crossoverStrategy;
+    }
+
+    public void setCrossoverStrategy(CrossoverStrategy crossoverStrategy) {
+        this.crossoverStrategy = crossoverStrategy;
     }
     
 }

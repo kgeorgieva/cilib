@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -110,6 +111,7 @@ public class DDEIterationStrategy  extends AbstractIterationStrategy<EC> {
     @Override
     public void performIteration(EC ec) {
         Topology<Entity> topology = (Topology<Entity>) ec.getTopology();
+        List<Entity> newTopology = Lists.newArrayList();
         ArrayList selectorList = new ArrayList();
         Entity current;
         Entity offspringEntity;
@@ -157,16 +159,21 @@ public class DDEIterationStrategy  extends AbstractIterationStrategy<EC> {
             //select the best between the current entity and the offspring entity
             if(selectorRandom.getRandomNumber() > selectorParameter) {
                 if(offspringEntity.getFitness().compareTo(current.getFitness()) > 0 ){
-                    topology.set(i, offspringEntity);
-                } 
+                    newTopology.add(offspringEntity);
+                } else {
+                    newTopology.add(current);
+                }
             } else {
                 selectorList.clear();
                 selectorList.add(offspringEntity);
                 selectorList.add(current);
                 offspringEntity = (Entity) nextGenerationSelectionStrategy.on(selectorList).select();
-                topology.set(i, offspringEntity);
+                newTopology.add(offspringEntity);
             }
         }
+        
+        topology.clear();
+        topology.addAll(newTopology);
     }
 
     /**

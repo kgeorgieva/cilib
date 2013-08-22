@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,7 @@ import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.ec.EC;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.ec.ParameterizedIndividual;
+import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.entity.topologies.GBestTopology;
 import net.sourceforge.cilib.math.random.ProbabilityDistributionFunction;
@@ -125,6 +127,7 @@ public class SaDDEIterationStrategy extends AbstractIterationStrategy<EC> {
     @Override
     public void performIteration(EC algorithm) {
         Topology<ParameterizedIndividual> topology = (Topology<ParameterizedIndividual>) algorithm.getTopology();
+        List<ParameterizedIndividual> newTopology = Lists.newArrayList();
         ArrayList<Individual> parameterList = new ArrayList<Individual>(); //
         ArrayList selectorList = new ArrayList();
         ParameterizedIndividual current; 
@@ -195,14 +198,16 @@ public class SaDDEIterationStrategy extends AbstractIterationStrategy<EC> {
             //Replace the Individual with the surviving individual
             if(selectorRandom.getRandomNumber() > selectorParameter.doubleValue()) {
                 if(offspringEntity.getFitness().compareTo(current.getFitness()) > 0 ){
-                    topology.set(i, offspringEntity.getClone());
-                } 
+                    newTopology.add(offspringEntity.getClone());
+                } else {
+                    newTopology.add(current.getClone());
+                }
             } else {
                 selectorList.clear();
                 selectorList.add(offspringEntity);
                 selectorList.add(current);
                 offspringEntity = (ParameterizedIndividual) nextGenerationSelectionStrategy.on(selectorList).select();
-                topology.set(i, offspringEntity.getClone());
+                newTopology.add(offspringEntity);
             }
             
         }

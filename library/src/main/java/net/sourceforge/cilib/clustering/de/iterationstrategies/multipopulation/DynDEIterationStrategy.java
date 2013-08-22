@@ -6,10 +6,8 @@
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
-import net.sourceforge.cilib.algorithm.population.MultiPopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
@@ -36,10 +34,10 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  * for Dynamic Optimization Problems".
  */
 public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm>{
-    private double exclusionRadius;
-    private DistanceMeasure measure;
-    private int totalReplaceableIndividuals;
-    private UpdateStrategy updateStrategyForWeakestIndividuals;
+    protected double exclusionRadius;
+    protected DistanceMeasure measure;
+    protected int totalReplaceableIndividuals;
+    protected UpdateStrategy updateStrategyForWeakestIndividuals;
     
     /*
      * Default constructor for DynDEIterationStrategy
@@ -78,7 +76,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      */
     @Override
     public void performIteration(StandardMultipopulationAlgorithm algorithm) {
-        evaluatePopulations(algorithm);
+        evaluatePopulations(algorithm.getPopulations());
         processPopulations(algorithm.getPopulations());
     }
     
@@ -88,8 +86,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      * @param The multipopulation algorithm holding all the populations to be
      * evaluated
      */
-    protected void evaluatePopulations(MultiPopulationBasedAlgorithm algorithm) {
-        for(PopulationBasedAlgorithm alg : algorithm.getPopulations()) {
+    protected void evaluatePopulations(List<PopulationBasedAlgorithm> populations) {
+        for(PopulationBasedAlgorithm alg : populations) {
             clearCentroidDistanceValues((Topology<ClusterIndividual>) alg.getTopology());
             for(Entity individual : alg.getTopology()) {
                 assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) alg).getIterationStrategy()).getWindow().getCurrentDataset());
@@ -98,9 +96,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
             
         }
         
-        
     }
-    
+       
     /*
      * Removes all previously assigned patterns from the centroids that they were assigned to
      * @param topology The topology to be cleaned up
@@ -121,45 +118,65 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      * populations an iteration of the clustering algorithm must take place.
      * @param populations The populations being dealt with
      */
-    protected void processPopulations(List<PopulationBasedAlgorithm> populations) {
+    protected void processPopulations(List<PopulationBasedAlgorithm> populationList) {
         boolean distanceIsSmaller;
+        List<PopulationBasedAlgorithm> populations = populationList;
         PopulationBasedAlgorithm weakestPopulation;
+        int index = 0;
         
         for(PopulationBasedAlgorithm algorithm : populations) {   
-            
             distanceIsSmaller = false;
             weakestPopulation = algorithm;
-            for(PopulationBasedAlgorithm otherAlgorithm : populations) {
-                if(!algorithm.equals(otherAlgorithm)) {
-                    if(aDistanceIsSmallerThanRadius((CentroidHolder) algorithm.getBestSolution().getPosition(), (CentroidHolder) otherAlgorithm.getBestSolution().getPosition())) {
-                        if (weakestPopulation.getBestSolution().compareTo(otherAlgorithm.getBestSolution()) > 0) {
-                            weakestPopulation = otherAlgorithm;
+            int weakestIndex = index;
+            int populationIndex = 0;
+                for(PopulationBasedAlgorithm otherAlgorithm : populations) {
+                        if(!algorithm.equals(otherAlgorithm)) {
+                            if(aDistanceIsSmallerThanRadius((CentroidHolder) algorithm.getBestSolution().getPosition(), index, (CentroidHolder) otherAlgorithm.getBestSolution().getPosition(), populationIndex)) {
+                                if (weakestPopulation.getBestSolution().compareTo(otherAlgorithm.getBestSolution()) > 0) {
+                                    weakestPopulation = otherAlgorithm;
+                                    weakestIndex = populationIndex;
+                                }
+                                distanceIsSmaller = true;
+                            }
                         }
-                        distanceIsSmaller = true;
-                    }
+                        
+                        populationIndex++;
+                }
+           
+            if(distanceIsSmaller) {
+                 reinitialisePopulation((DataClusteringEC) weakestPopulation);
+            }
+
+            updatePopulations(distanceIsSmaller, weakestPopulation, weakestIndex, algorithm, index, populationList);
+            index++;
+        }
+        
+    }
+    
+    protected void updatePopulations(boolean distanceIsSmaller, PopulationBasedAlgorithm weakestPopulation, int weakestIndex, PopulationBasedAlgorithm algorithm, int algIndx, List<PopulationBasedAlgorithm> populationList) {
+        if(!algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
+            algorithm.performIteration();
+        } 
+        
+        if(distanceIsSmaller) {
+                for(ClusterIndividual weakIndividual : (Topology<ClusterIndividual>) weakestPopulation.getTopology()) {
+                    weakIndividual.calculateFitness();
                 }
             }
-            
-            if(distanceIsSmaller) {
-                reinitialisePopulation((DataClusteringEC) weakestPopulation);
-            }
-            
-            if(!algorithm.getTopology().get(0).getFitness().equals(InferiorFitness.instance())) {
-                algorithm.performIteration();
-            }
-            
+                
             updateWeakest((SinglePopulationBasedAlgorithm) algorithm);
-            
+
             clearCentroidDistanceValues((Topology<ClusterIndividual>) algorithm.getTopology());
             for(Entity individual : algorithm.getTopology()) {
                 assignDataPatternsToEntity((CentroidHolder) individual.getCandidateSolution(), ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) algorithm).getIterationStrategy()).getWindow().getCurrentDataset());
                 individual.calculateFitness();
             }
-            
-        }
-        
     }
     
+    /*
+     * Updates the weakest individuals to become Brownian Individuals
+     * @param algorithm The algorithm whose individuals must be updated
+     */
     protected void updateWeakest(SinglePopulationBasedAlgorithm algorithm) {
         Topology<Individual> topology = (Topology<Individual>) algorithm.getTopology();
         int weakest = 0;
@@ -185,7 +202,12 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         
     }
     
-    private boolean contains(int[] array, int value) {
+    /*
+     * Checks if an array contains a value
+     * @param array The array to be checked
+     * @param value The value yo ve checked for
+     */
+    protected boolean contains(int[] array, int value) {
         for(int val : array) {
             if(val == value) {
                 return true;
@@ -241,12 +263,13 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      * @param otherPosition The CentroidHolder being compared against
      * @return True if the populations are close enough, false if they are still far appart
      */
-    protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, CentroidHolder otherPosition) {
+    protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, int currentIndex, CentroidHolder otherPosition, int otherIndex) {
         for(int i = 0; i < currentPosition.size(); i++) {
             if(measure.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius) {
                 return true;
             }
         }
+        
         return false;
     }
 
@@ -281,6 +304,5 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
     public void setMeasure(DistanceMeasure measure) {
         this.measure = measure;
     }
-    
-    
+        
 }

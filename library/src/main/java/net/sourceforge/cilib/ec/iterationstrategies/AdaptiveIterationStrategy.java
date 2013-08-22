@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
@@ -54,6 +55,7 @@ public class AdaptiveIterationStrategy extends AbstractIterationStrategy<EC> {
      */
     @Override
     public void performIteration(EC ec) {
+        List<SaDEIndividual> newTopology = Lists.newArrayList();
         Topology<SaDEIndividual> topology = (Topology<SaDEIndividual>) ec.getTopology();
 
         for (int i = 0; i < topology.size(); i++) {
@@ -75,11 +77,16 @@ public class AdaptiveIterationStrategy extends AbstractIterationStrategy<EC> {
             offspringEntity.calculateFitness();
 
             if (offspringEntity.getFitness().compareTo(current.getFitness()) > 0) { // the trial vector is better than the parent
-                topology.set(i, offspringEntity); // Replace the parent with the offspring individual
+                newTopology.add(offspringEntity); // Replace the parent with the offspring individual
+            } else {
+                newTopology.add(current);
             }
             
-            topology.get(i).updateParameters();
+            newTopology.get(i).updateParameters();
         }
+        
+        topology.clear();
+        topology.addAll(newTopology);
     }
 
     /**

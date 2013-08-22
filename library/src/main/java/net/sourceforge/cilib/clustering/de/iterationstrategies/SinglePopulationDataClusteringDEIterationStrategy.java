@@ -29,21 +29,20 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
     protected EuclideanDistanceMeasure distanceMeasure;
     protected SlidingWindow window;
     protected int reinitialisationPercentage;
-    protected int dimensions;
     protected boolean reinitialized;
-    
+    boolean isExplorer;
     /*
      * Default cosntructor for SinglePopulationDataClusteringDEIterationStrategy
      */
     public SinglePopulationDataClusteringDEIterationStrategy() {
+        super();
         dataset = new StandardPatternDataTable();
         reinitialized = false;
         distanceMeasure = new EuclideanDistanceMeasure();
         boundaryConstraint = new CentroidBoundaryConstraint();
         window = new SlidingWindow();
         reinitialisationPercentage = 1;
-        dimensions = 0;
-        
+        isExplorer = false;
     }
     
     /*
@@ -51,13 +50,14 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
      * @param copy The SinglePopulationDataClusteringDEIterationStrategy to be copied
      */
     public SinglePopulationDataClusteringDEIterationStrategy(SinglePopulationDataClusteringDEIterationStrategy copy) {
+        boundaryConstraint = copy.boundaryConstraint;
         dataset = copy.dataset;
         distanceMeasure = copy.distanceMeasure;
         boundaryConstraint = copy.boundaryConstraint;
         window = copy.window;
         reinitialisationPercentage = copy.reinitialisationPercentage;
-        dimensions = copy.dimensions;
         reinitialized = copy.reinitialized;
+        isExplorer = copy.isExplorer;
     }
     
     /*
@@ -188,22 +188,6 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
     }
 
     /*
-     * Gets the dimensions of the centroids (determined by the dataset)
-     * @return The dimensions of the centroids
-     */
-    public int getDimensions() {
-        return dimensions;
-    }
-
-    /*
-     * Sets the dimensions of the centroids
-     * @param dimensions The new dimensions
-     */
-    public void setDimensions(int dimensions) {
-        this.dimensions = dimensions;
-    }
-
-    /*
      * Gets the value of reinitialized, which indicates whether the population has been
      * reinitialised.
      * @return The value of reinitialized
@@ -219,6 +203,14 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
      */
     public void setReinitialized(boolean reinitialized) {
         this.reinitialized = reinitialized;
+    }
+    
+     public boolean isIsExplorer() {
+        return isExplorer;
+    }
+
+    public void setIsExplorer(boolean isExplorer) {
+        this.isExplorer = isExplorer;
     }
     
 }

@@ -27,7 +27,6 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
     protected EuclideanDistanceMeasure distanceMeasure;
     protected SlidingWindow window;
     protected int reinitialisationPercentage;
-    protected int dimensions;
     protected boolean reinitialized;
     
     /*
@@ -40,7 +39,6 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
         boundaryConstraint = new CentroidBoundaryConstraint();
         window = new SlidingWindow();
         reinitialisationPercentage = 1;
-        dimensions = 0;
         
     }
     
@@ -54,7 +52,6 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
         boundaryConstraint = copy.boundaryConstraint;
         window = copy.window;
         reinitialisationPercentage = copy.reinitialisationPercentage;
-        dimensions = copy.dimensions;
         reinitialized = copy.reinitialized;
     }
     
@@ -109,14 +106,6 @@ public abstract class SinglePopulationDataClusteringPSOIterationStrategy extends
      */
     public int getReinitialisationPercentage() {
         return reinitialisationPercentage;
-    }
-    
-    /*
-     * Sets the dimensions of the centroids (determined by the dataset)
-     * @param dim The new dimensions
-     */
-    public void setDimensions(int dim) {
-        dimensions = dim;
     }
     
     /*

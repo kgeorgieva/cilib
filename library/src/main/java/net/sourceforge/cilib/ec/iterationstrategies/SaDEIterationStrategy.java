@@ -6,6 +6,7 @@
  */
 package net.sourceforge.cilib.ec.iterationstrategies;
 
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
@@ -83,6 +84,7 @@ public class SaDEIterationStrategy extends AbstractIterationStrategy<EC> {
      */
     @Override
     public void performIteration(EC ec) {
+        List<Entity> newTopology = Lists.newArrayList();
         Topology<Entity> topology = (Topology<Entity>) ec.getTopology();
         String strategyResult;
         
@@ -146,9 +148,14 @@ public class SaDEIterationStrategy extends AbstractIterationStrategy<EC> {
                 offspringEntity = current.getClone();
                 offspringEntity.setCandidateSolution(offspringVector);
                 offspringEntity.calculateFitness();
-                topology.set(i, offspringEntity); // Replace the parent with the offspring individual
+                newTopology.add(offspringEntity); // Replace the parent with the offspring individual
+            } else {
+                newTopology.add(current);
             }
         }
+        
+        topology.clear();
+        topology.addAll(newTopology);
         
         if(AbstractAlgorithm.get().getIterations() == nextAdaptiveVariableRecalculation) {
             SaDEIndividual current;
