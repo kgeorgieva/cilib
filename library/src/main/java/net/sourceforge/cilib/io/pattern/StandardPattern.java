@@ -19,6 +19,7 @@ public class StandardPattern implements Cloneable {
 
     private Vector vector;
     private Type target;
+    private int id;
 
     /**
      * Default constructor.
@@ -32,9 +33,10 @@ public class StandardPattern implements Cloneable {
      * @param vector the new pattern's vector.
      * @param target the new pattern's target.
      */
-    public StandardPattern(Vector vector, Type target) {
+    public StandardPattern(Vector vector, Type target, int id) {
         this.vector = Vector.copyOf(vector);
         this.target = target.getClone();
+        this.id = id;
     }
 
     /**
@@ -42,6 +44,8 @@ public class StandardPattern implements Cloneable {
      * @param orig the pattern to be copied.
      */
     public StandardPattern(StandardPattern orig) {
+        this.id = orig.id;
+        orig.vector.setId(id);
         this.vector = Vector.copyOf(orig.vector);
         this.target = orig.target.getClone();
     }
@@ -124,6 +128,15 @@ public class StandardPattern implements Cloneable {
     @Override
     public String toString() {
         return this.vector.toString() +" "+ this.target.toString();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+        this.vector.setId(id);
     }
 
 

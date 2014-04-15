@@ -10,6 +10,8 @@ import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorit
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
+import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.entity.visitor.DiameterVisitor;
 import net.sourceforge.cilib.pso.PSO;
 
@@ -49,7 +51,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm> {
 
     private static final long serialVersionUID = 1416926223484924869L;
-    private double exclusionRadius = 2.0;
+    private ControlParameter exclusionRadius = new StandardUpdatableControlParameter(2.0);
 
     public MultiSwarmIterationStrategy() {
         super();
@@ -65,11 +67,11 @@ public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<Stand
         return new MultiSwarmIterationStrategy(this);
     }
 
-    public double getExclusionRadius() {
+    public ControlParameter getExclusionRadius() {
         return exclusionRadius;
     }
 
-    public void setExclusionRadius(double exlusionRadius) {
+    public void setExclusionRadius(ControlParameter exlusionRadius) {
         this.exclusionRadius = exlusionRadius;
     }
 
@@ -123,7 +125,7 @@ public class MultiSwarmIterationStrategy extends AbstractIterationStrategy<Stand
                     otherPosition = (Vector) ((PSO) other).getBestSolution().getPosition();
                     DistanceMeasure dm = new EuclideanDistanceMeasure();
                     double distance = dm.distance(currentPosition, otherPosition);
-                    if (distance < exclusionRadius) {
+                    if (distance < exclusionRadius.getParameter()) {
                         if (((PSO) current).getBestSolution().getFitness().compareTo(((PSO) other).getBestSolution().getFitness()) > 0) {
                             reInitialise((PSO) current);
                         } else {

@@ -28,9 +28,9 @@ import net.sourceforge.cilib.type.types.container.Vector;
  * appropriate clustering iteration strategy.
  */
 public class DataClusteringEC extends EC{
-    protected SlidingWindow window;
+    //protected SlidingWindow window;
     protected boolean isExplorer;
-    protected IterationStrategy<DataClusteringEC> iterationStrategy;
+    //protected IterationStrategy<DataClusteringEC> iterationStrategy;
     
     /*
      * Default constructor for the DataClusteringEC
@@ -39,7 +39,7 @@ public class DataClusteringEC extends EC{
         super();
         contributionSelection = new ZeroContributionSelectionStrategy();
         initialisationStrategy = new DataDependantPopulationInitializationStrategy<ClusterParticle>();
-        window = new SlidingWindow();
+        //window = new SlidingWindow();
         isExplorer = false;
         iterationStrategy = new StandardClusteringDEIterationStrategy();
     }
@@ -51,7 +51,7 @@ public class DataClusteringEC extends EC{
     public DataClusteringEC(DataClusteringEC copy) {
         super(copy);
         initialisationStrategy = copy.initialisationStrategy;
-        window = copy.window;
+        //window = copy.window;
         isExplorer = copy.isExplorer;
         iterationStrategy = copy.iterationStrategy;
     }
@@ -71,10 +71,17 @@ public class DataClusteringEC extends EC{
      */
     @Override
     public void algorithmInitialisation() {
-        DataTable dataset = window.initializeWindow();
+        SlidingWindow window = ((ClusteringProblem) this.getOptimisationProblem()).getWindow();
+        DataTable dataset;
+        
+        if(window.getCurrentDataset().size() == 0) {
+            dataset = window.initializeWindow();
+        } else {
+            dataset = window.getCurrentDataset();
+        }
 
         Vector pattern = ((StandardPattern) dataset.getRow(0)).getVector();
-        ((ClusteringProblem) super.problem).setDimension((int) pattern.size());
+        ((ClusteringProblem) super.getOptimisationProblem()).setDimension((int) pattern.size());
 
         ((DataDependantPopulationInitializationStrategy) initialisationStrategy).setDataset(window.getCompleteDataset());
         Iterable<ClusterIndividual> individuals = (Iterable<ClusterIndividual>) this.initialisationStrategy.initialise(this.getOptimisationProblem());
@@ -98,9 +105,9 @@ public class DataClusteringEC extends EC{
      * Gets the current window
      * @return The current window
      */
-    public SlidingWindow getWindow() {
-        return window;
-    }
+//    public SlidingWindow getWindow() {
+//        return window;
+//    }
 
     /*
      * Sets the algorithm to be an explorer or not
@@ -134,19 +141,19 @@ public class DataClusteringEC extends EC{
      * the dataset to be clsutered.
      * @param sourceURL The path to the dataset
      */
-    public void setSourceURL(String sourceURL) {
-        window.setSourceURL(sourceURL);
-    }
+//    public void setSourceURL(String sourceURL) {
+//        window.setSourceURL(sourceURL);
+//    }
 
     /*
      * Sets the SlidingWindow to the one received as a parameter
      * @param slidingWindow The new sliding window
      */
-    public void setWindow(SlidingWindow slidingWindow) {
-        String url = window.getSourceURL();
-        window = slidingWindow;
-        window.setSourceURL(url);
-    }
+//    public void setWindow(SlidingWindow slidingWindow) {
+//        String url = window.getSourceURL();
+//        window = slidingWindow;
+//        window.setSourceURL(url);
+//    }
 
     /*
      * Returns the value of isExplorer, i.e. it checks if the algorithm is currently an explorer

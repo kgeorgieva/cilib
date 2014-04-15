@@ -20,7 +20,7 @@ public interface CrossoverStrategy extends Operator {
     
     public int getNumberOfParents();
     
-    public void setCrossoverPointProbability(double crossoverPointProbability);
+    public void updateCrossoverPointProbability(double crossoverPointProbability);
     
     public ControlParameter getCrossoverPointProbability();
 }

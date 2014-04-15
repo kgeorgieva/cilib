@@ -245,6 +245,9 @@ public class ClusterParticle extends AbstractParticle implements ClusterEntity{
 
     }
 
+    public void setPersonalBestToSelf() {
+        this.getProperties().put(EntityType.Particle.BEST_POSITION, getCandidateSolution());
+    }
     /*
      * Reinitializes the ClusterParticle
      */

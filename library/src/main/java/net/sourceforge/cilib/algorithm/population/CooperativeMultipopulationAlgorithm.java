@@ -36,12 +36,13 @@ public class CooperativeMultipopulationAlgorithm extends StandardMultipopulation
      */
     @Override
     public void algorithmInitialisation()    {
-        ClusteringProblem problem = (ClusteringProblem) getOptimisationProblem();
+        ClusteringProblem problem = (ClusteringProblem) getOptimisationProblem().getClone();
         problem.setNumberOfClusters(subPopulationsAlgorithms.size());
         
         for (PopulationBasedAlgorithm currentAlgorithm : subPopulationsAlgorithms) {
             currentAlgorithm.setOptimisationProblem(problem);
             currentAlgorithm.performInitialisation();
         }//for
+        
     }
 }

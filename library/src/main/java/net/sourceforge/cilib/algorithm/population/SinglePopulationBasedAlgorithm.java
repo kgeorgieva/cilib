@@ -25,6 +25,7 @@ public abstract class SinglePopulationBasedAlgorithm extends AbstractAlgorithm i
      * Create an empty {@linkplain PopulationBasedAlgorithm}.
      */
     protected SinglePopulationBasedAlgorithm() {
+        super();
     }
 
     /**

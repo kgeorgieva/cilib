@@ -6,12 +6,14 @@ package net.sourceforge.cilib.clustering.de.iterationstrategies.multipopulation;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.SinglePopulationBasedAlgorithm;
 import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
@@ -30,7 +32,7 @@ public class CooperativeDynDEIterationStrategy extends DynDEIterationStrategy {
      */
     public CooperativeDynDEIterationStrategy() {
         super();
-        exclusionRadius = 5.0;
+        exclusionRadius = new StandardUpdatableControlParameter(5.0);
         context = new ClusterIndividual();
     }
     
@@ -72,6 +74,7 @@ public class CooperativeDynDEIterationStrategy extends DynDEIterationStrategy {
             index++;
         }
     }
+    
     /*
      * Updates the popualations to contain the context
      * @param multipopAlgorithm The multi-population algorithm currently running
@@ -167,7 +170,7 @@ public class CooperativeDynDEIterationStrategy extends DynDEIterationStrategy {
     protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, int currentIndex, CentroidHolder otherPosition, int otherIndex) {
 //        int count = 0;
 //        for(int i = 0; i < currentPosition.size(); i++) {
-            if(measure.distance(currentPosition.get(currentIndex).toVector(), otherPosition.get(otherIndex).toVector()) < exclusionRadius) {
+            if(measure.distance(currentPosition.get(currentIndex).toVector(), otherPosition.get(otherIndex).toVector()) < exclusionRadius.getParameter()) {
                 return true;
             }
             

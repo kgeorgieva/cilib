@@ -34,6 +34,8 @@ import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
 import net.sourceforge.cilib.util.DistanceMeasure;
 import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
+import net.sourceforge.cilib.controlparameter.ControlParameter;
 
 /**
  *
@@ -41,9 +43,9 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  */
 public class KIndependentCooperativeDynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm> {
     private ClusterIndividual context;
-    protected double exclusionRadius;
+    protected ControlParameter exclusionRadius;
     protected DistanceMeasure measure;
-    protected int totalReplaceableIndividuals;
+    protected ControlParameter percentageReplaceableIndividuals;
     protected UpdateStrategy updateStrategyForWeakestIndividuals;
     
     private double previousInterCluster;
@@ -53,25 +55,24 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
     private boolean populationHasConverged;
     
     private double silhouetteThreshold;
-    private double convergenceRadius;
+    private ControlParameter convergenceRadius;
     
     /*
      * Default constructor for CooperativeDynDEIterationStrategy
      */
     public KIndependentCooperativeDynDEIterationStrategy() {
         super();
-        exclusionRadius = 5.0;
         context = new ClusterIndividual();
-        exclusionRadius = 3.0;
+        exclusionRadius = new StandardUpdatableControlParameter(3.0);
         measure = new EuclideanDistanceMeasure();
         updateStrategyForWeakestIndividuals = new BrownianClusteringUpdateStrategy();
-        totalReplaceableIndividuals = 5;
+        percentageReplaceableIndividuals = new StandardUpdatableControlParameter(5);
         previousInterCluster = 0;
         previousRayTuri = Double.POSITIVE_INFINITY;
         previousIntraCluster = Double.POSITIVE_INFINITY;
         populationHasConverged = true;
-        silhouetteThreshold = 0.7;
-        convergenceRadius = 2.0;
+        silhouetteThreshold = 0.71;
+        convergenceRadius = new StandardUpdatableControlParameter(2.0);
     }
     
     /*
@@ -83,7 +84,7 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
         exclusionRadius = copy.exclusionRadius;
         measure = copy.measure;
         updateStrategyForWeakestIndividuals = copy.updateStrategyForWeakestIndividuals;
-        totalReplaceableIndividuals = copy.totalReplaceableIndividuals;
+        percentageReplaceableIndividuals = copy.percentageReplaceableIndividuals;
         previousInterCluster = copy.previousInterCluster;
         previousIntraCluster = copy.previousIntraCluster;
         previousRayTuri = copy.previousRayTuri;
@@ -110,9 +111,11 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
     public void performIteration(StandardMultipopulationAlgorithm algorithm) {
         evaluatePopulations(algorithm.getPopulations());
         createContext(algorithm.getPopulations());
+//        clearEmptyCentroids(algorithm);
         contextualisePopulations(algorithm.getPopulations());
         evaluatePopulations(algorithm.getPopulations());
         processPopulations(algorithm);
+        
     }
     
     private void contextualisePopulations(List<PopulationBasedAlgorithm> populations) {
@@ -122,6 +125,39 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
             index++;
         }
     }
+    
+//    private void clearEmptyCentroids(StandardMultipopulationAlgorithm mpAlgorithm) {
+//        List<PopulationBasedAlgorithm> populationList = mpAlgorithm.getPopulations();
+//        int index = 0;
+//        for(ClusterCentroid centroid : (CentroidHolder) context.getCandidateSolution()) {
+//            if (centroid.getDataItems().size() == 0) {
+//                context.getCandidateSolution().remove(centroid);
+//                PopulationBasedAlgorithm algorithmToRemove = populationList.get(index);
+//                populationList.remove(algorithmToRemove);
+//                for(PopulationBasedAlgorithm alg : populationList) {
+//                    //add new dimension to solution which this population will be optimising
+//                    for(ClusterIndividual individual : (Topology<ClusterIndividual>) alg.getTopology()) {
+//                        if(individual.getCandidateSolution().size() > populationList.size()) {
+//                            ClusterCentroid centroidToRemove = ((CentroidHolder) individual.getCandidateSolution()).get(index);
+//                            individual.getCandidateSolution().remove(centroidToRemove);
+//                        }
+//                    }
+//
+//                    Topology<ClusterIndividual> topology = (Topology<ClusterIndividual>) alg.getTopology();
+//
+//                    if(((CentroidHolder) alg.getBestSolution().getPosition()).size() > populationList.size()) {
+//                        ClusterCentroid centroidToRemove = ((CentroidHolder) ((ClusterIndividual) Topologies.getBestEntity(topology)).getCandidateSolution()).get(index);
+//                        ((ClusterIndividual) Topologies.getBestEntity(topology)).getCandidateSolution().remove(centroidToRemove);
+//                    }
+//                }
+//            }
+//            
+//            index++;
+//        }
+//        
+//        
+//    }
+    
     /*
      * Updates the popualations to contain the context
      * @param multipopAlgorithm The multi-population algorithm currently running
@@ -202,7 +238,7 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
     }
     
     protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, int currentIndex, CentroidHolder otherPosition, int otherIndex) {
-            if(measure.distance(currentPosition.get(currentIndex).toVector(), otherPosition.get(otherIndex).toVector()) < convergenceRadius) {
+            if(measure.distance(currentPosition.get(currentIndex).toVector(), otherPosition.get(otherIndex).toVector()) < convergenceRadius.getParameter()) {
                 return true;
             }
             
@@ -239,7 +275,6 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
             index++;
         }
         
-        iterationStrategy.setDataset(iterationStrategy.getWindow().slideWindow());
     }
     
     protected PopulationBasedAlgorithm addPopulation(StandardMultipopulationAlgorithm mpAlgorithm) {
@@ -389,6 +424,7 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
      */
     protected void processPopulations(StandardMultipopulationAlgorithm mpAlgorithm) {
         List<PopulationBasedAlgorithm> populationList = mpAlgorithm.getPopulations();
+        //System.out.println("clusters: " + populationList.size());
         //ArrayList<ClusterOperation> listOfOperations = new ArrayList<ClusterOperation>();
                 
         InterClusterDistance inter = new InterClusterDistance();
@@ -438,7 +474,7 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
                         index++;
                 }
                 
-                if(smallestDistance < exclusionRadius) {
+                if(smallestDistance < exclusionRadius.getParameter()) {
                     mergePopulations(weakestPopulation1, weakestPopulation2, mpAlgorithm);
                 }
                     
@@ -457,6 +493,13 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
         for(PopulationBasedAlgorithm algorithm : populationList) {
             updatePopulations(algorithm, index, populationList);
             index++;
+        }
+        
+        SinglePopulationDataClusteringDEIterationStrategy iterationStrategy = (SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) populationList.get(0)).getIterationStrategy();
+        DataTable newTable = iterationStrategy.getWindow().slideWindow();
+        
+        for(PopulationBasedAlgorithm algorithm : populationList) {
+            ((SinglePopulationDataClusteringDEIterationStrategy) ((DataClusteringEC) algorithm).getIterationStrategy()).setDataset(newTable);
         }
         
     }
@@ -505,9 +548,11 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
         Topology<Individual> topology = (Topology<Individual>) algorithm.getTopology();
         int weakest;
         int individualCount;
-        int[] weakestIndividuals = new int[totalReplaceableIndividuals];
         
-        for(int i = 0; i < totalReplaceableIndividuals; i++) {
+        int replaceableIndividuals = (int) (percentageReplaceableIndividuals.getParameter() * topology.size() / 100);
+        int[] weakestIndividuals = new int[replaceableIndividuals];
+        
+        for(int i = 0; i < replaceableIndividuals; i++) {
             individualCount = 0;
             weakest = 0;
             for(Individual individual : topology) {
@@ -580,7 +625,7 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
      * Gets the value of the exclusion radius
      * @return The value of the exclusion radius
      */
-    public double getExclusionRadius() {
+    public ControlParameter getExclusionRadius() {
         return exclusionRadius;
     }
 
@@ -588,8 +633,24 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
      * Sets the value of the exclusion radius
      * @param exclusionRadius The new value for the exclusion radius
      */
-    public void setExclusionRadius(double exclusionRadius) {
+    public void setExclusionRadius(ControlParameter exclusionRadius) {
         this.exclusionRadius = exclusionRadius;
+    }
+    
+     /*
+     * Gets the value of the exclusion radius
+     * @return The value of the exclusion radius
+     */
+    public ControlParameter getPercentageReplaceableIndividuals() {
+        return percentageReplaceableIndividuals;
+    }
+
+    /*
+     * Sets the value of the exclusion radius
+     * @param exclusionRadius The new value for the exclusion radius
+     */
+    public void setPercentageReplaceableIndividuals(ControlParameter percentageReplaceableIndividuals) {
+        this.percentageReplaceableIndividuals = percentageReplaceableIndividuals;
     }
 
     /*
@@ -616,11 +677,11 @@ public class KIndependentCooperativeDynDEIterationStrategy extends AbstractItera
         this.silhouetteThreshold = silhouetteThreshold;
     }
 
-    public double getConvergenceRadius() {
+    public ControlParameter getConvergenceRadius() {
         return convergenceRadius;
     }
 
-    public void setConvergenceRadius(double convergenceRadius) {
+    public void setConvergenceRadius(ControlParameter convergenceRadius) {
         this.convergenceRadius = convergenceRadius;
     }
     

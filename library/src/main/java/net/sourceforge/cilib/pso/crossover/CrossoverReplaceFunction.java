@@ -10,6 +10,7 @@ import fj.F;
 import java.util.Arrays;
 import java.util.List;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
+import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
 import net.sourceforge.cilib.entity.Particle;
 import net.sourceforge.cilib.entity.operators.crossover.CrossoverStrategy;
@@ -61,7 +62,7 @@ public class CrossoverReplaceFunction extends F<Particle, Particle> {
         return parentReplacementStrategy;
     }
 
-    public void setCrossoverProbability(ControlParameter crossoverProbability) {
+    public void updateCrossoverProbability(ControlParameter crossoverProbability) {
         this.crossoverProbability = crossoverProbability;
     }
 
@@ -85,5 +86,9 @@ public class CrossoverReplaceFunction extends F<Particle, Particle> {
         } else {
             return p;
         }
+    }
+    
+    public void setCrossoverProbability(SettableControlParameter crossoverProbability) {
+        crossoverProbability = crossoverProbability;
     }
 }

@@ -8,6 +8,7 @@ package net.sourceforge.cilib.clustering;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.io.ARFFFileReader;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.DataTableBuilder;
@@ -31,15 +32,24 @@ import net.sourceforge.cilib.io.transform.TypeConversionOperator;
 public class SlidingWindow {
     private DataTable completeDataset;
     private DataTable currentDataset;
+    private DataTable previousDataset;
     private DataTableBuilder tableBuilder;
     private int windowSize;
+    private int[] windowSizes = new int[0];
     private int slideSize;
     private DataOperator patternConverstionOperator;
     private int currentIndex;
+    private int previousIndex;
     private int slidingTime;
     private boolean isTemporal;
     private int slideFrequency;
-    
+    private int iterationModulus;
+    private int timeStep;
+    private int windowSizeCount;
+    private int nextChangeTS;
+    private int totalTimeSteps;
+    private int tsToChange;
+    private boolean windowSlid;
     /*
      * Default constructor for the SlidingWindow
      */
@@ -54,7 +64,11 @@ public class SlidingWindow {
         isTemporal = true;
         slideFrequency = 0;
         slideSize = 0;
-        
+        timeStep = 1;
+        windowSizeCount = 0;
+        totalTimeSteps = 1000; //iterations
+        windowSlid = false;
+         
     }
     
     /*
@@ -64,6 +78,7 @@ public class SlidingWindow {
     public SlidingWindow(SlidingWindow copy) {
         completeDataset = copy.completeDataset;
         currentDataset = copy.currentDataset;
+        previousDataset = copy.previousDataset;
         tableBuilder = copy.tableBuilder;
         windowSize = copy.windowSize;
         patternConverstionOperator = copy.patternConverstionOperator;
@@ -72,6 +87,27 @@ public class SlidingWindow {
         isTemporal = copy.isTemporal;
         slideFrequency = copy.slideFrequency;
         slideSize = copy.slideSize;
+        timeStep = copy.timeStep;
+        windowSizeCount = copy.windowSizeCount;
+        windowSizes = copy.windowSizes;
+        previousIndex = copy.previousIndex;
+        iterationModulus = copy.iterationModulus;
+        nextChangeTS = copy.nextChangeTS;
+        totalTimeSteps = copy.totalTimeSteps;
+        tsToChange = copy.tsToChange;
+        windowSlid = copy.windowSlid;
+    }
+    
+    public SlidingWindow getCleanSlidingWindow() {
+        SlidingWindow cleanWindow = new SlidingWindow();
+        cleanWindow.windowSize = windowSize;
+        cleanWindow.patternConverstionOperator = patternConverstionOperator;
+        cleanWindow.isTemporal = isTemporal;
+        cleanWindow.slideFrequency = slideFrequency;
+        cleanWindow.slideSize = slideSize;
+        cleanWindow.tableBuilder.setSourceURL(tableBuilder.getSourceURL());
+        
+        return cleanWindow;
     }
     
     /*
@@ -95,9 +131,37 @@ public class SlidingWindow {
      * window is currently placed
      */
     public DataTable slideWindow() {
+        windowSlid = false;
         if(hasNotFinished()) {
+            //System.out.println(windowSize + " - " + AbstractAlgorithm.get().getIterations() + "-" + currentIndex);
+            //System.out.println("\nIteration to change: " + slidingTime + ", iteration: " + AbstractAlgorithm.get().getIterations());
             if(slidingTime == getIterationToChange()) {
+                
+                previousDataset = new StandardPatternDataTable();
+                for(int i = 0; i < currentDataset.size(); i++) {
+                    previousDataset.addRow((StandardPattern) currentDataset.getRow(i));
+                }
+               
                 currentDataset = new StandardPatternDataTable();
+                
+//                System.out.println("\nIterations: " + AbstractAlgorithm.get().getIterations());
+//                if(currentIndex == (windowSize * timeStep) && timeStep != 1) {
+//                    changeWindowTS = timeStep;
+//                    nextChangeTS = changeWindowTS;
+//                }
+                
+                //if((timeStep == nextChangeTS) && windowSizes.length > 0) {
+                //System.out.println(AbstractAlgorithm.get().getIterations() + " - " + (nextChangeTS - 1) + "-" + windowSizes.length);
+                if((AbstractAlgorithm.get().getIterations() == (nextChangeTS - 1)) && windowSizes.length > 0) {
+                    //System.out.println(windowSize + " - " + AbstractAlgorithm.get().getIterations() + "-" + currentIndex);
+                    nextChangeTS += tsToChange;
+                    //System.out.println("timeStep: " + timeStep + " ---- " + "nextChangeTS: " + nextChangeTS + " --- iterations: " + AbstractAlgorithm.get().getIterations());
+                    windowSize = windowSizes[windowSizeCount];
+                    slideSize = windowSize;
+                    windowSizeCount++;
+                }
+                
+                previousIndex = currentIndex;
                 
                 int upTo = currentIndex + slideSize;
                 if(currentIndex + slideSize > completeDataset.size()) {
@@ -109,12 +173,20 @@ public class SlidingWindow {
                 }
                 
                 currentIndex = upTo;
-                slidingTime = 0;
                 
+                //System.out.println("\nTS: " + timeStep + ", windowsize: " + windowSize + " current index: " + currentIndex);
+                slidingTime = 1;
+                //timeStep++;
+                windowSlid = true;
+                //System.out.println("Complete DS: " + completeDataset.size());
             } else {
                 slidingTime++;
             }
+            
+           
         }
+        
+        
         return currentDataset;
     }
     
@@ -126,17 +198,29 @@ public class SlidingWindow {
      * Sets the counts.
      */
     public DataTable initializeWindow() {
+        //System.out.println("first iteration: " + AbstractAlgorithm.get().getIterations());
         tableBuilder.addDataOperator(new TypeConversionOperator());
         tableBuilder.addDataOperator(patternConverstionOperator);
         try {
             tableBuilder.buildDataTable();
-            
+                        
         } catch (CIlibIOException ex) {
             Logger.getLogger(DataClusteringPSO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         completeDataset = tableBuilder.getDataTable();
         
+        for(int i = 0; i < completeDataset.size(); i++) {
+            ((StandardPattern) completeDataset.getRow(i)).setId(i);
+        }
+                
+        if(windowSizes.length > 0) {
+            windowSize = windowSizes[windowSizeCount];
+            tsToChange = totalTimeSteps / windowSizes.length;
+            windowSizeCount++;
+            //System.out.println("tsToChange: " + tsToChange + " --- " + "totalTimeSteps: " + totalTimeSteps + " --- " + "windowSizes.length: " + windowSizes.length);
+        }
+                
         if((windowSize == 0) || windowSize == completeDataset.size()) {
             windowSize = completeDataset.size();
             isTemporal = false;
@@ -152,8 +236,10 @@ public class SlidingWindow {
             currentDataset.addRow((StandardPattern) completeDataset.getRow(i));
         }
         
+        nextChangeTS = tsToChange;
         currentIndex+= slideSize;
         slidingTime++;
+        timeStep++;
         
         return currentDataset;
     }
@@ -289,6 +375,60 @@ public class SlidingWindow {
     public boolean hasSlid() {
         return isTemporal && slidingTime == 0;
     }
+
+    public int getIterationModulus() {
+        return iterationModulus;
+    }
+
+    public void setIterationModulus(int iterationModulus) {
+        this.iterationModulus = iterationModulus;
+    }
     
+    public void clearTables() {
+        tableBuilder = new DataTableBuilder();
+    }
+    
+    public int[] getWindowSizes() {
+        return windowSizes;
+    }
+    
+    public void setWindowSizes(int[] windowSizes) {
+        this.windowSizes = windowSizes;
+    }
+    
+    public void setExtraWindowSize(int newWindowSize) {
+        int[] tempWindowSizes = new int[windowSizes.length + 1];
+        int count = 0;
+        for(int value : windowSizes) {
+            tempWindowSizes[count] = value;
+            count++;
+        }
+        tempWindowSizes[tempWindowSizes.length - 1] = newWindowSize;
+        windowSizes = tempWindowSizes;
+    }
+
+    public int getPreviousIndex() {
+        return previousIndex;
+    }
+
+    public void setPreviousIndex(int previousIndex) {
+        this.previousIndex = previousIndex;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
+    }
+
+    public DataTable getPreviousDataset() {
+        return previousDataset;
+    }
+
+    public boolean windowHasSlid() {
+        return windowSlid;
+    }
     
 }

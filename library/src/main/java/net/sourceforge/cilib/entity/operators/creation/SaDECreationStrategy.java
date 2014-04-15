@@ -9,6 +9,7 @@ package net.sourceforge.cilib.entity.operators.creation;
 import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.controlparameter.ConstantControlParameter;
 import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.entity.Entity;
 import net.sourceforge.cilib.entity.Topology;
@@ -251,16 +252,22 @@ public class SaDECreationStrategy implements CreationStrategy {
         return learningPeriod;
     }
     
-    public void setScaleControlParameter(SettableControlParameter scaleParameter) {
+    public void setScaleParameter(SettableControlParameter scaleParameter) {
         this.scaleParameter = scaleParameter;
-        strategy1.setScaleParameter(scaleParameter.getParameter());
-        strategy2.setScaleParameter(scaleParameter.getParameter());
-    }
-
-    public void setScaleParameter(double scaleParameter) {
-        this.scaleParameter.setParameter(scaleParameter);
         strategy1.setScaleParameter(scaleParameter);
         strategy2.setScaleParameter(scaleParameter);
+    }
+
+//    public void setScaleParameter(double scaleParameter) {
+//        this.scaleParameter.setParameter(scaleParameter);
+//        strategy1.setScaleParameter(scaleParameter);
+//        strategy2.setScaleParameter(scaleParameter);
+//    }
+    
+    public void updateScaleParameter(double scaleParameter) {
+        this.scaleParameter.setParameter(scaleParameter);
+        strategy1.setScaleParameter(new StandardUpdatableControlParameter(scaleParameter));
+        strategy2.setScaleParameter(new StandardUpdatableControlParameter(scaleParameter));
     }
     
     public SettableControlParameter getScaleParameter() {

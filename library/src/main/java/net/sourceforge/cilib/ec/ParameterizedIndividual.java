@@ -105,8 +105,8 @@ public class ParameterizedIndividual extends Individual{
         initialisationStrategy.initialize(EntityType.Particle.VELOCITY, parameterHoldingIndividual);
         initialisationStrategy.initialize(EntityType.Particle.BEST_POSITION, parameterHoldingIndividual);
         
-        trialVectorCreationStrategy.setScaleParameter(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(0).doubleValue());
-        crossoverStrategy.setCrossoverPointProbability(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(1).doubleValue());
+        trialVectorCreationStrategy.updateScaleParameter(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(0).doubleValue());
+        crossoverStrategy.updateCrossoverPointProbability(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(1).doubleValue());
         totalOffspring = ((Vector) parameterHoldingIndividual.getCandidateSolution()).get(2).intValue();
     }
 
@@ -172,8 +172,8 @@ public class ParameterizedIndividual extends Individual{
     public void setParameterHoldingIndividual(Individual parameterHoldingIndividual) {
         parameterConstraint.enforce(parameterHoldingIndividual);
         this.parameterHoldingIndividual = parameterHoldingIndividual;
-        trialVectorCreationStrategy.setScaleParameter(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(0).doubleValue());
-        crossoverStrategy.setCrossoverPointProbability(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(1).doubleValue());
+        trialVectorCreationStrategy.updateScaleParameter(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(0).doubleValue());
+        crossoverStrategy.updateCrossoverPointProbability(((Vector) parameterHoldingIndividual.getCandidateSolution()).get(1).doubleValue());
         totalOffspring = ((Vector) parameterHoldingIndividual.getCandidateSolution()).get(2).intValue();
     }
 

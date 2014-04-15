@@ -13,7 +13,10 @@ import net.sourceforge.cilib.algorithm.population.PopulationBasedAlgorithm;
 import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.clustering.pso.iterationstrategies.SinglePopulationDataClusteringPSOIterationStrategy;
+import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.io.DataTable;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
@@ -37,7 +40,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  */
 public class StandardClusteringMultiSwarmIterationStrategy extends AbstractIterationStrategy<MultiPopulationBasedAlgorithm> {
 
-    private double exclusionRadius = 1.0;
+    private ControlParameter exclusionRadius = new StandardUpdatableControlParameter(1.0);
 
     /*
      * Default constructor for StandardClusteringMultiSwarmIterationStrategy
@@ -67,7 +70,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
      * Returns the value of the exclusion radius
      * @return exclusionRadius The exclusion radius
      */
-    public double getExclusionRadius() {
+    public ControlParameter getExclusionRadius() {
         return exclusionRadius;
     }
 
@@ -75,7 +78,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
      * Sets the value of the exclusion radius
      * @param newRadius The new exclusion radius
      */
-    public void setExclusionRadius(double exlusionRadius) {
+    public void setExclusionRadius(ControlParameter exlusionRadius) {
         this.exclusionRadius = exlusionRadius;
     }
 
@@ -153,6 +156,11 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
      */
     @Override
     public void performIteration(MultiPopulationBasedAlgorithm ca) {
+         processPopulations(ca);
+         repulsePopulations(ca);
+    }
+    
+    public void processPopulations(MultiPopulationBasedAlgorithm ca) {
         int converged = 0;
         for (PopulationBasedAlgorithm current : ca.getPopulations()) {
             if (isConverged(current, ca)) {
@@ -185,6 +193,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
                 }
             }
             
+            System.out.println(explorer);
             weakest = explorer.getClone();
             ((DataClusteringPSO) weakest).setIsExplorer(false);
             reInitialise((DataClusteringPSO) explorer);
@@ -194,14 +203,19 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
         for (PopulationBasedAlgorithm current : ca.getPopulations()) {
             current.performIteration();
         }
-
+    }
+    
+    
+    public void repulsePopulations(MultiPopulationBasedAlgorithm ca) {
+        int currentIndex = 0;
         for (PopulationBasedAlgorithm current : ca.getPopulations()) {
+            int otherIndex = 0;
             for (PopulationBasedAlgorithm other : ca.getPopulations()) {
                 CentroidHolder currentPosition, otherPosition;
                 if (!current.equals(other)) {
                     currentPosition = (CentroidHolder) ((DataClusteringPSO) current).getBestSolution().getPosition(); //getBestParticle().getPosition();
                     otherPosition = (CentroidHolder) ((DataClusteringPSO) other).getBestSolution().getPosition();
-                    boolean aDistanceIsSmallerThanRadius = aDistanceIsSmallerThanRadius(currentPosition, otherPosition);
+                    boolean aDistanceIsSmallerThanRadius = aDistanceIsSmallerThanRadius(currentPosition, currentIndex, otherPosition, otherIndex);
                     
                     if (aDistanceIsSmallerThanRadius) {
                         if (((DataClusteringPSO) current).getBestSolution().getFitness().compareTo(((DataClusteringPSO) other).getBestSolution().getFitness()) > 0) {
@@ -211,9 +225,10 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
                         }
                     }
                 }
+                otherIndex++;
             }
+            currentIndex++;
         }
-        
     }
     
     /*
@@ -223,16 +238,27 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
      * @param otherPosition The position that currentPosition needs to be checked against
      * @return true if the swarms are too close, false otherwise
      */
-    private boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, CentroidHolder otherPosition) {
-        DistanceMeasure dm = new EuclideanDistanceMeasure();
-        
-        for(int i = 0; i < currentPosition.size(); i++) {
-            if(dm.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius)
+//    private boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, CentroidHolder otherPosition) {
+//        DistanceMeasure dm = new EuclideanDistanceMeasure();
+//        
+//        for(int i = 0; i < currentPosition.size(); i++) {
+//            if(dm.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius.getParameter())
+//                return true;
+//        }
+//        return false;
+//    }
+    
+    
+    protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, int currentIndex, CentroidHolder otherPosition, int otherIndex) {
+         DistanceMeasure measure = new EuclideanDistanceMeasure();   
+         if(measure.distance(currentPosition.get(currentIndex).toVector(), otherPosition.get(otherIndex).toVector()) < exclusionRadius.getParameter()) {
+                //System.out.println("distance is smaller: " + AbstractAlgorithm.get().getIterations());
                 return true;
-        }
-        return false;
+         }
+            
+            return false;
     }
-
+ 
     /*
      * Reinitializes a swarm
      * @param algorithm The algorithm holding the swarm
@@ -242,6 +268,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
             particle.reinitialise();
             assignDataPatternsToParticle((CentroidHolder) particle.getCandidateSolution(), 
                     ((SinglePopulationDataClusteringPSOIterationStrategy) algorithm.getIterationStrategy()).getWindow().getCurrentDataset());
+            particle.setPersonalBestToSelf();
         }
     }
     
@@ -251,6 +278,7 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
      * @param dataset The dataset holding all the data patterns
      */
     public void assignDataPatternsToParticle(CentroidHolder candidateSolution, DataTable dataset) {
+        clearDataPatterns(candidateSolution);
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure aDistanceMeasure = new EuclideanDistanceMeasure();
@@ -272,5 +300,11 @@ public class StandardClusteringMultiSwarmIterationStrategy extends AbstractItera
                 
                 candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
             }
+    }
+    
+    public void clearDataPatterns(CentroidHolder holder) {
+        for(ClusterCentroid centroid : holder) {
+            centroid.clearDataItems();
+        }
     }
 }

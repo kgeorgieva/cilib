@@ -11,6 +11,7 @@ import net.sourceforge.cilib.clustering.DataClusteringPSO;
 import net.sourceforge.cilib.clustering.entity.ClusterParticle;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.io.pattern.StandardPattern;
+import net.sourceforge.cilib.problem.solution.InferiorFitness;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
@@ -62,39 +63,21 @@ public class StandardDataClusteringIterationStrategy extends SinglePopulationDat
     @Override
     public void performIteration(DataClusteringPSO algorithm) {
         Topology<ClusterParticle> topology = algorithm.getTopology();
-        double euclideanDistance;
-        Vector addedPattern;
+        
         clearCentroidDistanceValues(topology);
         reinitialized = false;
-        Vector pattern;
+        
         
         for(ClusterParticle particle : topology) {
-            CentroidHolder candidateSolution = (CentroidHolder) particle.getCandidateSolution();
-            for(int i = 0; i < dataset.size(); i++) {
-                euclideanDistance = Double.POSITIVE_INFINITY;
-                addedPattern = Vector.of();
-                pattern = ((StandardPattern) dataset.getRow(i)).getVector();
-                int centroidIndex = 0;
-                int patternIndex = 0;
-                for(ClusterCentroid centroid : candidateSolution) {
-                    if(distanceMeasure.distance(centroid.toVector(), pattern) < euclideanDistance) {
-                        euclideanDistance = distanceMeasure.distance(centroid.toVector(), pattern);
-                        addedPattern = Vector.copyOf(pattern);
-                        patternIndex = centroidIndex;
-                    }
-                    centroidIndex++;
-                }
-                
-                candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
+            
+            if(particle.getFitness().equals(InferiorFitness.instance())){
+                calculateFitness(particle);
             }
-            
-            particle.setCandidateSolution(candidateSolution);
-            
-            particle.calculateFitness();
             particle.updateVelocity();
             particle.updatePosition();
             
             boundaryConstraint.enforce(particle);
+            calculateFitness(particle);
         }
         
         for (Iterator<? extends ClusterParticle> i = topology.iterator(); i.hasNext();) {
@@ -127,6 +110,40 @@ public class StandardDataClusteringIterationStrategy extends SinglePopulationDat
                 centroid.clearDataItems();
             }
         }
+    }
+    
+    private void clearCentroid(CentroidHolder candidateSolution) {
+            
+            for(ClusterCentroid centroid : candidateSolution) {
+                centroid.clearDataItems();
+            }
+    }
+    
+    private void calculateFitness(ClusterParticle particle) {
+        double euclideanDistance;
+        Vector addedPattern;
+        Vector pattern;
+        CentroidHolder candidateSolution = (CentroidHolder) particle.getCandidateSolution();
+            for(int i = 0; i < dataset.size(); i++) {
+                euclideanDistance = Double.POSITIVE_INFINITY;
+                addedPattern = Vector.of();
+                pattern = ((StandardPattern) dataset.getRow(i)).getVector();
+                int centroidIndex = 0;
+                int patternIndex = 0;
+                for(ClusterCentroid centroid : candidateSolution) {
+                    if(distanceMeasure.distance(centroid.toVector(), pattern) < euclideanDistance) {
+                        euclideanDistance = distanceMeasure.distance(centroid.toVector(), pattern);
+                        addedPattern = Vector.copyOf(pattern);
+                        patternIndex = centroidIndex;
+                    }
+                    centroidIndex++;
+                }
+                
+                candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
+            }
+            
+            particle.setCandidateSolution(candidateSolution);
+            particle.calculateFitness();
     }
     
     

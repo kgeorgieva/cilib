@@ -72,7 +72,7 @@ public class MultiParentCrossoverStrategy implements CrossoverStrategy {
         return 4;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
     

@@ -160,7 +160,7 @@ public class SimplexCrossoverStrategy implements CrossoverStrategy {
         this.numberOfParents = numberOfParents;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
     

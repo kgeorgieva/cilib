@@ -7,6 +7,7 @@
 package net.sourceforge.cilib.pso.crossover.operations;
 
 import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.SettableControlParameter;
 import net.sourceforge.cilib.entity.Particle;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.entity.operators.crossover.CrossoverStrategy;
@@ -64,7 +65,7 @@ public class DiscreteCrossoverOperation extends PSOCrossoverOperation {
         return function.getParentReplacementStrategy();
     }
 
-    public void setCrossoverProbability(ControlParameter crossoverProbability) {
+    public void setCrossoverProbability(SettableControlParameter crossoverProbability) {
         this.function.setCrossoverProbability(crossoverProbability);
     }
 

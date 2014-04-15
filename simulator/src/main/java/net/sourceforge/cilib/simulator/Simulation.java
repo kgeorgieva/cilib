@@ -12,6 +12,7 @@ import net.sourceforge.cilib.algorithm.Algorithm;
 import net.sourceforge.cilib.algorithm.AlgorithmEvent;
 import net.sourceforge.cilib.algorithm.AlgorithmListener;
 import net.sourceforge.cilib.problem.Problem;
+import net.sourceforge.cilib.problem.ClusteringProblem;
 
 /**
  * A Simulation is a complete simulation that runs as a separate thread.
@@ -82,6 +83,12 @@ public class Simulation implements AlgorithmListener, Runnable {
 
         try {
             measurementSuite.close();
+            
+            if(problem instanceof ClusteringProblem) {
+                ((ClusteringProblem) problem).getWindow().clearTables();
+                terminate();
+            }
+            
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

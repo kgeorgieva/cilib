@@ -63,13 +63,16 @@ public class SimulatorShell {
      * @param listener reposible to monitor progress.
      * TODO: This listener idea is not fresh - one listener per simulation should be the case.
      */
-    public static void execute(Iterable<Simulator> simulators, ProgressText listener) {
+    public static void execute(List<Simulator> simulators, ProgressText listener) {
         int index = 0;
-        for (Simulator simulator : simulators) {
+        int total = simulators.size();
+        for (int i = 0; i < total; i++) {
+            Simulator simulator = simulators.iterator().next();
             simulator.init(); // Prepare the simulator by initializing the simulations
             simulator.addProgressListener(listener);
             listener.setSimulation(index++);
             simulator.execute();
+            simulators.remove(simulator);
         }
     }
 

@@ -12,6 +12,14 @@ import net.sourceforge.cilib.type.types.Real;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 import net.sourceforge.cilib.type.types.container.Vector;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
+import net.sourceforge.cilib.io.DataTable;
+import net.sourceforge.cilib.problem.ClusteringProblem;
+import net.sourceforge.cilib.io.pattern.StandardPattern;
+import net.sourceforge.cilib.io.DataTable;
+import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
+import net.sourceforge.cilib.clustering.SlidingWindow;
+
 
 /**
  * This class calculates the Ray Tury Validity Index that can be found in:
@@ -44,9 +52,16 @@ public class RayTuriValidityIndex extends ValidityIndex {
     @Override
     public Real getValue(Algorithm algorithm) {
         CentroidHolder holder = (CentroidHolder) algorithm.getBestSolution().getPosition();
+        assignDataPatternsToCentroid(holder);
+        double inter = getInterClusterDistance(holder);
         
-        double result = getaverageClusterDistance(holder) / (double) getInterClusterDistance(holder);
-        return Real.valueOf(result);
+        if(Double.isInfinite(inter)) {
+            return Real.valueOf(Double.POSITIVE_INFINITY);
+        } else {
+            double result = getaverageClusterDistance(holder) / inter;
+            //System.out.println("Ray: " + result + " inter: " + getInterClusterDistance(holder));
+            return Real.valueOf(result);
+        }
     }
     
     /*
@@ -62,10 +77,12 @@ public class RayTuriValidityIndex extends ValidityIndex {
                 sum += distanceMeasure.distance(pattern, centroid.toVector());
                 numberOfPatterns++;
             }
+            
         }
         
         sum /= (double) numberOfPatterns;
         
+        //System.out.println("Intra min: " + sum);
         return sum;
     }
     
@@ -80,13 +97,53 @@ public class RayTuriValidityIndex extends ValidityIndex {
         for(int k = 0; k < centroidHolder.size() - 1; k++) {
             for(int j = k + 1; j < centroidHolder.size(); j++) {
                 distance = distanceMeasure.distance(centroidHolder.get(k).toVector(), centroidHolder.get(j).toVector());
+                
                 if(distance < minimum) {
                     minimum = distance;
                 }
             }
         }
-        
+        //System.out.println("Inter min: " + minimum);
         return minimum;
+    }
+    
+    public void assignDataPatternsToCentroid(CentroidHolder candidateSolution) {
+        EuclideanDistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
+        for(ClusterCentroid centroid : candidateSolution) {
+            centroid.clearDataItems();
+        }
+        
+        //DataTable dataset = ((ClusteringProblem) AbstractAlgorithm.get().getOptimisationProblem()).getWindow().getCurrentDataset();
+        SlidingWindow window= ((ClusteringProblem) AbstractAlgorithm.get().getOptimisationProblem()).getWindow();
+        DataTable dataset;
+        if(window.windowHasSlid()) {
+            dataset = window.getPreviousDataset();
+        } else {
+           dataset = window.getCurrentDataset(); 
+        }
+        
+        double euclideanDistance;
+        Vector addedPattern;
+        Vector pattern;
+        
+            for(int i = 0; i < dataset.size(); i++) {
+                euclideanDistance = Double.POSITIVE_INFINITY;
+                addedPattern = Vector.of();
+                pattern = ((StandardPattern) dataset.getRow(i)).getVector();
+                int centroidIndex = 0;
+                int patternIndex = 0;
+                for(ClusterCentroid centroid : candidateSolution) {
+                    if(distanceMeasure.distance(centroid.toVector(), pattern) < euclideanDistance) {
+                        euclideanDistance = distanceMeasure.distance(centroid.toVector(), pattern);
+                        addedPattern = Vector.copyOf(pattern);
+                        patternIndex = centroidIndex;
+                    }
+                    centroidIndex++;
+                }
+                
+                candidateSolution.get(patternIndex).addDataItem(euclideanDistance, addedPattern);
+            }
+            
     }
 
     /*
@@ -96,4 +153,5 @@ public class RayTuriValidityIndex extends ValidityIndex {
     public Measurement<Real> getClone() {
         return new RayTuriValidityIndex(this);
     }
+    
 }

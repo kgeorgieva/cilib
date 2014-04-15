@@ -10,6 +10,7 @@ import net.sourceforge.cilib.algorithm.population.AbstractIterationStrategy;
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.ec.EC;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.io.DataTable;
 import net.sourceforge.cilib.io.StandardPatternDataTable;
@@ -24,7 +25,7 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
 /**
  * This class holds the methods that are shared by certain clustering EC iteration strategies
  */
-public abstract class SinglePopulationDataClusteringDEIterationStrategy extends AbstractIterationStrategy<DataClusteringEC>{
+public abstract class SinglePopulationDataClusteringDEIterationStrategy extends AbstractIterationStrategy<EC>{
     protected DataTable dataset;
     protected EuclideanDistanceMeasure distanceMeasure;
     protected SlidingWindow window;
@@ -54,7 +55,7 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
         dataset = copy.dataset;
         distanceMeasure = copy.distanceMeasure;
         boundaryConstraint = copy.boundaryConstraint;
-        window = copy.window;
+        window = copy.window.getClone();
         reinitialisationPercentage = copy.reinitialisationPercentage;
         reinitialized = copy.reinitialized;
         isExplorer = copy.isExplorer;
@@ -66,12 +67,6 @@ public abstract class SinglePopulationDataClusteringDEIterationStrategy extends 
      */
     @Override
     public abstract SinglePopulationDataClusteringDEIterationStrategy getClone();
-
-    /*
-     * Performs one iteration of a SinglePopulationDataClusteringDEIterationStrategy
-     */
-    @Override
-    public abstract void performIteration(DataClusteringEC algorithm);
     
    /*
      * Adds the data patterns closest to a centrid to its data pattern list

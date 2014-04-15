@@ -152,8 +152,12 @@ public class RandPerDimensionCreationStrategy implements CreationStrategy {
     public void setScaleParameter(SettableControlParameter scaleParameter) {
         this.scaleParameter = scaleParameter;
     }
+//    
+//    public void setScaleParameter(double scaleParameterValue) {
+//        this.scaleParameter.setParameter(scaleParameterValue);
+//    }
     
-    public void setScaleParameter(double scaleParameterValue) {
+    public void updateScaleParameter(double scaleParameterValue) {
         this.scaleParameter.setParameter(scaleParameterValue);
     }
 }

@@ -67,6 +67,8 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
      * @param dataset The dataset holding all the data patterns
      */
     public void assignDataPatternsToParticle(CentroidHolder candidateSolution, DataTable dataset) {
+        
+        clearDataPatterns(candidateSolution);
         double euclideanDistance;
         Vector addedPattern;
         DistanceMeasure distanceMeasure = new EuclideanDistanceMeasure();
@@ -139,6 +141,12 @@ public abstract class AbstractCooperativeIterationStrategy<E extends Algorithm> 
      */
     public void clearDataPatterns(ClusterParticle particle) {
         for(ClusterCentroid centroid : (CentroidHolder) particle.getCandidateSolution()) {
+            centroid.clearDataItems();
+        }
+    }
+    
+    public void clearDataPatterns(CentroidHolder holder) {
+        for(ClusterCentroid centroid : holder) {
             centroid.clearDataItems();
         }
     }

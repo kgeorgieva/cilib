@@ -6,8 +6,9 @@
  */
 package net.sourceforge.cilib.clustering.de.iterationstrategies;
 
-import net.sourceforge.cilib.clustering.DataClusteringEC;
+import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.ec.EC;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.math.random.UniformDistribution;
 import net.sourceforge.cilib.problem.boundaryconstraint.BoundaryConstraint;
@@ -56,7 +57,7 @@ public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulatio
      * @param algorithm The algorithm using this iteration strategy
      */
     @Override
-    public void performIteration(DataClusteringEC algorithm) {
+    public void performIteration(EC algorithm) {
         if(changeDetectionStrategy.detectChange()) {
             reinitializePosition((Topology<ClusterIndividual>) algorithm.getTopology());
             reinitialized = true;
@@ -148,5 +149,15 @@ public class ReinitialisingClusteringDEIterationStrategy extends SinglePopulatio
      */
     public ChangeDetectionStrategy getChangeDetectionStrategy() {
         return changeDetectionStrategy;
+    }
+    
+    @Override
+    public void setWindow(SlidingWindow window) {
+        this.window = window;
+        dataset = window.getCurrentDataset();
+        int iterationModulus = window.getIterationModulus();
+        if (iterationModulus != 0) {
+            changeDetectionStrategy.setIterationModulus(iterationModulus);
+        }
     }
 }

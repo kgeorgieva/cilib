@@ -20,4 +20,6 @@ public abstract class ChangeDetectionStrategy {
      * @return True if a change has taken place, false if it has not
      */
     public abstract boolean detectChange();
+    
+    public abstract void setIterationModulus(int iterationModulus);
 }

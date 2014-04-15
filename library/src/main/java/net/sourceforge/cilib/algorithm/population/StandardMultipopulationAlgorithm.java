@@ -14,6 +14,8 @@ import net.sourceforge.cilib.problem.dataset.DataSetBuilder;
 import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 import net.sourceforge.cilib.pso.multiswarm.MultiSwarmIterationStrategy;
 import net.sourceforge.cilib.type.DomainRegistry;
+import net.sourceforge.cilib.type.types.container.CentroidHolder;
+import net.sourceforge.cilib.type.types.container.ClusterCentroid;
 
 /**
  *
@@ -49,9 +51,9 @@ public class StandardMultipopulationAlgorithm extends MultiPopulationBasedAlgori
         return sum;
     }
 
-    public void setAlgorithm(PopulationBasedAlgorithm algorithm) {
-        subPopulationsAlgorithms.add(algorithm);
-    }
+//    public void setAlgorithm(PopulationBasedAlgorithm algorithm) {
+//        subPopulationsAlgorithms.add(algorithm);
+//    }
 
     /**
      * initialises every population.
@@ -69,6 +71,7 @@ public class StandardMultipopulationAlgorithm extends MultiPopulationBasedAlgori
     @Override
     public OptimisationSolution getBestSolution() {
         OptimisationSolution bestSolution = subPopulationsAlgorithms.get(0).getBestSolution();
+        
         for (PopulationBasedAlgorithm currentAlgorithm : subPopulationsAlgorithms) {
             if(bestSolution.compareTo(currentAlgorithm.getBestSolution())<0) {
                 bestSolution = currentAlgorithm.getBestSolution();

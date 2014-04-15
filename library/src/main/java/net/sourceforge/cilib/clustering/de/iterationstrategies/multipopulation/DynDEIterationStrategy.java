@@ -14,6 +14,8 @@ import net.sourceforge.cilib.algorithm.population.StandardMultipopulationAlgorit
 import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.de.iterationstrategies.SinglePopulationDataClusteringDEIterationStrategy;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.controlparameter.ControlParameter;
+import net.sourceforge.cilib.controlparameter.StandardUpdatableControlParameter;
 import net.sourceforge.cilib.ec.Individual;
 import net.sourceforge.cilib.ec.update.UpdateStrategy;
 import net.sourceforge.cilib.ec.update.clustering.BrownianClusteringUpdateStrategy;
@@ -34,19 +36,19 @@ import net.sourceforge.cilib.util.EuclideanDistanceMeasure;
  * for Dynamic Optimization Problems".
  */
 public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMultipopulationAlgorithm>{
-    protected double exclusionRadius;
+    protected ControlParameter exclusionRadius;
     protected DistanceMeasure measure;
-    protected int totalReplaceableIndividuals;
+    protected ControlParameter percentageReplaceableIndividuals;
     protected UpdateStrategy updateStrategyForWeakestIndividuals;
     
     /*
      * Default constructor for DynDEIterationStrategy
      */
     public DynDEIterationStrategy() {
-        exclusionRadius = 1.0;
+        exclusionRadius = new StandardUpdatableControlParameter(1.0);
         measure = new EuclideanDistanceMeasure();
         updateStrategyForWeakestIndividuals = new BrownianClusteringUpdateStrategy();
-        totalReplaceableIndividuals = 5;
+        percentageReplaceableIndividuals = new StandardUpdatableControlParameter(5);
     }
     
     /*
@@ -57,7 +59,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         exclusionRadius = copy.exclusionRadius;
         measure = copy.measure;
         updateStrategyForWeakestIndividuals = copy.updateStrategyForWeakestIndividuals;
-        totalReplaceableIndividuals = copy.totalReplaceableIndividuals;
+        percentageReplaceableIndividuals = copy.percentageReplaceableIndividuals;
     }
     
     /*
@@ -181,6 +183,8 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
         Topology<Individual> topology = (Topology<Individual>) algorithm.getTopology();
         int weakest = 0;
         int individualCount;
+        
+        int totalReplaceableIndividuals = (int) (percentageReplaceableIndividuals.getParameter() * topology.size() / 100);
         int[] weakestIndividuals = new int[totalReplaceableIndividuals];
         
         for(int i = 0; i < totalReplaceableIndividuals; i++) {
@@ -265,7 +269,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      */
     protected boolean aDistanceIsSmallerThanRadius(CentroidHolder currentPosition, int currentIndex, CentroidHolder otherPosition, int otherIndex) {
         for(int i = 0; i < currentPosition.size(); i++) {
-            if(measure.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius) {
+            if(measure.distance(currentPosition.get(i).toVector(), otherPosition.get(i).toVector()) < exclusionRadius.getParameter()) {
                 return true;
             }
         }
@@ -277,7 +281,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      * Gets the value of the exclusion radius
      * @return The value of the exclusion radius
      */
-    public double getExclusionRadius() {
+    public ControlParameter getExclusionRadius() {
         return exclusionRadius;
     }
 
@@ -285,7 +289,7 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      * Sets the value of the exclusion radius
      * @param exclusionRadius The new value for the exclusion radius
      */
-    public void setExclusionRadius(double exclusionRadius) {
+    public void setExclusionRadius(ControlParameter exclusionRadius) {
         this.exclusionRadius = exclusionRadius;
     }
 
@@ -303,6 +307,22 @@ public class DynDEIterationStrategy extends AbstractIterationStrategy<StandardMu
      */
     public void setMeasure(DistanceMeasure measure) {
         this.measure = measure;
+    }
+    
+    /*
+     * Gets the value of the exclusion radius
+     * @return The value of the exclusion radius
+     */
+    public ControlParameter getPercentageReplaceableIndividuals() {
+        return percentageReplaceableIndividuals;
+    }
+
+    /*
+     * Sets the value of the exclusion radius
+     * @param exclusionRadius The new value for the exclusion radius
+     */
+    public void setPercentageReplaceableIndividuals(ControlParameter percentageReplaceableIndividuals) {
+        this.percentageReplaceableIndividuals = percentageReplaceableIndividuals;
     }
         
 }

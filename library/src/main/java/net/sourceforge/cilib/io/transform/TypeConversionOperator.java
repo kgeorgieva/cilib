@@ -104,7 +104,14 @@ public class TypeConversionOperator extends SelectiveDataOperator {
      * @return true if string matches Double regular expression.
      */
     private boolean isDouble(String token) {
-        return token.matches(doubleRegularExpresion);
+        try {
+                Double.parseDouble(token);
+                   return true;
+     
+            } catch (Exception e) {
+
+                return false;
+        }
     }
 
     /**
@@ -125,6 +132,7 @@ public class TypeConversionOperator extends SelectiveDataOperator {
      * @return true if string equals (ignoring case) "f" or "False"
      */
     private boolean isFalseBoolean(String token) {
+        
         if ((token.compareToIgnoreCase("f") == 0) || (token.compareToIgnoreCase("false") == 0)) {
             return true;
         }

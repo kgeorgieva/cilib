@@ -50,7 +50,13 @@ public class InterClusterDistance extends ValidityIndex{
     @Override
     public Real getValue(Algorithm algorithm) {
         CentroidHolder position = (CentroidHolder) algorithm.getBestSolution().getPosition();
-        return Real.valueOf(calculateInterClusterDistance(position));
+        double result = calculateInterClusterDistance(position);
+        
+        if(Double.isNaN(result)) {
+            result = 0.1;
+        }
+        
+        return Real.valueOf(result);
     }
     
     /*

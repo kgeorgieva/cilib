@@ -64,7 +64,7 @@ public class RootProbabilityCrossoverStrategy implements CrossoverStrategy {
         return 2;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
     

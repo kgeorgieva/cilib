@@ -112,7 +112,7 @@ public class DifferentialEvolutionBinomialCrossover implements CrossoverStrategy
         return 2;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         this.crossoverPointProbability.setParameter(crossoverPointProbability);
     }
     

@@ -211,7 +211,7 @@ public class ParentCentricCrossoverStrategy implements CrossoverStrategy {
         this.parentProvider = parentProvider;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
     

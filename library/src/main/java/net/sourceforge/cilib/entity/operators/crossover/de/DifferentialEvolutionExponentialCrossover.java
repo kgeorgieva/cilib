@@ -115,7 +115,7 @@ public class DifferentialEvolutionExponentialCrossover implements CrossoverStrat
         return 2;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         this.crossoverPointProbability.setParameter(crossoverPointProbability);
     }
 }

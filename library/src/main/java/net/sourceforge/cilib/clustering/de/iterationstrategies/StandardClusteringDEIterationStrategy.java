@@ -8,8 +8,8 @@ package net.sourceforge.cilib.clustering.de.iterationstrategies;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-import net.sourceforge.cilib.clustering.DataClusteringEC;
 import net.sourceforge.cilib.clustering.entity.ClusterIndividual;
+import net.sourceforge.cilib.ec.EC;
 import net.sourceforge.cilib.entity.Topology;
 import net.sourceforge.cilib.type.types.container.CentroidHolder;
 
@@ -53,7 +53,7 @@ public class StandardClusteringDEIterationStrategy extends SinglePopulationDataC
      * the next generation.
      */
     @Override
-    public void performIteration(DataClusteringEC algorithm) {
+    public void performIteration(EC algorithm) {
         Topology<ClusterIndividual> topology = (Topology<ClusterIndividual>) algorithm.getTopology();
         List<ClusterIndividual> newTopology = Lists.newArrayList();
         clearCentroidDistanceValues(topology);

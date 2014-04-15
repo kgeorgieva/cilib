@@ -91,7 +91,7 @@ public class PatternConversionOperator extends SelectiveDataOperator {
                 Vector data = this.buildPatternData(row, rowLength, classRange);
                 Type classification = this.buildPatternTarget(row, classRange);
 
-                patterns.addRow(new StandardPattern(data, classification));
+                patterns.addRow(new StandardPattern(data, classification, r));
             }
         }
         return patterns;

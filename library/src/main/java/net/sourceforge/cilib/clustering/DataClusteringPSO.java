@@ -47,7 +47,6 @@ import net.sourceforge.cilib.type.types.container.Vector;
  */
 public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements ParticipatingAlgorithm {
     protected Topology<ClusterParticle> topology;
-    protected SlidingWindow window;
     protected IterationStrategy<DataClusteringPSO> iterationStrategy;
     protected ContributionSelectionStrategy contributionSelection;
     protected boolean isExplorer;
@@ -60,7 +59,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         contributionSelection = new ZeroContributionSelectionStrategy();
         topology = new GBestTopology<ClusterParticle>();
         initialisationStrategy = new DataDependantPopulationInitializationStrategy<ClusterParticle>();
-        window = new SlidingWindow();
         iterationStrategy = new StandardDataClusteringIterationStrategy();
         isExplorer = false;
     }
@@ -73,7 +71,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         super(copy);
         topology = copy.topology;
         initialisationStrategy = copy.initialisationStrategy;
-        window = copy.window;
         iterationStrategy = copy.iterationStrategy;
         contributionSelection = copy.contributionSelection;
         isExplorer = copy.isExplorer;
@@ -120,10 +117,18 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
      */
     @Override
     public void algorithmInitialisation() {
-        DataTable dataset = window.initializeWindow();
-
+        SlidingWindow window = ((ClusteringProblem) this.getOptimisationProblem()).getWindow();
+        DataTable dataset;
+        
+        if(window.getCurrentDataset().size() == 0) {
+            dataset = window.initializeWindow();
+        } else {
+            dataset = window.getCurrentDataset();
+        }
+        
         Vector pattern = ((StandardPattern) dataset.getRow(0)).getVector();
-        ((ClusteringProblem) this.optimisationProblem).setDimension((int) pattern.size());
+        
+        ((ClusteringProblem) super.optimisationProblem).setDimension((int) pattern.size());
 
         ((DataDependantPopulationInitializationStrategy) initialisationStrategy).setDataset(window.getCompleteDataset());
         Iterable<ClusterParticle> particles = (Iterable<ClusterParticle>) this.initialisationStrategy.initialise(this.getOptimisationProblem());
@@ -132,6 +137,7 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
         topology.addAll(Lists.<ClusterParticle>newLinkedList(particles));
 
         ((SinglePopulationDataClusteringPSOIterationStrategy) iterationStrategy).setWindow(window);
+        
     }
 
     /*
@@ -142,6 +148,7 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
     public OptimisationSolution getBestSolution() {
         ClusterParticle bestEntity = Topologies.getBestEntity(topology, new SocialBestFitnessComparator<ClusterParticle>());
         return new OptimisationSolution(bestEntity.getBestPosition(), bestEntity.getBestFitness());
+        
     }
 
     /*
@@ -174,25 +181,6 @@ public class DataClusteringPSO extends SinglePopulationBasedAlgorithm implements
     @Override
     public void setContributionSelectionStrategy(ContributionSelectionStrategy strategy) {
         contributionSelection = strategy;
-    }
-
-    /*
-     * Sets the window's source URL. This source URL is the path to the file containing
-     * the dataset to be clsutered.
-     * @param sourceURL The path to the dataset
-     */
-    public void setSourceURL(String sourceURL) {
-        window.setSourceURL(sourceURL);
-    }
-
-    /*
-     * Sets the SlidingWindow to the one received as a parameter
-     * @param slidingWindow The new sliding window
-     */
-    public void setWindow(SlidingWindow slidingWindow) {
-        String url = window.getSourceURL();
-        window = slidingWindow;
-        window.setSourceURL(url);
     }
 
     /*

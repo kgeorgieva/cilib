@@ -96,14 +96,15 @@ public class CooperativePSO extends MultiPopulationBasedAlgorithm{
      */
     @Override
     public void algorithmInitialisation()    {
-        ClusteringProblem problem = (ClusteringProblem) getOptimisationProblem().getClone();//getCoevolutionOptimisationProblem();
+        ClusteringProblem problem = (ClusteringProblem) getOptimisationProblem();
         problem.setNumberOfClusters(subPopulationsAlgorithms.size());
-
+        
         for (PopulationBasedAlgorithm currentAlgorithm : subPopulationsAlgorithms) {
             currentAlgorithm.setOptimisationProblem(problem);
             currentAlgorithm.performInitialisation();
-        }
-
+        }//for
+        
+        ((DataClusteringPSO) subPopulationsAlgorithms.get(subPopulationsAlgorithms.size() - 1)).setIsExplorer(true);
     }
 
     /*

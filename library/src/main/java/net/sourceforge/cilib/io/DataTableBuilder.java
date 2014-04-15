@@ -55,12 +55,13 @@ public class DataTableBuilder {
         while (dataReader.hasNextRow()) {
             dataTable.addRow(dataReader.nextRow());
         }
+        
         dataTable.setColumnNames(dataReader.getColumnNames());
         dataReader.close();
         for (DataOperator operator : operatorPipeline) {
             this.setDataTable(operator.operate(this.getDataTable()));
         }
-        return (DataTable) this.dataTable.getClone();
+        return (DataTable) this.dataTable;
     }
 
     /**

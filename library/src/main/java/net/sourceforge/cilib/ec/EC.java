@@ -33,7 +33,7 @@ import net.sourceforge.cilib.problem.solution.OptimisationSolution;
 public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingAlgorithm {
 
     private static final long serialVersionUID = -4324446523858690744L;
-    protected Problem problem;
+    //protected Problem problem;
     protected IterationStrategy<EC> iterationStrategy;
     protected Topology<Individual> topology;
     protected InitializationStrategy<Entity> strategyParameterInitialization;
@@ -43,6 +43,7 @@ public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingA
      * Create a new instance of {@code EC}.
      */
     public EC() {
+        super();
         this.initialisationStrategy = new ClonedPopulationInitialisationStrategy();
         this.initialisationStrategy.setEntityType(new Individual());
         this.iterationStrategy = new GeneticAlgorithmIterationStrategy();
@@ -77,7 +78,7 @@ public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingA
      */
     @Override
     public void algorithmInitialisation() {
-        Iterable<? extends Entity> individuals = this.initialisationStrategy.initialise(this.problem);
+        Iterable<? extends Entity> individuals = this.initialisationStrategy.initialise(super.optimisationProblem);
         //Iterables.addAll(getTopology(), particles); // Use this instead?
         for (Entity individual : individuals) {
             topology.add((Individual) individual);
@@ -114,22 +115,6 @@ public class EC extends SinglePopulationBasedAlgorithm implements ParticipatingA
     @Override
     public void setTopology(Topology topology) {
         this.topology = topology;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setOptimisationProblem(Problem problem) {
-        this.problem = problem;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Problem getOptimisationProblem() {
-        return this.problem;
     }
 
     /**

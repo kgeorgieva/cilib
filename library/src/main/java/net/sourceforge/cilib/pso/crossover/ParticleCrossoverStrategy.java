@@ -117,8 +117,8 @@ public class ParticleCrossoverStrategy implements CrossoverStrategy {
         return crossoverStrategy.getNumberOfParents();
     }
 
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
-        crossoverStrategy.setCrossoverPointProbability(crossoverPointProbability);
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
+        crossoverStrategy.updateCrossoverPointProbability(crossoverPointProbability);
     }
 
     public ControlParameter getCrossoverPointProbability() {

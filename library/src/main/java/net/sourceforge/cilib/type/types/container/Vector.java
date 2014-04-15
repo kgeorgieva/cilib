@@ -54,7 +54,7 @@ public class Vector implements StructuredType<Numeric>,
 
     private static final long serialVersionUID = -4853190809813810272L;
     private Numeric[] components;
-
+    private int id;
     /**
      * Returns an empty {@code Vector}.
      * <p>
@@ -128,9 +128,11 @@ public class Vector implements StructuredType<Numeric>,
      *         {@code Vector}.
      */
     public static Vector copyOf(Vector input) {
-        return newBuilder().copyOf(input).build(); // this is a little weird :(
+        Vector newVector = newBuilder().copyOf(input).build();
+        newVector.setId(input.id);
+        return newVector; // this is a little weird :(
     }
-
+    
     public static Vector fill(Numeric n, int size) {
     	Numeric[] a = new Numeric[size];
     	for (int i = 0; i < size; i++) {
@@ -1046,4 +1048,13 @@ public class Vector implements StructuredType<Numeric>,
             return new Vector(numerics);
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 }

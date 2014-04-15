@@ -15,6 +15,7 @@ import net.sourceforge.cilib.container.visitor.Visitor;
 import net.sourceforge.cilib.math.random.generator.RandomProvider;
 import net.sourceforge.cilib.type.types.Numeric;
 import net.sourceforge.cilib.type.types.Real;
+import net.sourceforge.cilib.algorithm.AbstractAlgorithm;
 
 /**
  * This class serves the same purpose as a Vector, except with added functionality.

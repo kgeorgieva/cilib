@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<!DOCTYPE simulator [
+<!ATTLIST algorithm id ID #IMPLIED>
+<!ATTLIST problem id ID #IMPLIED>
+<!ATTLIST measurements id ID #IMPLIED>
+]>
+<simulator>
+    <algorithms>
+        <algorithm id="multiPopulationDE" class="algorithm.population.CooperativeMultipopulationAlgorithm">
+            <multiSwarmIterationStrategy class="clustering.de.iterationstrategies.multipopulation.KIndependentCooperativeDynDEIterationStrategy">
+                <convergenceRadius class="controlparameter.ConstantControlParameter" parameter="2.0"/>
+                <exclusionRadius class="controlparameter.ConstantControlParameter" parameter="3.5"/>
+            </multiSwarmIterationStrategy>
+            <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="1000"/>
+            <addPopulationBasedAlgorithm id="clusteringDE" class="clustering.DataClusteringEC">
+                <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="1"/>
+                <iterationStrategy class="clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy">
+                    <boundaryConstraint class="problem.boundaryconstraint.CentroidBoundaryConstraint">
+                        <delegate class="problem.boundaryconstraint.ClampingBoundaryConstraint"/>
+                    </boundaryConstraint>
+                </iterationStrategy>
+                <initialisationStrategy class="algorithm.initialisation.DataDependantPopulationInitializationStrategy">
+                    <delegate class="algorithm.initialisation.ClonedPopulationInitialisationStrategy"/>
+                    <entityNumber value="50"/>
+                    <entityType class="clustering.entity.ClusterIndividual">
+                        <initialisationStrategy class="entity.initialization.RandomBoundedInitializationStrategy"/>
+                        <centroidInitialisationStrategy class="entity.initialization.StandardCentroidInitializationStrategy"/>
+                    </entityType>
+                </initialisationStrategy>
+            </addPopulationBasedAlgorithm>
+            <addPopulationBasedAlgorithm id="clusteringDE_2" class="clustering.DataClusteringEC">
+                <addStoppingCondition class="stoppingcondition.MeasuredStoppingCondition" target="1"/>
+                <iterationStrategy class="clustering.de.iterationstrategies.StandardClusteringDEIterationStrategy">
+                    <boundaryConstraint class="problem.boundaryconstraint.CentroidBoundaryConstraint">
+                        <delegate class="problem.boundaryconstraint.ClampingBoundaryConstraint"/>
+                    </boundaryConstraint>
+                </iterationStrategy>
+                <initialisationStrategy class="algorithm.initialisation.DataDependantPopulationInitializationStrategy">
+                    <delegate class="algorithm.initialisation.ClonedPopulationInitialisationStrategy"/>
+                    <entityNumber value="50"/>
+                    <entityType class="clustering.entity.ClusterIndividual">
+                        <initialisationStrategy class="entity.initialization.RandomBoundedInitializationStrategy"/>
+                        <centroidInitialisationStrategy class="entity.initialization.StandardCentroidInitializationStrategy"/>
+                    </entityType>
+                </initialisationStrategy>
+            </addPopulationBasedAlgorithm>
+        </algorithm>
+        
+    </algorithms>
+    
+    
+    <problems>
+        <!-- Pattern migration -->
+        <!-- D3 -->
+        <problem id="quantization_d3_s1_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)" sourceURL="TemporalClustering/d3_s1_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s1_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s1_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s1_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s1_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s1_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s1_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s1_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s1_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s2_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s2_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s2_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s2_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s2_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s2_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s2_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s2_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s2_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s2_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s3_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s3_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s3_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s3_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s3_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s3_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s3_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s3_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s3_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s3_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s4_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s4_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s4_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s4_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s4_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s4_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s4_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s4_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s4_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s4_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s5_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s5_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s5_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s5_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s5_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s5_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s5_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s5_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d3_s5_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d3_s5_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        
+        <!-- D8 -->
+        <problem id="quantization_d8_s1_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)" sourceURL="TemporalClustering/d8_s1_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s1_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s1_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s1_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s1_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s1_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s1_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s1_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s1_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s2_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s2_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s2_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s2_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s2_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s2_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s2_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s2_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s2_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s2_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s3_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s3_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s3_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s3_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s3_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s3_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s3_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s3_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s3_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s3_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s4_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s4_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s4_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s4_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s4_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s4_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s4_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s4_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s4_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s4_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s5_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s5_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s5_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s5_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s5_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s5_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s5_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s5_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d8_s5_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d8_s5_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        
+        <!-- D15 -->
+        <problem id="quantization_d15_s1_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)" sourceURL="TemporalClustering/d15_s1_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s1_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s1_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s1_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s1_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s1_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s1_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s1_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s1_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s2_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s2_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s2_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s2_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s2_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s2_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s2_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s2_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s2_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s2_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s3_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s3_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s3_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s3_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s3_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s3_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s3_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s3_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s3_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s3_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s4_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s4_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s4_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s4_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s4_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s4_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s4_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s4_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s4_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s4_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s5_f1" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s5_f1.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s5_f2" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s5_f2.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s5_f3" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s5_f3.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s5_f4" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s5_f4.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+        <problem id="quantization_d15_s5_f5" class="problem.QuantizationErrorMinimizationProblem" domain="R(-10:10)"  sourceURL="TemporalClustering/d15_s5_f5.arff">
+            <window class="clustering.SlidingWindow" windowSize="80" slideFrequency="10"/>
+        </problem>
+    </problems>
+    
+    <measurements id="fitness" class="simulator.MeasurementSuite" resolution="10">
+        <addMeasurement class="measurement.multiple.ClusterCentroid"/>
+        <addMeasurement class="measurement.clustervalidity.DunnValidityIndex"/>
+        <addMeasurement class="measurement.clustervalidity.DaviesBouldinValidityIndex"/>
+        <addMeasurement class="measurement.clustervalidity.HalkidiVazirgiannisValidityIndex"/>
+        <addMeasurement class="measurement.clustervalidity.RayTuriFavouringValidityIndex"/>
+        <addMeasurement class="measurement.clustervalidity.RayTuriValidityIndex"/>
+        <addMeasurement class="measurement.clustervalidity.InterClusterDistance"/>
+        <addMeasurement class="measurement.clustervalidity.IntraClusterDistance"/>
+        <addMeasurement class="measurement.single.Fitness"/>
+    </measurements>
+    
+    <simulations>
+        <!-- pattern migration -->
+        <!-- D3 -->
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE"/>
+            <problem idref="quantization_d3_s1_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s1_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f1"/>
+            <problem idref="quantization_d3_s2_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s2_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f1"/>
+            <problem idref="quantization_d3_s3_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s3_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f1"/>
+            <problem idref="quantization_d3_s4_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s4_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f1"/>
+            <problem idref="quantization_d3_s5_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s5_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f2"/>
+            <problem idref="quantization_d3_s1_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s1_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f2"/>
+            <problem idref="quantization_d3_s2_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s2_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f2"/>
+            <problem idref="quantization_d3_s3_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s3_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f2"/>
+            <problem idref="quantization_d3_s4_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s4_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f2"/>
+            <problem idref="quantization_d3_s5_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s5_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f3"/>
+            <problem idref="quantization_d3_s1_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s1_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f3"/>
+            <problem idref="quantization_d3_s2_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s2_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f3"/>
+            <problem idref="quantization_d3_s3_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s3_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f3"/>
+            <problem idref="quantization_d3_s4_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s4_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f3"/>
+            <problem idref="quantization_d3_s5_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s5_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f4"/>
+            <problem idref="quantization_d3_s1_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s1_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f4"/>
+            <problem idref="quantization_d3_s2_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s2_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f4"/>
+            <problem idref="quantization_d3_s3_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s3_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f4"/>
+            <problem idref="quantization_d3_s4_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s4_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f4"/>
+            <problem idref="quantization_d3_s5_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s5_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f5"/>
+            <problem idref="quantization_d3_s1_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s1_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f5"/>
+            <problem idref="quantization_d3_s2_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s2_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f5"/>
+            <problem idref="quantization_d3_s3_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s3_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f5"/>
+            <problem idref="quantization_d3_s4_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s4_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f5"/>
+            <problem idref="quantization_d3_s5_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d3_s5_f5.txt" />
+        </simulation>
+        
+        <!-- D8 -->
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE"/>
+            <problem idref="quantization_d8_s1_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s1_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f1"/>
+            <problem idref="quantization_d8_s2_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s2_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f1"/>
+            <problem idref="quantization_d8_s3_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s3_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f1"/>
+            <problem idref="quantization_d8_s4_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s4_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f1"/>
+            <problem idref="quantization_d8_s5_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s5_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f2"/>
+            <problem idref="quantization_d8_s1_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s1_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f2"/>
+            <problem idref="quantization_d8_s2_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s2_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f2"/>
+            <problem idref="quantization_d8_s3_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s3_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f2"/>
+            <problem idref="quantization_d8_s4_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s4_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f2"/>
+            <problem idref="quantization_d8_s5_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s5_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f3"/>
+            <problem idref="quantization_d8_s1_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s1_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f3"/>
+            <problem idref="quantization_d8_s2_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s2_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f3"/>
+            <problem idref="quantization_d8_s3_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s3_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f3"/>
+            <problem idref="quantization_d8_s4_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s4_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f3"/>
+            <problem idref="quantization_d8_s5_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s5_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f4"/>
+            <problem idref="quantization_d8_s1_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s1_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f4"/>
+            <problem idref="quantization_d8_s2_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s2_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f4"/>
+            <problem idref="quantization_d8_s3_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s3_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f4"/>
+            <problem idref="quantization_d8_s4_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s4_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f4"/>
+            <problem idref="quantization_d8_s5_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s5_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f5"/>
+            <problem idref="quantization_d8_s1_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s1_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f5"/>
+            <problem idref="quantization_d8_s2_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s2_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f5"/>
+            <problem idref="quantization_d8_s3_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s3_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f5"/>
+            <problem idref="quantization_d8_s4_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s4_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f5"/>
+            <problem idref="quantization_d8_s5_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d8_s5_f5.txt" />
+        </simulation>
+        
+        <!-- D15 -->
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE"/>
+            <problem idref="quantization_d15_s1_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s1_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f1"/>
+            <problem idref="quantization_d15_s2_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s2_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f1"/>
+            <problem idref="quantization_d15_s3_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s3_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f1"/>
+            <problem idref="quantization_d15_s4_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s4_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f1"/>
+            <problem idref="quantization_d15_s5_f1"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s5_f1.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f2"/>
+            <problem idref="quantization_d15_s1_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s1_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f2"/>
+            <problem idref="quantization_d15_s2_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s2_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f2"/>
+            <problem idref="quantization_d15_s3_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s3_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f2"/>
+            <problem idref="quantization_d15_s4_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s4_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f2"/>
+            <problem idref="quantization_d15_s5_f2"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s5_f2.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f3"/>
+            <problem idref="quantization_d15_s1_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s1_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f3"/>
+            <problem idref="quantization_d15_s2_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s2_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f3"/>
+            <problem idref="quantization_d15_s3_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s3_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f3"/>
+            <problem idref="quantization_d15_s4_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s4_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f3"/>
+            <problem idref="quantization_d15_s5_f3"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s5_f3.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f4"/>
+            <problem idref="quantization_d15_s1_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s1_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f4"/>
+            <problem idref="quantization_d15_s2_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s2_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f4"/>
+            <problem idref="quantization_d15_s3_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s3_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f4"/>
+            <problem idref="quantization_d15_s4_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s4_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f4"/>
+            <problem idref="quantization_d15_s5_f4"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s5_f4.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s1_f5"/>
+            <problem idref="quantization_d15_s1_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s1_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s2_f5"/>
+            <problem idref="quantization_d15_s2_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s2_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s3_f5"/>
+            <problem idref="quantization_d15_s3_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s3_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s4_f5"/>
+            <problem idref="quantization_d15_s4_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s4_f5.txt" />
+        </simulation>
+        <simulation samples="30">
+            <algorithm idref="multiPopulationDE_s5_f5"/>
+            <problem idref="quantization_d15_s5_f5"/>
+            <measurements idref="fitness" />
+	    <output format="TXT" file="data/CooperativeDynDE_d15_s5_f5.txt" />
+        </simulation>
+    </simulations>
+</simulator>

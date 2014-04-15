@@ -92,7 +92,7 @@ public class DiscreteVelocityCrossoverStrategy implements CrossoverStrategy {
         return pbestProvider;
     }
 
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
 

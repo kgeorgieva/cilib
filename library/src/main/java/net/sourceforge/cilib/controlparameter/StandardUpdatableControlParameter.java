@@ -20,6 +20,10 @@ public class StandardUpdatableControlParameter implements SettableControlParamet
         parameter = 0;
     }
 
+    public StandardUpdatableControlParameter(double parameter) {
+        this.parameter = parameter;
+    }
+     
     /*
      * Copy constructor for StandardUpdatableControlParameter
      * @param copy The StandardUpdatableControlParameter to be copied

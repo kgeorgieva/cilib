@@ -98,7 +98,7 @@ public class TwoPointCrossoverStrategy implements DiscreteCrossoverStrategy {
         return crossoverPoints;
     }
 
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable.");
     }
 

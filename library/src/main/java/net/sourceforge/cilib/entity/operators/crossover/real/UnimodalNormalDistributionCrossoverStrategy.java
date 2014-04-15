@@ -214,7 +214,7 @@ public class UnimodalNormalDistributionCrossoverStrategy implements CrossoverStr
         this.numberOfParents = numberOfParents;
     }
     
-    public void setCrossoverPointProbability(double crossoverPointProbability) {
+    public void updateCrossoverPointProbability(double crossoverPointProbability) {
         throw new UnsupportedOperationException("Not applicable");
     }
     

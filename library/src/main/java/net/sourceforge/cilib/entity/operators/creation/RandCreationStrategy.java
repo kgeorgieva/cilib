@@ -136,8 +136,11 @@ public class RandCreationStrategy implements CreationStrategy {
         this.scaleParameter = scaleParameter;
     }
     
-    public void setScaleParameter(double scaleParameterValue) {
+//    public void setScaleParameter(double scaleParameterValue) {
+//        this.scaleParameter.setParameter(scaleParameterValue);
+//    }
+
+    public void updateScaleParameter(double scaleParameterValue) {
         this.scaleParameter.setParameter(scaleParameterValue);
     }
-
 }

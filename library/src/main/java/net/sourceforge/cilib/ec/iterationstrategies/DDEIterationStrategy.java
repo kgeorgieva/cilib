@@ -121,7 +121,7 @@ public class DDEIterationStrategy  extends AbstractIterationStrategy<EC> {
         Entity tempOffspringEntity;
 
         //generate the scaling factor randomly each iteration
-        trialVectorCreationStrategy.setScaleParameter(scalingFactorRandom.getRandomNumber());
+        trialVectorCreationStrategy.updateScaleParameter(scalingFactorRandom.getRandomNumber());
         
         for (int i = 0; i < topology.size(); i++) {
             current = topology.get(i);

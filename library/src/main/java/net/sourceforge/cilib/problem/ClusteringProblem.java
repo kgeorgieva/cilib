@@ -6,20 +6,25 @@
  */
 package net.sourceforge.cilib.problem;
 
+import net.sourceforge.cilib.clustering.SlidingWindow;
 import net.sourceforge.cilib.problem.solution.Fitness;
 import net.sourceforge.cilib.type.DomainRegistry;
 import net.sourceforge.cilib.type.types.Type;
 
 public abstract class ClusteringProblem extends AbstractProblem{
     private int numberOfClusters;
+    private SlidingWindow window;
 
     public ClusteringProblem() {
+        super();
         numberOfClusters = 1;
+        window = new SlidingWindow();
     }
 
     public ClusteringProblem(ClusteringProblem copy) {
         super(copy);
         numberOfClusters = copy.numberOfClusters;
+        window = copy.window;//.getCleanSlidingWindow();
     }
 
     @Override
@@ -49,4 +54,18 @@ public abstract class ClusteringProblem extends AbstractProblem{
         return numberOfClusters;
     }
 
+    public SlidingWindow getWindow() {
+        return window;
+    }
+
+    public void setWindow(SlidingWindow window) {
+        String url = this.window.getSourceURL();
+        this.window = window;
+        window.setSourceURL(url);
+    }
+    
+    public void setSourceURL(String sourceURL) {
+        window.setSourceURL(sourceURL);
+    }
+    
 }
